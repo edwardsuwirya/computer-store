@@ -1,3 +1,15 @@
-<h1>
-  {{title}}
-</h1>
+<div class="container">
+  <div class="row">
+    <div class="col s6 m1" style="margin-top: 5px;">
+      <img src="assets/img/angular2-logo.png">
+    </div>
+    <div class="col s6 m6">
+      <h4 class="title-beautify">{{title}}</h4>
+    </div>
+    <div class="col s6 m5"
+         style="color: rgba(0, 0, 0, .6);text-align: right;font-size: 14px; margin-top: 25px;font-weight: bold">
+      Today is {{ todays | date:medium}}
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

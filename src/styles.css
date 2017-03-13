@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+td, th {
+  padding: 5px 5px !important;
+}
+
+.text-beauty {
+  color: #fff;
+  background-color: transparent;
+  text-shadow: #fff 0 0 10px;
+}
+
+.title-beautify {
+  color: rgba(0, 0, 0, .6);
+  background-color: transparent;
+  text-shadow: rgba(0, 0, 0, .2) 2px 6px 5px, rgba(255, 255, 255, .4) 0 -4px 30px;
+}
+
+.row {
+  margin-bottom: 0 !important;
+}
+
+.small-font {
+  font-size: 10px;
+}
+
+.icon-action {
+  cursor: pointer;
+  margin-right: 5px;
+}
+

@@ -19,9 +19,16 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "styles.css",
+        "../node_modules/materialize-css/bin/materialize.css",
+        "../node_modules/font-awesome/css/font-awesome.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/materialize-css/bin/jquery-2.1.1.min.js",
+        "../node_modules/materialize-css/bin/materialize.js",
+        "../node_modules/numeral/numeral.js",
+        "../node_modules/lodash/lodash.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

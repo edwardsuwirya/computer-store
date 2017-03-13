@@ -1,0 +1,108 @@
+<app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
+<div class="row">
+  <div class="col s12 m12">
+    <div class="card blue-grey darken-1">
+      <a class="btn-flat white-text" routerLink="/home">Home</a>
+      <div class="card-content">
+        <span class="card-title">
+          <h5 class="left text-beauty">Supplier List</h5>
+        </span>
+        <button type="button" class="btn-floating orange right" (click)="newSupplier()"><i
+          class="fa fa-plus"></i>
+        </button>
+        <div class="list-content">
+          <table class="bordered" *ngIf="!smallWindow">
+            <thead>
+            <tr>
+              <th>
+                <div class="header-text">
+                  Name
+                  <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a>
+                </div>
+              </th>
+              <th>
+                <div class="header-text">
+                  Phone No
+                  <a (click)="showSearchBar('Phone')" class="to-pointer"><i class="fa fa-search"></i></a>
+                </div>
+              </th>
+              <th>
+                <div class="header-text">
+                  Address
+                  <a (click)="showSearchBar('Address')" class="to-pointer"><i class="fa fa-search"></i></a>
+                </div>
+              </th>
+              <th>
+                <div class="header-text">
+                  Bank Acc.
+                  <a (click)="showSearchBar('Bank')" class="to-pointer"><i class="fa fa-search"></i></a>
+                </div>
+              </th>
+              <th>
+                <div class="header-tex">
+                  Status
+                </div>
+              </th>
+              <th></th>
+            </tr>
+            <tr [hidden]="!showFilter">
+              <td colspan="6">
+                <input type="text" placeholder="{{filterSupplierBy}}" [formControl]="filterSupplier">
+              </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let sup of suppliers" class="small-font">
+              <td>{{sup.supplierName}}</td>
+              <td>{{sup.supplierPhone}}</td>
+              <td>{{sup.supplierAddress}}</td>
+              <td>{{sup.supplierBank}}</td>
+              <td>
+                <input type="checkbox" class="filled-in" *ngIf="sup.supplierStatus" checked="checked"/>
+                <input type="checkbox" class="filled-in" *ngIf="!sup.supplierStatus"/>
+                <label></label>
+              </td>
+              <td>
+                <a class="orange-text darken-4 action-button to-pointer" (click)="updateSupplier(sup)">Update</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <table class="bordered" *ngIf="smallWindow">
+            <thead>
+            <tr>
+              <th>Name <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a></th>
+            </tr>
+            <tr>
+              <th>Phone No <a (click)="showSearchBar('Phone')" class="to-pointer"><i class="fa fa-search"></i></a></th>
+            </tr>
+            <tr>
+              <th>Address <a (click)="showSearchBar('Address')" class="to-pointer"><i class="fa fa-search"></i></a></th>
+            </tr>
+            <tr>
+              <th>Bank.Acc <a (click)="showSearchBar('Bank')" class="to-pointer"><i class="fa fa-search"></i></a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr [hidden]="!showFilter">
+              <td>
+                <input type="text" placeholder="{{filterSupplierBy}}" [formControl]="filterSupplier">
+              </td>
+            </tr>
+            <tr *ngFor="let sup of suppliers" class="small-font">
+              <td>
+                <div>{{sup.supplierName}}</div>
+                <div>{{sup.supplierPhone}}</div>
+                <div>{{sup.supplierAddress}}</div>
+                <div>{{sup.supplierBank}}</div>
+                <div><a class="orange-text darken-4 action-button to-pointer"
+                        (click)="updateSupplier(sup)">Update</a></div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
