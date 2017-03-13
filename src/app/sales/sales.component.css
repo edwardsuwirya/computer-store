@@ -29,3 +29,9 @@
   width: 150px;
   margin-bottom: 10px;
 }
+
+.button-search{
+  margin-top: -25px;
+  margin-right: 3px;
+  cursor: pointer;
+}

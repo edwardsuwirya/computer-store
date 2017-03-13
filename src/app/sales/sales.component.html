@@ -15,6 +15,9 @@
                   <input placeholder="" id="customer" type="text" [(ngModel)]="customer" appFindCustomer
                          [customerName]="customer"
                          (customers)="onCustomerFilter($event)" class="invoice-form">
+                  <span class="pull-right button-search hide-on-large-only" appFindCustomer
+                        [customerName]="customer"
+                        (customers)="onCustomerFilter($event)"><i class="fa fa-search"></i></span>
                   <label for="customer" class="active">Customer</label>
                 </div>
                 <div class="row">
@@ -37,9 +40,10 @@
                   </div>
                 </div>
               </div>
-              <div class="col s3 m3 offset-s3 offset-m3">
+              <div class="col s4 m2 offset-s2 offset-m4">
                 <div class="input-field">
-                  <input placeholder="" id="invoiceDate" type="text" [(ngModel)]="invoiceDate" class="invoice-form" readonly="true">
+                  <input placeholder="" id="invoiceDate" type="text" [(ngModel)]="invoiceDate" class="invoice-form"
+                         readonly="true">
                   <label for="invoiceDate" class="active">Date</label>
                 </div>
               </div>
@@ -49,7 +53,7 @@
         <br/>
         <div class="row">
           <div class="col s12 m12">
-            <table>
+            <table *ngIf="!smallWindow">
               <thead>
               <tr>
                 <th style="text-align: center">Qty</th>
@@ -73,6 +77,9 @@
                          [productName]="i.productName"
                          (products)="onProductFilter(i,$event)"
                          class="invoice-form-detail invoice-form">
+                  <span class="pull-right button-search hide-on-large-only" appFindProduct
+                        [productName]="i.productName"
+                        (products)="onProductFilter(i,$event)"><i class="fa fa-search"></i></span>
                 </td>
                 <td style="width:12%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
                     (rowDelAllowed)="onRemoveRow($event)">
@@ -93,11 +100,76 @@
               </tr>
               </tbody>
             </table>
+            <table *ngIf="smallWindow">
+              <thead>
+              <tr>
+                <th style="text-align: center">Detail</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="collection-item" *ngFor="let i of salesDetails">
+                <td>
+                  <div>
+                    <div class="input-field" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                         (rowDelAllowed)="onRemoveRow($event)">
+                      <input type="text" [(ngModel)]="i.productName" appFindProduct
+                             [productName]="i.productName"
+                             (products)="onProductFilter(i,$event)"
+                             class="invoice-form" placeholder="">
+                      <span class="pull-right button-search hide-on-large-only" appFindProduct
+                            [productName]="i.productName"
+                            (products)="onProductFilter(i,$event)"><i class="fa fa-search"></i></span>
+                      <label class="active">Item</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s3">
+                      <div class="input-field" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                           (rowDelAllowed)="onRemoveRow($event)">
+                        <input type="text" style="text-align: center" [(ngModel)]="i.productQty"
+                               [appNumberFormat]="i.productQty"
+                               class="invoice-form" placeholder="">
+                        <label class="active">Qty</label>
+                      </div>
+                    </div>
+                    <div class="col s3">
+                      <div class="input-field" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                           (rowDelAllowed)="onRemoveRow($event)">
+                        <input type="text" style="text-align: right" [appNumberFormat]="i.unitPrice"
+                               [(ngModel)]="i.unitPrice"
+                               class="invoice-form" placeholder="">
+                        <label class="active">Unit Price</label>
+                      </div>
+                    </div>
+                    <div class="col s3">
+                      <div class="input-field" (appTabNewRow)="onAddRow($event)" [appNumberFormat]="i.discount"
+                           appTabDelRow
+                           [rowId]="i.id"
+                           (rowDelAllowed)="onRemoveRow($event)">
+                        <input type="text" style="text-align: right" [(ngModel)]="i.discount"
+                               class="invoice-form"placeholder="">
+                        <label class="active">Disc</label>
+                      </div>
+                    </div>
+                    <div class="col s3">
+                      <div class="input-field" #itemtotalPrice (appTabNewRow)="onAddRow($event)" appTabDelRow
+                           [rowId]="i.id"
+                           (rowDelAllowed)="onRemoveRow($event)">
+                        <input type="text" style="text-align: right" [value]="calculatedPrice(i)"
+                               class="invoice-form" readonly="true" placeholder="">
+                        <label class="active">Total</label>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <div style="border-top:1px solid lightgray; width: 100%"></div>
         <div class="row">
-          <div class="col s3 offset-s9">
+          <div class="col s5 offset-s7 m3 offset-m9">
             <div class="input-field" style="padding-right:5px;">
               <input type="text" id="total" placeholder="0" style="text-align: right" value="{{invoiceTotal}}"
                      class="invoice-form" readonly="true">
@@ -106,7 +178,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col s3 offset-s9">
+          <div class="col s5 offset-s7 m3 offset-m9">
             <div class="input-field" style="padding-right: 5px;">
               <input type="text" id="invoiceDisc" placeholder="0" style="text-align: right"
                      [(ngModel)]="invoiceDiscount"
@@ -117,7 +189,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col s3 offset-s9">
+          <div class="col s5 offset-s7 m3 offset-m9">
             <div class="input-field" style="padding-right: 5px;">
               <input type="text" id="grandTotal" placeholder="0" style="text-align: right" readonly='true'
                      class="invoice-form" value="0" [(ngModel)]="invoiceGrandTotal">
@@ -126,7 +198,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col s3 offset-s9">
+          <div class="col s5 offset-s7 m3 offset-m9">
             <div class="input-field">
               <input type="checkbox" class="invoice-form" id="paidCheckbox" [(ngModel)]="salesPaidStatus"/>
               <label for="paidCheckbox">Paid</label>
@@ -137,7 +209,7 @@
         <div class="row">
           <div class="col s9 offset-s3" style="text-align: right;">
             <div class="input-field">
-              <button type="button" class="btn orange lighten-4 action-button" (click)="onResetInvoice()">Reset</button>
+              <button type="button" class="btn orange lighten-2 action-button" (click)="onResetInvoice()">Reset</button>
               <button type="button" class="btn orange lighten-2 action-button" (click)="goToList()">Cancel</button>
               <button type="button" class="btn orange darken-1 action-button" (click)="onCreateInvoice()">Save</button>
             </div>

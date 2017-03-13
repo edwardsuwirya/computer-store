@@ -48,7 +48,7 @@ export class CustomerComponent implements OnInit {
   }
 
   checkSmallWindow() {
-    if (window.screen.height < 800) {
+    if (window.screen.height < 700) {
       this.smallWindow = true;
     } else {
       this.smallWindow = false;

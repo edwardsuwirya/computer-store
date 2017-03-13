@@ -9,23 +9,39 @@ import {Product} from "../../product/product";
 })
 export class FindProductDirective {
   @Input()
-  productName:string;
+  productName: string;
   @Output()
-  products:EventEmitter<Product[]> = new EventEmitter<Product[]>();
+  products: EventEmitter<Product[]> = new EventEmitter<Product[]>();
 
-  constructor(private productService:ProductService, private dialogService:DialogService) {
+  constructor(private productService: ProductService, private dialogService: DialogService) {
+  }
+
+  private searchProduct() {
+    if (this.productName) {
+      this.productService.getProductByField('productName', this.productName).subscribe((res) => {
+        this.products.emit(res);
+      });
+    } else {
+      this.dialogService.showDialog('Please fill the product name field');
+    }
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event) {
+    let target = event.target;
+    if (target.className.indexOf('fa') != -1) {
+      this.searchProduct();
+    } else {
+      return;
+    }
   }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(event) {
     if (event.ctrlKey && event.keyCode === 80) {
-      if (this.productName) {
-        this.productService.getProductByField('productName', this.productName).subscribe((res)=> {
-          this.products.emit(res);
-        });
-      } else {
-        this.dialogService.showDialog('Please fill the product name field');
-      }
+      this.searchProduct();
+    } else {
+      return;
     }
   }
 

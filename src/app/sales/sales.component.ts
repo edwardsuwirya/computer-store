@@ -1,14 +1,14 @@
 import {Component, OnInit, Renderer} from "@angular/core";
 import {Router} from "@angular/router";
 import {SalesDetail} from "./sales-detail";
-import {Subject} from "rxjs/Rx";
+import {Subject, Observable} from "rxjs/Rx";
 import {Customer} from "../customer/customer";
 import {DatePipe} from "@angular/common";
 import {Product} from "../product/product";
 
-declare let _:any;
-declare let numeral:any;
-declare let $:any;
+declare let _: any;
+declare let numeral: any;
+declare let $: any;
 
 @Component({
   selector: 'app-sales',
@@ -17,34 +17,36 @@ declare let $:any;
   providers: [DatePipe]
 })
 export class SalesComponent implements OnInit {
-  invoiceDate:string;
-  customerId:string;
-  customer:string = '';
-  customerAddress1:string = '';
-  customerAddress2:string = '';
-  customerAddress3:string = '';
+  invoiceDate: string;
+  customerId: string;
+  customer: string = '';
+  customerAddress1: string = '';
+  customerAddress2: string = '';
+  customerAddress3: string = '';
 
-  salesPaidStatus:boolean = false;
+  salesPaidStatus: boolean = false;
 
-  invoiceTotal:number = 0;
-  invoiceDiscount:number = 0;
-  invoiceGrandTotal:number = 0;
+  invoiceTotal: number = 0;
+  invoiceDiscount: number = 0;
+  invoiceGrandTotal: number = 0;
 
-  customers:Customer[] = [];
-  products:Product[] = [];
+  customers: Customer[] = [];
+  products: Product[] = [];
 
-  itemSelection:SalesDetail;
+  itemSelection: SalesDetail;
 
-  invoiceTotalCalc:Subject<number> = new Subject<number>();
+  invoiceTotalCalc: Subject<number> = new Subject<number>();
   invoiceTotalCalc$ = this.invoiceTotalCalc.asObservable();
 
-  salesDetails:SalesDetail[] = [new SalesDetail(1, '', 0, 0, 0)];
+  salesDetails: SalesDetail[] = [new SalesDetail(1, '', 0, 0, 0)];
 
-  constructor(private router:Router, private rd:Renderer, private datePipe:DatePipe) {
+  smallWindow: boolean = false;
+
+  constructor(private router: Router, private rd: Renderer, private datePipe: DatePipe) {
   }
 
   ngOnInit() {
-    this.invoiceTotalCalc$.debounceTime(400).subscribe((res)=> {
+    this.invoiceTotalCalc$.debounceTime(400).subscribe((res) => {
       let total = 0;
       for (let c of this.salesDetails) {
         total = total + ((numeral(c.productQty).value() * numeral(c.unitPrice).value()) - numeral(c.discount).value());
@@ -56,8 +58,20 @@ export class SalesComponent implements OnInit {
     $('#customerModal').modal();
     $('#productModal').modal();
     this.invoiceDate = this.datePipe.transform(new Date(), 'dd.MMM.yyyy');
+
+    this.checkSmallWindow();
+    Observable.fromEvent(window, 'resize').subscribe(() => {
+      this.checkSmallWindow();
+    })
   }
 
+  checkSmallWindow() {
+    if (window.screen.height < 700) {
+      this.smallWindow = true;
+    } else {
+      this.smallWindow = false;
+    }
+  }
 
   goToList() {
     this.router.navigate(['/']);
@@ -80,8 +94,8 @@ export class SalesComponent implements OnInit {
     this.router.navigate(['/salesPrint']);
   }
 
-  calculatedPrice(salesDetail):number {
-    let tot:number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
+  calculatedPrice(salesDetail): number {
+    let tot: number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
     this.invoiceTotalCalc.next(tot);
     return numeral(tot).format('0,0');
   }
@@ -91,13 +105,13 @@ export class SalesComponent implements OnInit {
     $('#customerModal').modal('open');
   }
 
-  onProductFilter(item:SalesDetail, event) {
+  onProductFilter(item: SalesDetail, event) {
     this.products = event;
     this.itemSelection = item;
     $('#productModal').modal('open');
   }
 
-  onPickCustomer(customer:Customer) {
+  onPickCustomer(customer: Customer) {
     this.customer = customer.customerName;
     this.customerAddress1 = customer.customerAddress1;
     this.customerAddress2 = customer.customerAddress2;
@@ -105,7 +119,7 @@ export class SalesComponent implements OnInit {
     $('#customerModal').modal('close');
   }
 
-  onPickProduct(product:Product) {
+  onPickProduct(product: Product) {
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');
   }
