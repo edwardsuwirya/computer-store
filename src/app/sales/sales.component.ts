@@ -5,10 +5,12 @@ import {Subject, Observable} from "rxjs/Rx";
 import {Customer} from "../customer/customer";
 import {DatePipe} from "@angular/common";
 import {Product} from "../product/product";
+import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
+import {Sales} from "./sales";
 
-declare let _: any;
-declare let numeral: any;
-declare let $: any;
+declare let _:any;
+declare let numeral:any;
+declare let $:any;
 
 @Component({
   selector: 'app-sales',
@@ -17,32 +19,32 @@ declare let $: any;
   providers: [DatePipe]
 })
 export class SalesComponent implements OnInit {
-  invoiceDate: string;
-  customerId: string;
-  customer: string = '';
-  customerAddress1: string = '';
-  customerAddress2: string = '';
-  customerAddress3: string = '';
+  invoiceDate:string;
+  customerId:string;
+  customer:string = '';
+  customerAddress1:string = '';
+  customerAddress2:string = '';
+  customerAddress3:string = '';
 
-  salesPaidStatus: boolean = false;
+  salesPaidStatus:boolean = false;
 
-  invoiceTotal: number = 0;
-  invoiceDiscount: number = 0;
-  invoiceGrandTotal: number = 0;
+  invoiceTotal:number = 0;
+  invoiceDiscount:number = 0;
+  invoiceGrandTotal:number = 0;
 
-  customers: Customer[] = [];
-  products: Product[] = [];
+  customers:Customer[] = [];
+  products:Product[] = [];
 
-  itemSelection: SalesDetail;
+  itemSelection:SalesDetail;
 
-  invoiceTotalCalc: Subject<number> = new Subject<number>();
+  invoiceTotalCalc:Subject<number> = new Subject<number>();
   invoiceTotalCalc$ = this.invoiceTotalCalc.asObservable();
 
-  salesDetails: SalesDetail[] = [new SalesDetail(1, '', 0, 0, 0)];
+  salesDetails:SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0)];
 
-  smallWindow: boolean = false;
+  smallWindow:boolean = false;
 
-  constructor(private router: Router, private rd: Renderer, private datePipe: DatePipe) {
+  constructor(private router:Router, private rd:Renderer, private datePipe:DatePipe, private salesForPrint:SalesForPrintingService) {
   }
 
   ngOnInit() {
@@ -79,7 +81,13 @@ export class SalesComponent implements OnInit {
   }
 
   onAddRow(event) {
-    this.salesDetails.push(new SalesDetail(this.salesDetails.length + 1, '', 0, 0, 0));
+    let lastSalesDetail = _.takeRight(this.salesDetails)[0];
+    if (lastSalesDetail) {
+      this.salesDetails.push(new SalesDetail(Number(lastSalesDetail.id) + 1, '', '', 0, 0, 0));
+    } else {
+      this.salesDetails.push(new SalesDetail(1, '', '', 0, 0, 0));
+    }
+
   }
 
   onRemoveRow(event) {
@@ -91,11 +99,19 @@ export class SalesComponent implements OnInit {
   }
 
   onCreateInvoice() {
+    let currentSales:Sales = new Sales();
+    currentSales.salesCustomerId = this.customerId;
+    currentSales.salesCustomerName = this.customer;
+    currentSales.salesCustomerAddress1 = this.customerAddress1;
+    currentSales.salesCustomerAddress2 = this.customerAddress2;
+    currentSales.salesCustomerAddress3 = this.customerAddress3;
+    currentSales.salesDate = new Date();
+    this.salesForPrint.doPrint(currentSales);
     this.router.navigate(['/salesPrint']);
   }
 
-  calculatedPrice(salesDetail): number {
-    let tot: number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
+  calculatedPrice(salesDetail):number {
+    let tot:number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
     this.invoiceTotalCalc.next(tot);
     return numeral(tot).format('0,0');
   }
@@ -105,13 +121,14 @@ export class SalesComponent implements OnInit {
     $('#customerModal').modal('open');
   }
 
-  onProductFilter(item: SalesDetail, event) {
+  onProductFilter(item:SalesDetail, event) {
     this.products = event;
     this.itemSelection = item;
     $('#productModal').modal('open');
   }
 
-  onPickCustomer(customer: Customer) {
+  onPickCustomer(customer:Customer) {
+    this.customerId = customer.id;
     this.customer = customer.customerName;
     this.customerAddress1 = customer.customerAddress1;
     this.customerAddress2 = customer.customerAddress2;
@@ -119,7 +136,8 @@ export class SalesComponent implements OnInit {
     $('#customerModal').modal('close');
   }
 
-  onPickProduct(product: Product) {
+  onPickProduct(product:Product) {
+    this.itemSelection.productId = product.productId;
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');
   }
@@ -129,6 +147,6 @@ export class SalesComponent implements OnInit {
     this.customerAddress1 = '';
     this.customerAddress2 = '';
     this.customerAddress3 = '';
-    this.salesDetails = [new SalesDetail(1, '', 0, 0, 0)];
+    this.salesDetails = [new SalesDetail(1, '', '', 0, 0, 0)];
   }
 }

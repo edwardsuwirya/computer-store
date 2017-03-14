@@ -25,13 +25,18 @@
 .invoice-form-detail {
   border-bottom: none !important;
 }
+
 .action-button {
   width: 150px;
   margin-bottom: 10px;
 }
 
-.button-search{
+.button-search {
   margin-top: -25px;
   margin-right: 3px;
   cursor: pointer;
+}
+
+.card .card-content {
+  padding: 0px 24px 24px 24px !important;
 }
