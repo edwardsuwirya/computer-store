@@ -21,6 +21,7 @@ import {FindCustomerDirective} from './shared/directive/find-customer.directive'
 import {FindProductDirective} from './shared/directive/find-product.directive';
 import {SalesForPrintingComponent} from './sales-for-printing/sales-for-printing.component';
 import {SalesForPrintingService} from "./sales-for-printing/sales-for-printing.service";
+import { PricePipe } from './shared/pipe/price.pipe';
 
 const appRoutes:Routes = [
   {
@@ -60,6 +61,7 @@ const appRoutes:Routes = [
     FindCustomerDirective,
     FindProductDirective,
     SalesForPrintingComponent,
+    PricePipe,
   ],
   imports: [
     BrowserModule,

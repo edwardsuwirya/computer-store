@@ -7,6 +7,8 @@ export class Sales {
   salesCustomerAddress2:string;
   salesCustomerAddress3:string;
   salesDetail:SalesDetail[];
+  salesTotal:number;
   salesDiscount:number;
+  salesGrandTotal:number;
   salesPaidStatus:boolean;
 }

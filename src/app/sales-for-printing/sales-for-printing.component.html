@@ -45,7 +45,13 @@
         </tr>
         </thead>
         <tbody>
-
+        <tr *ngFor="let sales of salesPrint.salesDetail">
+          <td style="text-align: center">{{sales.productQty | price}}</td>
+          <td>{{sales.productName}}</td>
+          <td style="text-align: right">{{sales.unitPrice | price}}</td>
+          <td style="text-align: right">{{sales.discount | price}}</td>
+          <td style="text-align: right">{{sales.salesTotal | price}}</td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -53,22 +59,37 @@
   <div style="border-top:1px solid lightgray; width: 100%"></div>
   <div class="row">
     <div class="col s3 offset-s9">
-      <div style="padding-right:5px;">
-        Invoice Total
+      <div class="row">
+        <div class="col s5">
+          <span style="margin-right: 40px;font-weight: bolder;">Total: </span>
+        </div>
+        <div class="col s7" style="text-align: right;padding-right: 16px;">
+          {{salesPrint.salesTotal | price}}
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col s3 offset-s9">
-      <div style="padding-right: 5px;">
-        Discount
+      <div class="row">
+        <div class="col s5">
+          <span style="margin-right: 40px;font-weight: bolder;">Discount: </span>
+        </div>
+        <div class="col s7" style="text-align: right;padding-right: 16px;">
+          {{salesPrint.salesDiscount | price}}
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col s3 offset-s9">
-      <div style="padding-right: 5px;">
-        Grand Total
+      <div class="row">
+        <div class="col s5">
+          <span style="margin-right: 40px;font-weight: bolder;">Grand Total: </span>
+        </div>
+        <div class="col s7" style="text-align: right;padding-right: 16px;">
+          {{salesPrint.salesGrandTotal | price}}
+        </div>
       </div>
     </div>
   </div>
