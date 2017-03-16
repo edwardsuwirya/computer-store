@@ -13,7 +13,7 @@
               <div class="col s6 m6">
                 <input type="hidden" [(ngModel)]="customerId">
                 <div class="input-field">
-                  <input placeholder="" id="customer" type="text" [(ngModel)]="customer"
+                  <input placeholder="Press enter key to query customer" id="customer" type="text" [(ngModel)]="customer"
                          (keypress)="onCustomerFilter($event)" class="invoice-form">
                   <span class="pull-right button-search hide-on-large-only" (click)="onCustomerFilter($event)"><i
                     class="fa fa-search"></i></span>
@@ -45,7 +45,7 @@
                   <label for="invoiceNo" class="active">Invoice No</label>
                 </div>
                 <div class="input-field">
-                  <input placeholder="" id="invoiceDate" type="date" [(ngModel)]="invoiceDate"
+                  <input placeholder="" id="invoiceDate" type="text" [(ngModel)]="invoiceDate"
                          class="invoice-form datepicker">
                   <label for="invoiceDate" class="active">Date</label>
                 </div>
@@ -73,9 +73,9 @@
                   <input type="hidden" [(ngModel)]="i.productId">
                   <input type="text" id="{{i.id}}" [(ngModel)]="i.productName"
                          (keypress)="onProductFilter(i,$event)"
-                         class="invoice-form-detail invoice-form">
+                         class="invoice-form-detail invoice-form" placeholder="Press enter key to query product">
                   <input type="text" [(ngModel)]="i.salesDetailInfo"
-                         class="invoice-form-detail invoice-form">
+                         class="invoice-form-detail invoice-form" placeholder="Type some extra product info">
                 </td>
                 <td style="width:8%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
                     (rowDelAllowed)="onRemoveRow($event)">
@@ -228,15 +228,17 @@
 <div id="customerModal" class="modal" style="height: 600px">
   <div class="modal-content">
     <div class="input-field">
-      <input type="text" id="customerFilter" [formControl]="customerFilterForm">
+      <input type="text" id="customerFilter" [formControl]="customerFilterForm" placeholder="Type your customer name or nick name">
       <label for="customerFilter" class="active">Customer</label>
     </div>
     <div style="height: 300px;overflow-y: scroll">
       <ul class="collection">
         <li class="collection-item" *ngFor="let cust of customers" (click)="onPickCustomer(cust)"
             style="cursor: pointer">
-          <div>{{cust.customerName}} ({{cust.customerNickName}})</div>
-          <div>{{cust.customerAddress1}}</div>
+          <div class="customer-name">{{cust.customerName}} ({{cust.customerNickName}})</div>
+          <div class="customer-address">{{cust.customerAddress1}}</div>
+          <div class="customer-address">{{cust.customerAddress2}}</div>
+          <div class="customer-address">{{cust.customerAddress3}}</div>
         </li>
       </ul>
     </div>
@@ -245,7 +247,7 @@
 <div id="productModal" class="modal" style="height: 600px">
   <div class="modal-content">
     <div class="input-field">
-      <input type="text" id="productFilter" [formControl]="productFilterForm">
+      <input type="text" id="productFilter" [formControl]="productFilterForm" placeholder="Type your product name or barcode">
       <label for="productFilter" class="active">Product</label>
     </div>
     <div style="height: 300px;overflow-y: scroll">

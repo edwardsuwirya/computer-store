@@ -41,6 +41,14 @@
   padding: 0px 24px 24px 24px !important;
 }
 
+.customer-name {
+  font-weight: bolder;
+}
+
+.customer-address {
+  font-size: 10px;
+}
+
 .product-title {
   font-weight: bolder;
 }
