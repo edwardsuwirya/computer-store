@@ -1,5 +1,6 @@
 import {SalesDetail} from "./sales-detail";
 export class Sales {
+  salesNo:string;
   salesDate:Date;
   salesCustomerId:string;
   salesCustomerName:string;
@@ -11,4 +12,9 @@ export class Sales {
   salesDiscount:number;
   salesGrandTotal:number;
   salesPaidStatus:boolean;
+  salesDeliveryCharge:number;
+  salesDeliveryInfo:string;
+  salesComission:number;
+  salesComissionInfo:string;
+  salesOtherInfo:string;
 }

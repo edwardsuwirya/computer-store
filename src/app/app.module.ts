@@ -17,11 +17,10 @@ import {SalesComponent} from './sales/sales.component';
 import {TabNewRowDirective} from './shared/directive/tab-new-row.directive';
 import {TabDelRowDirective} from './shared/directive/tab-del-row.directive';
 import {NumberFormatDirective} from './shared/directive/number-format.directive';
-import {FindCustomerDirective} from './shared/directive/find-customer.directive';
-import {FindProductDirective} from './shared/directive/find-product.directive';
 import {SalesForPrintingComponent} from './sales-for-printing/sales-for-printing.component';
 import {SalesForPrintingService} from "./sales-for-printing/sales-for-printing.service";
-import { PricePipe } from './shared/pipe/price.pipe';
+import {PricePipe} from './shared/pipe/price.pipe';
+import {DateFormatDirective} from './shared/directive/date-format.directive';
 
 const appRoutes:Routes = [
   {
@@ -58,10 +57,9 @@ const appRoutes:Routes = [
     TabNewRowDirective,
     TabDelRowDirective,
     NumberFormatDirective,
-    FindCustomerDirective,
-    FindProductDirective,
     SalesForPrintingComponent,
     PricePipe,
+    DateFormatDirective,
   ],
   imports: [
     BrowserModule,

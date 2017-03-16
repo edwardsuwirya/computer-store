@@ -10,9 +10,9 @@ td, th {
 }
 
 .text-beauty {
-  color: #fff;
+  color: #666;
   background-color: transparent;
-  text-shadow: #fff 0 0 10px;
+  text-shadow: #555 0 0 10px;
 }
 
 .title-beautify {
@@ -33,4 +33,33 @@ td, th {
   cursor: pointer;
   margin-right: 5px;
 }
+
+.header-text {
+  font-size: 12px;
+  font-weight: bolder;
+}
+
+.header-text-center {
+  font-size: 12px;
+  font-weight: bolder;
+  text-align: center;
+}
+
+.header-text-number {
+  font-size: 12px;
+  font-weight: bolder;
+  text-align: right;
+}
+
+.to-pointer {
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 993px) {
+  .container {
+    width: 85% !important;
+  }
+}
+
+
 

@@ -3,23 +3,27 @@ import {Router} from "@angular/router";
 import {SalesDetail} from "./sales-detail";
 import {Subject, Observable} from "rxjs/Rx";
 import {Customer} from "../customer/customer";
-import {DatePipe} from "@angular/common";
 import {Product} from "../product/product";
 import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
 import {Sales} from "./sales";
 import {DialogService} from "../shared/service/dialog.service";
+import {FormControl} from "@angular/forms";
+import {CustomerService} from "../customer/customer.service";
+import {ProductService} from "../product/product.service";
 
 declare let _:any;
 declare let numeral:any;
 declare let $:any;
+declare let moment:any;
 
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.css'],
-  providers: [DatePipe, DialogService]
+  providers: [DialogService, CustomerService, ProductService]
 })
 export class SalesComponent implements OnInit {
+  invoiceNo:string;
   invoiceDate:string;
   customerId:string;
   customer:string = '';
@@ -41,12 +45,19 @@ export class SalesComponent implements OnInit {
   invoiceTotalCalc:Subject<number> = new Subject<number>();
   invoiceTotalCalc$ = this.invoiceTotalCalc.asObservable();
 
-  salesDetails:SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0)];
+  salesDetails:SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
 
   smallWindow:boolean = false;
 
-  constructor(private router:Router, private dialogService:DialogService, private datePipe:DatePipe,
-              private salesForPrint:SalesForPrintingService) {
+  customerFilterForm:FormControl = new FormControl();
+  productFilterForm:FormControl = new FormControl();
+
+  constructor(private router:Router, private dialogService:DialogService,
+              private salesForPrint:SalesForPrintingService, private customerService:CustomerService,
+              private productService:ProductService) {
+    setTimeout(function () {
+      document.getElementById('customer').focus();
+    }, 200);
   }
 
   ngOnInit() {
@@ -61,12 +72,34 @@ export class SalesComponent implements OnInit {
 
     $('#customerModal').modal();
     $('#productModal').modal();
-    this.invoiceDate = this.datePipe.transform(new Date(), 'dd.MMM.yyyy');
 
     this.checkSmallWindow();
     Observable.fromEvent(window, 'resize').subscribe(() => {
       this.checkSmallWindow();
-    })
+    });
+
+    this.customerFilterForm.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((keyword)=> {
+      if (keyword) {
+        this.customerService.getCustomerByField('customerName', keyword).subscribe((cust)=> {
+          this.customers = cust;
+        })
+      }
+    });
+    this.productFilterForm.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((keyword)=> {
+      if (keyword) {
+        this.productService.getProductByField('productName', keyword).subscribe((prod)=> {
+          this.products = prod;
+        })
+      }
+    });
+    let that = this;
+    $('.datepicker').pickadate({
+      format: 'dd/mm/yyyy',
+      onClose: function () {
+        that.invoiceDate = this.get();
+      },
+    });
+    this.invoiceDate = moment().format('DD/MM/YYYY');
   }
 
   checkSmallWindow() {
@@ -85,12 +118,17 @@ export class SalesComponent implements OnInit {
   onAddRow(event) {
     let lastSalesDetail = _.takeRight(this.salesDetails)[0];
     if (lastSalesDetail) {
-      this.salesDetails.push(new SalesDetail(Number(lastSalesDetail.id) + 1, '', '', 0, 0, 0, 0));
-    } else {
-      this.salesDetails.push(new SalesDetail(1, '', '', 0, 0, 0, 0));
-    }
+      let currId = Number(lastSalesDetail.id) + 1;
+      this.salesDetails.push(new SalesDetail(currId, '', '', 0, 0, 0, 0, ''));
+      setTimeout(function () {
+        document.getElementById(currId.toString()).focus();
+      }, 300);
 
+    } else {
+      this.salesDetails.push(new SalesDetail(1, '', '', 0, 0, 0, 0, ''));
+    }
   }
+
 
   onRemoveRow(event) {
     if (this.salesDetails.length > 1) {
@@ -102,12 +140,14 @@ export class SalesComponent implements OnInit {
 
   onCreateInvoice() {
     let currentSales:Sales = new Sales();
+    currentSales.salesNo = this.invoiceNo;
     currentSales.salesCustomerId = this.customerId;
     currentSales.salesCustomerName = this.customer;
     currentSales.salesCustomerAddress1 = this.customerAddress1;
     currentSales.salesCustomerAddress2 = this.customerAddress2;
     currentSales.salesCustomerAddress3 = this.customerAddress3;
-    currentSales.salesDate = new Date();
+    console.log(this.invoiceDate);
+    currentSales.salesDate = moment(this.invoiceDate, 'DD/MM/YYYY');
     for (let sd of this.salesDetails) {
       sd.productQty = numeral(sd.productQty).value();
       sd.discount = numeral(sd.discount).value();
@@ -119,13 +159,12 @@ export class SalesComponent implements OnInit {
     currentSales.salesDiscount = numeral(this.invoiceDiscount).value();
     currentSales.salesGrandTotal = numeral(this.invoiceGrandTotal).value();
     currentSales.salesPaidStatus = this.salesPaidStatus;
-    if (this.customer && this.invoiceDate) {
+    if (this.customer && this.invoiceDate && this.invoiceNo) {
       this.salesForPrint.doPrint(currentSales);
       this.router.navigate(['/salesPrint']);
     } else {
       this.dialogService.showDialog('Please choose customer')
     }
-
   }
 
   calculatedPrice(salesDetail:SalesDetail):number {
@@ -136,14 +175,24 @@ export class SalesComponent implements OnInit {
   }
 
   onCustomerFilter(event) {
-    this.customers = event;
-    $('#customerModal').modal('open');
+    let target = event.target;
+    if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
+      $('#customerModal').modal('open');
+      setTimeout(function () {
+        document.getElementById('customerFilter').focus();
+      }, 300);
+    }
   }
 
   onProductFilter(item:SalesDetail, event) {
-    this.products = event;
-    this.itemSelection = item;
-    $('#productModal').modal('open');
+    let target = event.target;
+    if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
+      this.itemSelection = item;
+      $('#productModal').modal('open');
+      setTimeout(function () {
+        document.getElementById('productFilter').focus();
+      }, 300);
+    }
   }
 
   onPickCustomer(customer:Customer) {
@@ -153,19 +202,28 @@ export class SalesComponent implements OnInit {
     this.customerAddress2 = customer.customerAddress2;
     this.customerAddress3 = customer.customerAddress3;
     $('#customerModal').modal('close');
+    setTimeout(function () {
+      document.getElementById('invoiceNo').focus();
+    }, 300);
   }
 
   onPickProduct(product:Product) {
     this.itemSelection.productId = product.productId;
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');
+    let that = this;
+    setTimeout(function () {
+      document.getElementById('item' + that.itemSelection.id).focus();
+    }, 300);
   }
 
   onResetInvoice() {
+    this.invoiceNo = '';
     this.customer = '';
     this.customerAddress1 = '';
     this.customerAddress2 = '';
     this.customerAddress3 = '';
-    this.salesDetails = [new SalesDetail(1, '', '', 0, 0, 0, 0)];
+    this.salesDetails = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
+    this.invoiceDate = moment().format('DD/MM/YYYY');
   }
 }

@@ -18,7 +18,8 @@ export class NumberFormatDirective {
     let nm = numeral(this.val).value();
     if (nm) {
       event.target.value = numeral(this.val).format(0, 0);
+    } else {
+      event.target.value = 0;
     }
-
   }
 }

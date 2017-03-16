@@ -1,13 +1,13 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
 <div class="row">
   <div class="col s12 m12">
-    <div class="card blue-grey darken-1">
-      <a class="btn-flat white-text" routerLink="/home">Home</a>
+    <div class="card white darken-1 grey-text">
+      <a class="btn-flat grey-text" routerLink="/home">Home</a>
       <div class="card-content">
         <span class="card-title">
           <h5 class="left text-beauty">Supplier List</h5>
         </span>
-        <button type="button" class="btn-floating orange right" (click)="newSupplier()"><i
+        <button type="button" class="btn-floating green right" (click)="newSupplier()"><i
           class="fa fa-plus"></i>
         </button>
         <div class="list-content">
@@ -39,7 +39,7 @@
                 </div>
               </th>
               <th>
-                <div class="header-tex">
+                <div class="header-text-center">
                   Status
                 </div>
               </th>
@@ -57,7 +57,7 @@
               <td>{{sup.supplierPhone}}</td>
               <td>{{sup.supplierAddress}}</td>
               <td>{{sup.supplierBank}}</td>
-              <td>
+              <td style="text-align: center;">
                 <input type="checkbox" class="filled-in" *ngIf="sup.supplierStatus" checked="checked"/>
                 <input type="checkbox" class="filled-in" *ngIf="!sup.supplierStatus"/>
                 <label></label>

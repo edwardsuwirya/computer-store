@@ -6,8 +6,14 @@ export class SalesDetail {
   discount:number;
   unitPrice:number;
   salesTotal:number;
+  salesDetailInfo:string;
 
-  constructor(id:number, productId:string, productName:string, productQty:number, discount:number, unitPrice:number, salesTotal:number) {
+  constructor(id:number, productId:string,
+              productName:string,
+              productQty:number,
+              discount:number,
+              unitPrice:number,
+              salesTotal:number, salesDetailInfo:string) {
     this.id = id;
     this.productId = productId;
     this.productName = productName;
@@ -15,5 +21,6 @@ export class SalesDetail {
     this.discount = discount;
     this.unitPrice = unitPrice;
     this.salesTotal = salesTotal;
+    this.salesDetailInfo = salesDetailInfo;
   }
 }
