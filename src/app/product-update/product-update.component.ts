@@ -30,7 +30,7 @@ export class ProductUpdateComponent implements OnInit {
         productDescription: new FormControl(s.productDescription),
         productLastPrice: new FormControl(s.productLastPrice),
         productStock: new FormControl(s.productStock),
-        productStatus: new FormControl(s.productStatus)
+        productStatus: new FormControl(s.productStatus === '1' ? true : false)
       });
     }
   }
@@ -38,6 +38,7 @@ export class ProductUpdateComponent implements OnInit {
   saveProduct() {
     this.pleaseWaitActive = true;
     let newProduct:Product = this.productUpdateForm.value;
+    newProduct.productStatus ? newProduct.productStatus = '1' : newProduct.productStatus = '0';
     this.productService.saveProduct(newProduct).subscribe((res) => {
       this.pleaseWaitActive = false;
       this.router.navigate(['product']);

@@ -7,5 +7,5 @@ export class Product {
   productDescription:string;
   productLastPrice:number;
   productStock:number;
-  productStatus:boolean;
+  productStatus:string;
 }

@@ -22,22 +22,20 @@ export class ProductComponent implements OnInit {
   fieldBy:string = '';
 
   smallWindow:boolean = false;
+  page:number = 0;
+  keyword:string = '';
+  status:boolean;
 
   constructor(private productService:ProductService, private router:Router) {
   }
 
   ngOnInit() {
-    this.pleaseWaitActive = true;
-    this.productService.getAllProduct().subscribe((cust)=> {
-      this.products = cust;
-      this.pleaseWaitActive = false;
-    });
+    this.findFirstProduct();
     this.filterProduct.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword)=> {
-      this.pleaseWaitActive = true;
-      this.productService.getProductByField(this.filterProductBy, keyword).subscribe((cust)=> {
-        this.products = _.uniqBy(_.flatten(cust), 'id');
-        this.pleaseWaitActive = false;
-      });
+      if (keyword) {
+        this.keyword = keyword;
+        this.findProduct();
+      }
     });
     this.checkSmallWindow();
     Observable.fromEvent(window, 'resize').subscribe(()=> {
@@ -51,6 +49,22 @@ export class ProductComponent implements OnInit {
     } else {
       this.smallWindow = false;
     }
+  }
+
+  private findFirstProduct() {
+    this.pleaseWaitActive = true;
+    this.productService.getAllProduct((this.page * 10).toString()).subscribe((prod)=> {
+      this.products = prod;
+      this.pleaseWaitActive = false;
+    });
+  }
+
+  private findProduct() {
+    this.pleaseWaitActive = true;
+    this.productService.getProductByField(this.filterProductBy, this.keyword, (this.page * 10).toString()).subscribe((prod)=> {
+      this.products = _.uniqBy(_.flatten(prod), 'id');
+      this.pleaseWaitActive = false;
+    });
   }
 
   newProduct() {
@@ -72,6 +86,40 @@ export class ProductComponent implements OnInit {
     this.fieldBy = field;
     this.filterProductBy = 'product' + field;
     this.filterProduct.setValue('');
+    setTimeout(function () {
+      document.getElementById('txtFilter').focus();
+    }, 200);
+  }
+
+  refreshProduct() {
+    this.keyword = '';
+    this.page = 0;
+    this.showFilter = false;
+    this.filterProduct.setValue('');
+    this.findFirstProduct();
+  }
+
+  prev() {
+    if (this.page > 0) {
+      this.page = this.page - 1;
+      if (this.keyword) {
+        this.findProduct();
+      } else {
+        this.findFirstProduct();
+      }
+    } else {
+
+    }
+  }
+
+  next() {
+    this.page = this.page + 1;
+    if (this.keyword) {
+      this.findProduct();
+    } else {
+      this.findFirstProduct();
+    }
+
   }
 
 }

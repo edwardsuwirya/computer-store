@@ -30,7 +30,7 @@ export class CustomerUpdateComponent implements OnInit {
         customerAddress2: new FormControl(s.customerAddress2),
         customerAddress3: new FormControl(s.customerAddress3),
         customerPhone: new FormControl(s.customerPhone),
-        customerStatus: new FormControl(s.customerStatus)
+        customerStatus: new FormControl(s.customerStatus === '1' ? true : false)
       });
     }
   }
@@ -38,6 +38,7 @@ export class CustomerUpdateComponent implements OnInit {
   saveCustomer() {
     this.pleaseWaitActive = true;
     let newCustomer:Customer = this.customerUpdateForm.value;
+    newCustomer.customerStatus ? newCustomer.customerStatus = '1' : newCustomer.customerStatus = '0';
     this.customerService.saveCustomer(newCustomer).subscribe((res) => {
       this.pleaseWaitActive = false;
       this.router.navigate(['customer']);

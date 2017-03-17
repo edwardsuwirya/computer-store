@@ -22,23 +22,20 @@ export class CustomerComponent implements OnInit {
   fieldBy:string = '';
 
   smallWindow:boolean = false;
+  page:number = 0;
+  keyword:string = '';
 
   constructor(private customerService:CustomerService, private router:Router) {
   }
 
   ngOnInit() {
-    this.pleaseWaitActive = true;
-    this.customerService.getAllCustomer().subscribe((cust)=> {
-      this.customers = cust;
-      this.pleaseWaitActive = false;
-    });
+    this.findFirstCustomer();
 
     this.filterCustomer.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword)=> {
-      this.pleaseWaitActive = true;
-      this.customerService.getCustomerByField(this.filterCustomerBy, keyword).subscribe((cust)=> {
-        this.customers = _.uniqBy(_.flatten(cust), 'id');
-        this.pleaseWaitActive = false;
-      });
+      if (keyword) {
+        this.keyword = keyword;
+        this.findCustomer();
+      }
     });
 
     this.checkSmallWindow();
@@ -53,6 +50,22 @@ export class CustomerComponent implements OnInit {
     } else {
       this.smallWindow = false;
     }
+  }
+
+  private findFirstCustomer() {
+    this.pleaseWaitActive = true;
+    this.customerService.getAllCustomer((this.page * 10).toString()).subscribe((cust)=> {
+      this.customers = cust;
+      this.pleaseWaitActive = false;
+    });
+  }
+
+  private findCustomer() {
+    this.pleaseWaitActive = true;
+    this.customerService.getCustomerByField(this.filterCustomerBy, this.keyword, (this.page * 10).toString()).subscribe((cust)=> {
+      this.customers = _.uniqBy(_.flatten(cust), 'id');
+      this.pleaseWaitActive = false;
+    });
   }
 
   newCustomer() {
@@ -74,5 +87,40 @@ export class CustomerComponent implements OnInit {
     this.fieldBy = field;
     this.filterCustomerBy = 'customer' + field;
     this.filterCustomer.setValue('');
+    setTimeout(function () {
+      document.getElementById('txtFilter').focus();
+    }, 200);
+  }
+
+  refreshCustomer() {
+    this.keyword = '';
+    this.page = 0;
+    this.showFilter = false;
+    this.filterCustomer.setValue('');
+    this.findFirstCustomer();
+  }
+
+
+  prev() {
+    if (this.page > 0) {
+      this.page = this.page - 1;
+      if (this.keyword) {
+        this.findCustomer();
+      } else {
+        this.findFirstCustomer();
+      }
+    } else {
+
+    }
+  }
+
+  next() {
+    this.page = this.page + 1;
+    if (this.keyword) {
+      this.findCustomer();
+    } else {
+      this.findFirstCustomer();
+    }
+
   }
 }

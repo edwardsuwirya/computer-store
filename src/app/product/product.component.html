@@ -7,8 +7,11 @@
         <span class="card-title">
           <h5 class="left text-beauty">Product List</h5>
         </span>
-        <button type="button" class="btn-floating green right" (click)="newProduct()"><i
-          class="fa fa-plus"></i>
+        <button type="button" class="btn-floating green right" (click)="newProduct()">
+          <i class="fa fa-plus"></i>
+        </button>
+        <button type="button" class="btn-floating green right" (click)="refreshProduct()" style="margin-right: 5px">
+          <i class="fa fa-refresh"></i>
         </button>
         <div class="list-content">
           <table class="bordered" *ngIf="!smallWindow">
@@ -16,57 +19,60 @@
             <tr>
               <th>
                 <div class="header-text">
-                  Id
+                  <span>Id</span>
                   <a (click)="showSearchBar('Id')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
                 <div class="header-text">
-                  Barcode
+                  <span>Barcode</span>
                   <a (click)="showSearchBar('Barcode')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th>
                 <div class="header-text">
-                  Name
+                  <span>Name</span>
                   <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th>
                 <div class="header-text">
-                  Spesification
+                  <span>Spesification</span>
                   <a (click)="showSearchBar('Spesification')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
                 <div class="header-text">
-                  Description
+                  <span>Description</span>
                   <a (click)="showSearchBar('Description')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th>
                 <div class="header-text-number">
-                  Last Price
+                  <span>Last Price</span>
                 </div>
               </th>
               <th>
                 <div class="header-text-number">
-                  Stock
+                  <span>Stock</span>
                   <a (click)="showSearchBar('Stock')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
-              <th class="header-text-center">Status</th>
+              <th class="header-text-center">
+                <span>Status</span>
+                <a (click)="showSearchBar('Status')" class="to-pointer"><i class="fa fa-search"></i></a>
+              </th>
               <th></th>
             </tr>
             <tr [hidden]="!showFilter">
               <td colspan="7">
-                <input type="text" placeholder="{{filterProductBy}}" [formControl]="filterProduct">
+                <input type="text" id="txtFilter" placeholder="{{filterProductBy}}" [formControl]="filterProduct">
               </td>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let prod of products" class="small-font">
-              <td style="width: 10%">
+              <td style="width: 13%">
                 <div>{{prod.productId}}</div>
                 <div>{{prod.productBarcode}}</div>
               </td>
-              <td style="width: 30%">{{prod.productName}}</td>
+              <td style="width: 27%">{{prod.productName}}</td>
               <td style="width: 30%">
                 <div>{{prod.productSpesification}}</div>
                 <div>{{prod.productDescription}}</div>
@@ -74,8 +80,8 @@
               <td style="text-align: right;">{{prod.productLastPrice | price}}</td>
               <td style="text-align: right;">{{prod.productStock | price}}</td>
               <td style="text-align: center;">
-                <input type="checkbox" class="filled-in" *ngIf="prod.productStatus" checked="checked"/>
-                <input type="checkbox" class="filled-in" *ngIf="!prod.productStatus"/>
+                <input type="checkbox" class="filled-in" *ngIf="prod.productStatus==='1'" checked="checked"/>
+                <input type="checkbox" class="filled-in" *ngIf="prod.productStatus==='0'"/>
                 <label></label>
               </td>
               <td>
@@ -84,6 +90,13 @@
             </tr>
             </tbody>
           </table>
+          <div class="row">
+            <div class="col s4 m4 offset-s8 offset-m8 pagination">
+              <span class="to-pointer" (click)="prev()"><i class="fa fa-arrow-left"></i></span>
+              <span>{{page+1}}</span>
+              <span class="to-pointer" (click)="next()"><i class="fa fa-arrow-right"></i></span>
+            </div>
+          </div>
           <table class="bordered" *ngIf="smallWindow">
             <thead>
             <tr>

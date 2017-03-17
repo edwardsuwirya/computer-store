@@ -6,5 +6,5 @@ export class Customer {
   customerAddress2:string;
   customerAddress3:string;
   customerPhone:string;
-  customerStatus:boolean;
+  customerStatus:string;
 }

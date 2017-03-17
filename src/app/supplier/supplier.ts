@@ -7,5 +7,5 @@ export class Supplier {
   supplierAddress:string;
   supplierPhone:string;
   supplierBank:string;
-  supplierStatus:boolean;
+  supplierStatus:string;
 }

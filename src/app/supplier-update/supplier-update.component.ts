@@ -27,7 +27,7 @@ export class SupplierUpdateComponent implements OnInit {
         supplierAddress: new FormControl(s.supplierAddress),
         supplierPhone: new FormControl(s.supplierPhone),
         supplierBank: new FormControl(s.supplierBank),
-        supplierStatus: new FormControl(s.supplierStatus)
+        supplierStatus: new FormControl(s.supplierStatus === '1' ? true : false)
       });
     }
   }
@@ -35,6 +35,7 @@ export class SupplierUpdateComponent implements OnInit {
   saveSupplier() {
     this.pleaseWaitActive = true;
     let newSupplier:Supplier = this.supplierUpdateForm.value;
+    newSupplier.supplierStatus ? newSupplier.supplierStatus = '1' : newSupplier.supplierStatus = '0';
     this.supplierService.saveSupplier(newSupplier).subscribe((res) => {
       this.pleaseWaitActive = false;
       this.router.navigate(['supplier']);

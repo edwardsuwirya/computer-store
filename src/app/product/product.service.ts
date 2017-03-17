@@ -8,14 +8,14 @@ export class ProductService {
   constructor(private http:Http) {
   }
 
-  getAllProduct() {
-    return this.http.get('http://128.199.228.221:2403/product')
+  getAllProduct(page:string) {
+    return this.http.get('http://128.199.228.221:2403/product?{"$sort": {"productName": 1},"$skip":' + page + ',"$limit":10}')
       .map(res=>res.json())
       .catch((err)=>Observable.throw(err));
   }
 
-  getProductByField(fieldName:string, fieldValue:string) {
-    return this.http.get('http://128.199.228.221:2403/product?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"}}')
+  getProductByField(fieldName:string, fieldValue:string, page:string) {
+    return this.http.get('http://128.199.228.221:2403/product?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"},"$sort": {"productName": 1},"$skip":' + page + ',"$limit":10}')
       .map(res=>res.json())
       .catch((err)=>Observable.throw(err));
   }

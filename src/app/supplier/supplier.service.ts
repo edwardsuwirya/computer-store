@@ -9,14 +9,14 @@ export class SupplierService {
   constructor(private http:Http) {
   }
 
-  getAllSupllier() {
-    return this.http.get('http://128.199.228.221:2403/supplier')
+  getAllSupllier(page:string) {
+    return this.http.get('http://128.199.228.221:2403/supplier?{"$sort": {"supplierName": 1},"$skip":' + page + ',"$limit":10}')
       .map(res=>res.json())
       .catch((err)=>Observable.throw(err));
   }
 
-  getSupplierByField(fieldName:string, fieldValue:string) {
-    return this.http.get('http://128.199.228.221:2403/supplier?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"}}')
+  getSupplierByField(fieldName:string, fieldValue:string, page:string) {
+    return this.http.get('http://128.199.228.221:2403/supplier?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"},"$sort": {"supplierName": 1},"$skip":' + page + ',"$limit":10}')
       .map(res=>res.json())
       .catch((err)=>Observable.throw(err));
   }

@@ -21,27 +21,22 @@ export class SupplierComponent implements OnInit {
   fieldBy:string = '';
 
   smallWindow:boolean = false;
+  page:number = 0;
+  keyword:string = '';
 
   constructor(private supplierService:SupplierService, private router:Router) {
   }
 
   ngOnInit() {
-    this.pleaseWaitActive = true;
-    this.supplierService.getAllSupllier().subscribe((sup)=> {
-      this.suppliers = sup;
-      this.pleaseWaitActive = false;
-    });
+    this.findFirstSupplier();
     this.filterSupplier.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword)=> {
-      this.pleaseWaitActive = true;
-      this.supplierService.getSupplierByField(this.filterSupplierBy, keyword).subscribe((sup)=> {
-        this.suppliers = sup;
-        this.pleaseWaitActive = false;
-      });
+      this.keyword = keyword;
+      this.findSupplier();
     });
     this.checkSmallWindow();
     Observable.fromEvent(window, 'resize').subscribe(()=> {
       this.checkSmallWindow();
-    })
+    });
   }
 
   checkSmallWindow() {
@@ -50,6 +45,22 @@ export class SupplierComponent implements OnInit {
     } else {
       this.smallWindow = false;
     }
+  }
+
+  private findFirstSupplier() {
+    this.pleaseWaitActive = true;
+    this.supplierService.getAllSupllier((this.page * 10).toString()).subscribe((supp)=> {
+      this.suppliers = supp;
+      this.pleaseWaitActive = false;
+    });
+  }
+
+  private findSupplier() {
+    this.pleaseWaitActive = true;
+    this.supplierService.getSupplierByField(this.filterSupplierBy, this.keyword, (this.page * 10).toString()).subscribe((sup)=> {
+      this.suppliers = sup;
+      this.pleaseWaitActive = false;
+    });
   }
 
   newSupplier() {
@@ -71,5 +82,41 @@ export class SupplierComponent implements OnInit {
     this.fieldBy = field;
     this.filterSupplierBy = 'supplier' + field;
     this.filterSupplier.setValue('');
+    setTimeout(function () {
+      document.getElementById('txtFilter').focus();
+    }, 200);
+  }
+
+  refreshSupplier() {
+    this.keyword = '';
+    this.page = 0;
+    this.showFilter = false;
+    this.filterSupplier.setValue('');
+    this.findFirstSupplier();
+  }
+
+
+  prev() {
+    if (this.page > 0) {
+      this.page = this.page - 1;
+      if (this.keyword) {
+        this.findSupplier();
+      } else {
+        this.findFirstSupplier();
+      }
+
+    } else {
+
+    }
+  }
+
+  next() {
+    this.page = this.page + 1;
+    if (this.keyword) {
+      this.findSupplier();
+    } else {
+      this.findFirstSupplier();
+    }
+
   }
 }

@@ -11,11 +11,11 @@ import {FormControl} from "@angular/forms";
 import {CustomerService} from "../customer/customer.service";
 import {ProductService} from "../product/product.service";
 
-declare let _: any;
-declare let numeral: any;
-declare let $: any;
-declare let moment: any;
-declare let Pikaday: any;
+declare let _:any;
+declare let numeral:any;
+declare let $:any;
+declare let moment:any;
+declare let Pikaday:any;
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
@@ -23,38 +23,38 @@ declare let Pikaday: any;
   providers: [DialogService, CustomerService, ProductService]
 })
 export class SalesComponent implements OnInit {
-  invoiceNo: string;
-  invoiceDate: string;
-  customerId: string;
-  customer: string = '';
-  customerAddress1: string = '';
-  customerAddress2: string = '';
-  customerAddress3: string = '';
+  invoiceNo:string;
+  invoiceDate:string;
+  customerId:string;
+  customer:string = '';
+  customerAddress1:string = '';
+  customerAddress2:string = '';
+  customerAddress3:string = '';
 
-  salesPaidStatus: boolean = false;
+  salesPaidStatus:boolean = false;
 
-  invoiceTotal: number = 0;
-  invoiceDiscount: number = 0;
-  invoiceGrandTotal: number = 0;
+  invoiceTotal:number = 0;
+  invoiceDiscount:number = 0;
+  invoiceGrandTotal:number = 0;
 
-  customers: Customer[] = [];
-  products: Product[] = [];
+  customers:Customer[] = [];
+  products:Product[] = [];
 
-  itemSelection: SalesDetail;
+  itemSelection:SalesDetail;
 
-  invoiceTotalCalc: Subject<number> = new Subject<number>();
+  invoiceTotalCalc:Subject<number> = new Subject<number>();
   invoiceTotalCalc$ = this.invoiceTotalCalc.asObservable();
 
-  salesDetails: SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
+  salesDetails:SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
 
-  smallWindow: boolean = false;
+  smallWindow:boolean = false;
 
-  customerFilterForm: FormControl = new FormControl();
-  productFilterForm: FormControl = new FormControl();
+  customerFilterForm:FormControl = new FormControl();
+  productFilterForm:FormControl = new FormControl();
 
-  constructor(private router: Router, private dialogService: DialogService,
-              private salesForPrint: SalesForPrintingService, private customerService: CustomerService,
-              private productService: ProductService) {
+  constructor(private router:Router, private dialogService:DialogService,
+              private salesForPrint:SalesForPrintingService, private customerService:CustomerService,
+              private productService:ProductService) {
     setTimeout(function () {
       document.getElementById('customer').focus();
     }, 200);
@@ -80,10 +80,9 @@ export class SalesComponent implements OnInit {
 
     this.customerFilterForm.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((keyword) => {
       if (keyword) {
-        let multiCustomerResult = [];
         Observable.forkJoin(
-          this.customerService.getCustomerByField('customerName', keyword),
-          this.customerService.getCustomerByField('customerNickName', keyword)
+          this.customerService.getCustomerByField('customerName', keyword, '0'),
+          this.customerService.getCustomerByField('customerNickName', keyword, '0')
         ).subscribe((res) => {
           this.customers = _.uniqBy(_.flatten(res), 'id');
         })
@@ -91,7 +90,7 @@ export class SalesComponent implements OnInit {
     });
     this.productFilterForm.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((keyword) => {
       if (keyword) {
-        this.productService.getProductByField('productName', keyword).subscribe((prod) => {
+        this.productService.getProductByField('productName', keyword, '0').subscribe((prod) => {
           this.products = prod;
         })
       }
@@ -144,7 +143,7 @@ export class SalesComponent implements OnInit {
   }
 
   onCreateInvoice() {
-    let currentSales: Sales = new Sales();
+    let currentSales:Sales = new Sales();
     currentSales.salesNo = this.invoiceNo;
     currentSales.salesCustomerId = this.customerId;
     currentSales.salesCustomerName = this.customer;
@@ -172,8 +171,8 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  calculatedPrice(salesDetail: SalesDetail): number {
-    let tot: number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
+  calculatedPrice(salesDetail:SalesDetail):number {
+    let tot:number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
     salesDetail.salesTotal = tot;
     this.invoiceTotalCalc.next(tot);
     return numeral(tot).format('0,0');
@@ -189,7 +188,7 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  onProductFilter(item: SalesDetail, event) {
+  onProductFilter(item:SalesDetail, event) {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
       this.itemSelection = item;
@@ -200,7 +199,7 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  onPickCustomer(customer: Customer) {
+  onPickCustomer(customer:Customer) {
     this.customerId = customer.id;
     this.customer = customer.customerName;
     this.customerAddress1 = customer.customerAddress1;
@@ -212,7 +211,7 @@ export class SalesComponent implements OnInit {
     }, 300);
   }
 
-  onPickProduct(product: Product) {
+  onPickProduct(product:Product) {
     this.itemSelection.productId = product.productId;
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');

@@ -10,44 +10,48 @@
         <button type="button" class="btn-floating green right" (click)="newSupplier()"><i
           class="fa fa-plus"></i>
         </button>
+        <button type="button" class="btn-floating green right" (click)="refreshSupplier()" style="margin-right: 5px">
+          <i class="fa fa-refresh"></i>
+        </button>
         <div class="list-content">
           <table class="bordered" *ngIf="!smallWindow">
             <thead>
             <tr>
               <th>
                 <div class="header-text">
-                  Name
+                  <span>Name</span>
                   <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th>
                 <div class="header-text">
-                  Phone No
+                  <span>Phone No</span>
                   <a (click)="showSearchBar('Phone')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th>
                 <div class="header-text">
-                  Address
+                  <span>Address</span>
                   <a (click)="showSearchBar('Address')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th>
                 <div class="header-text">
-                  Bank Acc.
+                  <span>Bank Acc.</span>
                   <a (click)="showSearchBar('Bank')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th>
                 <div class="header-text-center">
-                  Status
+                  <span>Status</span>
+                  <a (click)="showSearchBar('Status')" class="to-pointer"><i class="fa fa-search"></i></a>
                 </div>
               </th>
               <th></th>
             </tr>
             <tr [hidden]="!showFilter">
               <td colspan="6">
-                <input type="text" placeholder="{{filterSupplierBy}}" [formControl]="filterSupplier">
+                <input type="text" id="txtFilter" placeholder="{{filterSupplierBy}}" [formControl]="filterSupplier">
               </td>
             </tr>
             </thead>
@@ -58,8 +62,8 @@
               <td>{{sup.supplierAddress}}</td>
               <td>{{sup.supplierBank}}</td>
               <td style="text-align: center;">
-                <input type="checkbox" class="filled-in" *ngIf="sup.supplierStatus" checked="checked"/>
-                <input type="checkbox" class="filled-in" *ngIf="!sup.supplierStatus"/>
+                <input type="checkbox" class="filled-in" *ngIf="sup.supplierStatus==='1'" checked="checked"/>
+                <input type="checkbox" class="filled-in" *ngIf="sup.supplierStatus==='0'"/>
                 <label></label>
               </td>
               <td>
@@ -68,6 +72,13 @@
             </tr>
             </tbody>
           </table>
+          <div class="row">
+            <div class="col s4 m4 offset-s8 offset-m8 pagination">
+              <span class="to-pointer" (click)="prev()"><i class="fa fa-arrow-left"></i></span>
+              <span>{{page+1}}</span>
+              <span class="to-pointer" (click)="next()"><i class="fa fa-arrow-right"></i></span>
+            </div>
+          </div>
           <table class="bordered" *ngIf="smallWindow">
             <thead>
             <tr>
