@@ -14,11 +14,11 @@ import {SalesPayment} from "../sales-report/sales-payment";
 import {SalesPaymentService} from "../sales-report/sales-payment.service";
 import {SalesService} from "./sales.service";
 
-declare let _:any;
-declare let numeral:any;
-declare let $:any;
-declare let moment:any;
-declare let Pikaday:any;
+declare let _: any;
+declare let numeral: any;
+declare let $: any;
+declare let moment: any;
+declare let Pikaday: any;
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
@@ -26,45 +26,45 @@ declare let Pikaday:any;
   providers: [DialogService, CustomerService, ProductService, SalesService]
 })
 export class SalesComponent implements OnInit {
-  pleaseWaitActive:boolean = false;
-  invoiceNo:string;
-  invoiceDate:string;
-  customerId:string;
-  customer:string = '';
-  customerAddress1:string = '';
-  customerAddress2:string = '';
-  customerAddress3:string = '';
+  pleaseWaitActive: boolean = false;
+  invoiceNo: string;
+  invoiceDate: string;
+  customerId: string;
+  customer: string = '';
+  customerAddress1: string = '';
+  customerAddress2: string = '';
+  customerAddress3: string = '';
 
-  salesPaidStatus:boolean = false;
+  salesPaidStatus: boolean = false;
 
-  invoiceTotal:number = 0;
-  invoiceDiscount:number = 0;
-  invoiceGrandTotal:number = 0;
+  invoiceTotal: number = 0;
+  invoiceDiscount: number = 0;
+  invoiceGrandTotal: number = 0;
 
-  customers:Customer[] = [];
-  products:Product[] = [];
+  customers: Customer[] = [];
+  products: Product[] = [];
 
-  itemSelection:SalesDetail;
+  itemSelection: SalesDetail;
 
-  invoiceTotalCalc:Subject<number> = new Subject<number>();
-  customerRegistrationComplete:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  productRegistrationComplete:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  invoiceTotalCalc: Subject<number> = new Subject<number>();
+  customerRegistrationComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  productRegistrationComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   invoiceTotalCalc$ = this.invoiceTotalCalc.asObservable();
   // customerRegistrationComplete$ = this.customerRegistrationComplete.asObservable();
   productRegistrationComplete$ = this.productRegistrationComplete.asObservable();
 
-  salesDetails:SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
+  salesDetails: SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
 
 
-  smallWindow:boolean = false;
+  smallWindow: boolean = false;
 
-  customerFilterForm:FormControl = new FormControl();
-  productFilterForm:FormControl = new FormControl();
+  customerFilterForm: FormControl = new FormControl();
+  productFilterForm: FormControl = new FormControl();
 
-  constructor(private router:Router, private dialogService:DialogService,
-              private salesForPrint:SalesForPrintingService, private customerService:CustomerService,
-              private productService:ProductService, private salesService:SalesService) {
+  constructor(private router: Router, private dialogService: DialogService,
+              private salesForPrint: SalesForPrintingService, private customerService: CustomerService,
+              private productService: ProductService, private salesService: SalesService) {
     setTimeout(function () {
       document.getElementById('customer').focus();
     }, 200);
@@ -157,7 +157,7 @@ export class SalesComponent implements OnInit {
     if (this.customer && this.invoiceDate && this.invoiceNo) {
       if (numeral(this.invoiceGrandTotal).value() > 0) {
         this.pleaseWaitActive = true;
-        let currentSales:Sales = new Sales();
+        let currentSales: Sales = new Sales();
         currentSales.salesNo = this.invoiceNo;
         currentSales.salesDate = moment(this.invoiceDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
@@ -169,21 +169,21 @@ export class SalesComponent implements OnInit {
           currentSales.salesCustomerAddress3 = this.customerAddress3;
           this.customerRegistrationComplete.next(true);
         } else {
-          let newCust:Customer = new Customer();
+          let newCust: Customer = new Customer();
           newCust.customerName = this.customer;
           newCust.customerAddress1 = this.customerAddress1;
           newCust.customerAddress2 = this.customerAddress2;
           newCust.customerAddress3 = this.customerAddress3;
           newCust.customerStatus = '1';
-          this.customerService.saveCustomer(newCust).subscribe((res)=> {
+          this.customerService.saveCustomer(newCust).subscribe((res) => {
             currentSales.salesCustomerId = res.id;
             this.customerRegistrationComplete.next(true);
           });
         }
 
-        let unregisterProduct:SalesDetail[] = [];
+        let unregisterProduct: SalesDetail[] = [];
         for (let sd of this.salesDetails) {
-          let isUnregister:boolean = false;
+          let isUnregister: boolean = false;
           if (!sd.productId) {
             isUnregister = true;
           }
@@ -196,20 +196,20 @@ export class SalesComponent implements OnInit {
           }
         }
         if (unregisterProduct.length > 0) {
-          Observable.of(...unregisterProduct).flatMap((sdProd)=> {
-            let newProd:Product = new Product();
+          Observable.of(...unregisterProduct).flatMap((sdProd) => {
+            let newProd: Product = new Product();
             newProd.productName = sdProd.productName;
             newProd.productStatus = '1';
-            newProd.productStock = -1;
-            return Observable.create((obs)=> {
-              this.productService.saveProduct(newProd).subscribe((res)=> {
+            newProd.productStock = -1 * (sdProd.productQty);
+            return Observable.create((obs) => {
+              this.productService.saveProduct(newProd).subscribe((res) => {
                 sdProd.productId = res.id;
                 obs.next();
               });
             })
-          }).subscribe(()=> {
-          }, ()=> {
-          }, ()=> {
+          }).subscribe(() => {
+          }, () => {
+          }, () => {
             this.productRegistrationComplete.next(true);
           });
         } else {
@@ -223,10 +223,10 @@ export class SalesComponent implements OnInit {
         currentSales.salesGrandTotal = numeral(this.invoiceGrandTotal).value();
         currentSales.salesPaidStatus = '0';
 
-        this.productRegistrationComplete$.subscribe(()=> {
+        this.productRegistrationComplete$.subscribe(() => {
           console.log(currentSales);
 
-          this.salesService.saveSales(currentSales).subscribe((res)=> {
+          this.salesService.saveSales(currentSales).subscribe((res) => {
             this.salesForPrint.doPrint(currentSales);
             this.router.navigate(['/salesPrint']);
             this.pleaseWaitActive = false;
@@ -240,8 +240,8 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  calculatedPrice(salesDetail:SalesDetail):number {
-    let tot:number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
+  calculatedPrice(salesDetail: SalesDetail): number {
+    let tot: number = (numeral(salesDetail.productQty).value() * numeral(salesDetail.unitPrice).value()) - numeral(salesDetail.discount).value();
     salesDetail.salesTotal = tot;
     this.invoiceTotalCalc.next(tot);
     return numeral(tot).format('0,0');
@@ -257,7 +257,7 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  onProductFilter(item:SalesDetail, event) {
+  onProductFilter(item: SalesDetail, event) {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
       this.itemSelection = item;
@@ -268,7 +268,7 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  onPickCustomer(customer:Customer) {
+  onPickCustomer(customer: Customer) {
     this.customerId = customer.id;
     this.customer = customer.customerName;
     this.customerAddress1 = customer.customerAddress1;
@@ -280,7 +280,7 @@ export class SalesComponent implements OnInit {
     }, 300);
   }
 
-  onPickProduct(product:Product) {
+  onPickProduct(product: Product) {
     this.itemSelection.productId = product.id;
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');
