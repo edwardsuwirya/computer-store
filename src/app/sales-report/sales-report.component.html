@@ -1,0 +1,275 @@
+<app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
+<div class="card white darken-1 grey-text">
+  <a class="btn-flat grey-text" routerLink="/home">Home</a>
+  <div class="card-content">
+    <h5 class="text-beauty">Sales Report</h5>
+    <button type="button" class="btn-floating green right" (click)="refreshSales()" style="margin-right: 5px">
+      <i class="fa fa-refresh"></i>
+    </button>
+    <table class="bordered">
+      <thead>
+      <tr>
+        <th>
+          <div class="header-text-center">
+            <span>Inv.No</span>
+          </div>
+        </th>
+        <th>
+          <div class="header-text-center">
+            <span>Inv Date</span>
+          </div>
+        </th>
+        <th>
+          <div class="header-text">
+            <span>Customer</span>
+            <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
+          </div>
+        </th>
+        <th>
+          <div class="header-text-number">
+            <span>Total</span>
+          </div>
+        </th>
+        <th>
+          <div class="header-text">
+            <span>Del.Charge</span>
+          </div>
+        </th>
+        <th>
+          <div class="header-text">
+            <span>Commission</span>
+          </div>
+        </th>
+        <th>
+          <div class="header-text">
+            <span>Payment Term</span>
+          </div>
+        </th>
+        <th>
+          <div class="header-text-number">
+            <span>Remaining Balance</span>
+          </div>
+        </th>
+        <th>
+          <div class="header-text">
+            <span>Clean</span>
+            <a (click)="showSearchBar('PaidStatus')" class="to-pointer"><i class="fa fa-search"></i></a>
+          </div>
+        </th>
+      </tr>
+      <tr [hidden]="!showFilter">
+        <td colspan="6">
+          <input type="text" id="txtFilter" placeholder="{{filterSalesBy}}" [formControl]="filterSales">
+        </td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let s of sales" class="small-font">
+        <td class="td-report-center" style="width:5%">
+          <span class="to-pointer" (click)="viewInvoiceDetail(s)"
+                style="text-decoration: underline">{{s.salesNo}}</span>
+        </td>
+        <td class="td-report-center" style="width:7%">{{s.salesDate | date:'dd MMM yyyy'}}</td>
+        <td class="td-report" style="width:13%">{{s.salesCustomerName}}</td>
+        <td class="td-report-right" style="width:7%">{{(s.salesTotal-s.salesDiscount) | price}}</td>
+        <td class="td-report" style="width:10%">
+          <div><a class="orange-text darken-4 action-button to-pointer" (click)="onUpdateDeliveryCharge(s)">Update</a>
+          </div>
+          <div *ngIf="s.salesDeliveryCharge">
+            <div>{{s.salesDeliveryInfo}}</div>
+            <div>Ch: {{s.salesDeliveryCharge | price}}</div>
+          </div>
+        </td>
+        <td class="td-report" style="width:10%">
+          <div><a class="orange-text darken-4 action-button to-pointer" (click)="onUpdateComission(s)">Update</a></div>
+          <div *ngIf="s.salesComission">
+            <div>{{s.salesComissionInfo}}</div>
+            <div>{{s.salesComission | price}}</div>
+          </div>
+        </td>
+        <td class="td-report" style="width:30%">
+          <div><a class="orange-text darken-4 action-button to-pointer" (click)="onUpdatePaymentMethod(s)">Update</a>
+          </div>
+          <div class="row" *ngFor="let ssp of s.salesPayment">
+            <div class="col s4">
+              <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
+            </div>
+            <div class="col s3">
+              {{ssp.paymentDate }}
+            </div>
+            <div class="col s4" style="text-align: right;">
+              {{ssp.paymentValue | price}}
+            </div>
+            <div class="col s1">
+              <span class="to-pointer red-text" (click)="onDeletePayment(ssp,s)"><i
+                class="fa fa-window-close"></i> </span>
+            </div>
+          </div>
+        </td>
+        <td class="td-report-right">
+          {{((s.salesTotal-s.salesDiscount)-salesPaymentTotalCalculation(s.salesPayment)) | price}}
+        </td>
+        <td>
+          <input type="checkbox" class="filled-in" *ngIf="s.salesPaidStatus==='1'" checked="checked"/>
+          <input type="checkbox" class="filled-in" *ngIf="s.salesPaidStatus==='0'"/>
+          <label></label>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="row">
+      <div class="col s4 m4 offset-s8 offset-m8 pagination">
+        <span class="to-pointer" (click)="prev()"><i class="fa fa-arrow-left"></i></span>
+        <span>{{page+1}}</span>
+        <span class="to-pointer" (click)="next()"><i class="fa fa-arrow-right"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="deliveryModal" class="modal" style="width: 300px;">
+  <div class="modal-content">
+    <div class="row">
+      <h5>Delivery Charge For {{salesForUpdate.salesNo}}</h5>
+    </div>
+    <div class="input-field">
+      <input id="deliveryChargeInfo" type="text" placeholder="" class="invoice-form"
+             [(ngModel)]="salesForUpdate.salesDeliveryInfo">
+      <label for="deliveryChargeInfo" class="active">Delivery Charge Info</label>
+    </div>
+    <div class="input-field">
+      <input id="deliveryCharge" type="text" placeholder="" class="invoice-form"
+             [(ngModel)]="salesForUpdate.salesDeliveryCharge" [appNumberFormat]="salesForUpdate.salesDeliveryCharge"
+             style="text-align: right;">
+      <label for="deliveryCharge" class="active">Delivery Charge</label>
+    </div>
+    <div style="text-align: right;margin-top: 10px;">
+      <button type="button" class="btn green action-button" (click)="onDoDeliveryCharge()">Pay</button>
+    </div>
+  </div>
+</div>
+<div id="comissionModal" class="modal" style="width: 300px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s6">
+        <h5>Commission</h5>
+      </div>
+      <div class="col s6" style="text-align: right">
+        <div class="small-font">Invoice No. {{salesForUpdate.salesNo}}</div>
+      </div>
+      <h5>Sales Commission For {{salesForUpdate.salesNo}}</h5>
+    </div>
+    <div class="input-field">
+      <input id="comissionInfo" type="text" placeholder="" class="invoice-form"
+             [(ngModel)]="salesForUpdate.salesComissionInfo">
+      <label for="comissionInfo" class="active">Commission Info</label>
+    </div>
+    <div class="input-field">
+      <input id="comissionValue" type="text" placeholder="" class="invoice-form"
+             [(ngModel)]="salesForUpdate.salesComission" [appNumberFormat]="salesForUpdate.salesComission"
+             style="text-align: right;">
+      <label for="comissionValue" class="active">Commission Value</label>
+    </div>
+    <div style="text-align: right;margin-top: 10px;">
+      <button type="button" class="btn green action-button" (click)="onDoComission()">Pay</button>
+    </div>
+  </div>
+</div>
+<div id="paymentModal" class="modal" style="width: 500px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s6">
+        <h5>Payment</h5>
+      </div>
+      <div class="col s6" style="text-align: right">
+        <div class="small-font">Invoice No. {{salesForUpdate.salesNo}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s6 m6">
+        Total:
+      </div>
+      <div class="col s6 m6" style="text-align: right">
+        {{(salesForUpdate.salesTotal-salesForUpdate.salesDiscount) | price}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <input name="paymentTypeGroup" type="radio" id="tt" value="TT"
+               [(ngModel)]="salesPaymentInv.paymentType"/>
+        <label for="tt">Transfer</label>
+        <input name="paymentTypeGroup" type="radio" id="cc" value="CC"
+               [(ngModel)]="salesPaymentInv.paymentType"/>
+        <label for="cc">Cash</label>
+        <input name="paymentTypeGroup" type="radio" id="db" value="DB"
+               [(ngModel)]="salesPaymentInv.paymentType"/>
+        <label for="db">Debit Card</label>
+        <input name="paymentTypeGroup" type="radio" id="cr" value="CR"
+               [(ngModel)]="salesPaymentInv.paymentType"/>
+        <label for="cr">Credit Card</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="input-field">
+          <input id="paymentDate" type="text" placeholder="" class="invoice-form"
+                 [(ngModel)]="salesPaymentInv.paymentDate">
+          <label for="paymentDate" class="active">Payment Date</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="input-field">
+          <input id="bankName" type="text" placeholder="" class="invoice-form"
+                 [(ngModel)]="salesPaymentInv.bankName" [disabled]="bankNameDisabled">
+          <label for="bankName" class="active">Bank Name</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="input-field">
+          <input id="paymentValue" type="text" placeholder="" class="invoice-form"
+                 [(ngModel)]="salesPaymentInv.paymentValue" [appNumberFormat]="salesPaymentInv.paymentValue"
+                 style="text-align: right;">
+          <label for="paymentValue" class="active">Payment Value</label>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: right;margin-top: 10px;">
+      <button type="button" class="btn green action-button" (click)="onDoPayment()">Pay</button>
+    </div>
+  </div>
+</div>
+<div id="salesDetailModal" class="modal" style="width: 600px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s6">
+        <h5>Invoice Detail</h5>
+      </div>
+      <div class="col s6" style="text-align: right">
+        <div class="small-font">Invoice No. {{salesForUpdate.salesNo}}</div>
+      </div>
+    </div>
+    <table>
+      <thead>
+      <tr>
+        <td class="header-text">Product Name</td>
+        <td class="header-text-number">Product Qty</td>
+        <td class="header-text-number">Unit Price</td>
+        <td class="header-text-number">Disc</td>
+        <td class="header-text-number">Sales Total</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let sd of salesDetail" class="small-font">
+        <td>{{sd.productName}}</td>
+        <td style="text-align: right;">{{sd.productQty}}</td>
+        <td style="text-align: right;">{{sd.unitPrice | price}}</td>
+        <td style="text-align: right;">{{sd.discount | price}}</td>
+        <td style="text-align: right;">{{sd.salesTotal | price}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

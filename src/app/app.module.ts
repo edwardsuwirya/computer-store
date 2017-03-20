@@ -21,6 +21,8 @@ import {SalesForPrintingComponent} from './sales-for-printing/sales-for-printing
 import {SalesForPrintingService} from "./sales-for-printing/sales-for-printing.service";
 import {PricePipe} from './shared/pipe/price.pipe';
 import {DateFormatDirective} from './shared/directive/date-format.directive';
+import {SalesReportComponent} from './sales-report/sales-report.component';
+import { SalesPaymentReportPipe } from './sales-report/sales-payment-report.pipe';
 
 const appRoutes:Routes = [
   {
@@ -40,6 +42,7 @@ const appRoutes:Routes = [
   {path: 'productUpdate/:product', component: ProductUpdateComponent},
   {path: 'sales', component: SalesComponent},
   {path: 'salesPrint', component: SalesForPrintingComponent},
+  {path: 'salesReport', component: SalesReportComponent},
 ];
 
 @NgModule({
@@ -60,6 +63,8 @@ const appRoutes:Routes = [
     SalesForPrintingComponent,
     PricePipe,
     DateFormatDirective,
+    SalesReportComponent,
+    SalesPaymentReportPipe,
   ],
   imports: [
     BrowserModule,

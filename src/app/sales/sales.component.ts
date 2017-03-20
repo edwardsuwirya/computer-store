@@ -1,7 +1,7 @@
 import {Component, OnInit, Renderer} from "@angular/core";
 import {Router} from "@angular/router";
 import {SalesDetail} from "./sales-detail";
-import {Subject, Observable} from "rxjs/Rx";
+import {Subject, Observable, BehaviorSubject} from "rxjs/Rx";
 import {Customer} from "../customer/customer";
 import {Product} from "../product/product";
 import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
@@ -10,6 +10,9 @@ import {DialogService} from "../shared/service/dialog.service";
 import {FormControl} from "@angular/forms";
 import {CustomerService} from "../customer/customer.service";
 import {ProductService} from "../product/product.service";
+import {SalesPayment} from "../sales-report/sales-payment";
+import {SalesPaymentService} from "../sales-report/sales-payment.service";
+import {SalesService} from "./sales.service";
 
 declare let _:any;
 declare let numeral:any;
@@ -20,9 +23,10 @@ declare let Pikaday:any;
   selector: 'app-sales',
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.css'],
-  providers: [DialogService, CustomerService, ProductService]
+  providers: [DialogService, CustomerService, ProductService, SalesService]
 })
 export class SalesComponent implements OnInit {
+  pleaseWaitActive:boolean = false;
   invoiceNo:string;
   invoiceDate:string;
   customerId:string;
@@ -43,9 +47,15 @@ export class SalesComponent implements OnInit {
   itemSelection:SalesDetail;
 
   invoiceTotalCalc:Subject<number> = new Subject<number>();
+  customerRegistrationComplete:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  productRegistrationComplete:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   invoiceTotalCalc$ = this.invoiceTotalCalc.asObservable();
+  // customerRegistrationComplete$ = this.customerRegistrationComplete.asObservable();
+  productRegistrationComplete$ = this.productRegistrationComplete.asObservable();
 
   salesDetails:SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
+
 
   smallWindow:boolean = false;
 
@@ -54,14 +64,14 @@ export class SalesComponent implements OnInit {
 
   constructor(private router:Router, private dialogService:DialogService,
               private salesForPrint:SalesForPrintingService, private customerService:CustomerService,
-              private productService:ProductService) {
+              private productService:ProductService, private salesService:SalesService) {
     setTimeout(function () {
       document.getElementById('customer').focus();
     }, 200);
   }
 
   ngOnInit() {
-    this.invoiceTotalCalc$.debounceTime(400).subscribe((res) => {
+    this.invoiceTotalCalc$.debounceTime(300).subscribe((res) => {
       let total = 0;
       for (let c of this.salesDetails) {
         total = total + ((numeral(c.productQty).value() * numeral(c.unitPrice).value()) - numeral(c.discount).value());
@@ -142,32 +152,91 @@ export class SalesComponent implements OnInit {
     }
   }
 
+
   onCreateInvoice() {
-    let currentSales:Sales = new Sales();
-    currentSales.salesNo = this.invoiceNo;
-    currentSales.salesCustomerId = this.customerId;
-    currentSales.salesCustomerName = this.customer;
-    currentSales.salesCustomerAddress1 = this.customerAddress1;
-    currentSales.salesCustomerAddress2 = this.customerAddress2;
-    currentSales.salesCustomerAddress3 = this.customerAddress3;
-    console.log(this.invoiceDate);
-    currentSales.salesDate = moment(this.invoiceDate, 'DD/MM/YYYY');
-    for (let sd of this.salesDetails) {
-      sd.productQty = numeral(sd.productQty).value();
-      sd.discount = numeral(sd.discount).value();
-      sd.unitPrice = numeral(sd.unitPrice).value();
-      sd.salesTotal = numeral(sd.salesTotal).value();
-    }
-    currentSales.salesDetail = this.salesDetails;
-    currentSales.salesTotal = numeral(this.invoiceTotal).value();
-    currentSales.salesDiscount = numeral(this.invoiceDiscount).value();
-    currentSales.salesGrandTotal = numeral(this.invoiceGrandTotal).value();
-    currentSales.salesPaidStatus = this.salesPaidStatus;
     if (this.customer && this.invoiceDate && this.invoiceNo) {
-      this.salesForPrint.doPrint(currentSales);
-      this.router.navigate(['/salesPrint']);
+      if (numeral(this.invoiceGrandTotal).value() > 0) {
+        this.pleaseWaitActive = true;
+        let currentSales:Sales = new Sales();
+        currentSales.salesNo = this.invoiceNo;
+        currentSales.salesDate = moment(this.invoiceDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+        if (this.customerId) {
+          currentSales.salesCustomerId = this.customerId;
+          currentSales.salesCustomerName = this.customer;
+          currentSales.salesCustomerAddress1 = this.customerAddress1;
+          currentSales.salesCustomerAddress2 = this.customerAddress2;
+          currentSales.salesCustomerAddress3 = this.customerAddress3;
+          this.customerRegistrationComplete.next(true);
+        } else {
+          let newCust:Customer = new Customer();
+          newCust.customerName = this.customer;
+          newCust.customerAddress1 = this.customerAddress1;
+          newCust.customerAddress2 = this.customerAddress2;
+          newCust.customerAddress3 = this.customerAddress3;
+          newCust.customerStatus = '1';
+          this.customerService.saveCustomer(newCust).subscribe((res)=> {
+            currentSales.salesCustomerId = res.id;
+            this.customerRegistrationComplete.next(true);
+          });
+        }
+
+        let unregisterProduct:SalesDetail[] = [];
+        for (let sd of this.salesDetails) {
+          let isUnregister:boolean = false;
+          if (!sd.productId) {
+            isUnregister = true;
+          }
+          sd.productQty = numeral(sd.productQty).value();
+          sd.discount = numeral(sd.discount).value();
+          sd.unitPrice = numeral(sd.unitPrice).value();
+          sd.salesTotal = numeral(sd.salesTotal).value();
+          if (isUnregister) {
+            unregisterProduct.push(sd);
+          }
+        }
+        if (unregisterProduct.length > 0) {
+          Observable.of(...unregisterProduct).flatMap((sdProd)=> {
+            let newProd:Product = new Product();
+            newProd.productName = sdProd.productName;
+            newProd.productStatus = '1';
+            newProd.productStock = -1;
+            return Observable.create((obs)=> {
+              this.productService.saveProduct(newProd).subscribe((res)=> {
+                sdProd.productId = res.id;
+                obs.next();
+              });
+            })
+          }).subscribe(()=> {
+          }, ()=> {
+          }, ()=> {
+            this.productRegistrationComplete.next(true);
+          });
+        } else {
+          this.productRegistrationComplete.next(true);
+        }
+
+        currentSales.salesDetail = this.salesDetails;
+
+        currentSales.salesTotal = numeral(this.invoiceTotal).value();
+        currentSales.salesDiscount = numeral(this.invoiceDiscount).value();
+        currentSales.salesGrandTotal = numeral(this.invoiceGrandTotal).value();
+        currentSales.salesPaidStatus = '0';
+
+        this.productRegistrationComplete$.subscribe(()=> {
+          console.log(currentSales);
+
+          this.salesService.saveSales(currentSales).subscribe((res)=> {
+            this.salesForPrint.doPrint(currentSales);
+            this.router.navigate(['/salesPrint']);
+            this.pleaseWaitActive = false;
+          });
+        })
+      } else {
+        this.dialogService.showDialog('Your invoice grand total is zero/minus');
+      }
     } else {
-      this.dialogService.showDialog('Please choose customer')
+      this.dialogService.showDialog('Please fill customer & invoice info');
     }
   }
 
@@ -212,7 +281,7 @@ export class SalesComponent implements OnInit {
   }
 
   onPickProduct(product:Product) {
-    this.itemSelection.productId = product.productId;
+    this.itemSelection.productId = product.id;
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');
     let that = this;
