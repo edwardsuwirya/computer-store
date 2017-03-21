@@ -23,6 +23,7 @@ import {PricePipe} from './shared/pipe/price.pipe';
 import {DateFormatDirective} from './shared/directive/date-format.directive';
 import {SalesReportComponent} from './sales-report/sales-report.component';
 import { SalesPaymentReportPipe } from './sales-report/sales-payment-report.pipe';
+import { SalesCustomerReportComponent } from './sales-customer-report/sales-customer-report.component';
 
 const appRoutes:Routes = [
   {
@@ -43,6 +44,7 @@ const appRoutes:Routes = [
   {path: 'sales', component: SalesComponent},
   {path: 'salesPrint', component: SalesForPrintingComponent},
   {path: 'salesReport', component: SalesReportComponent},
+  {path: 'salesCustomerReport', component: SalesCustomerReportComponent},
 ];
 
 @NgModule({
@@ -65,6 +67,7 @@ const appRoutes:Routes = [
     DateFormatDirective,
     SalesReportComponent,
     SalesPaymentReportPipe,
+    SalesCustomerReportComponent,
   ],
   imports: [
     BrowserModule,
