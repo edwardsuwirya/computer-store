@@ -28,7 +28,9 @@ td, th {
 .small-font {
   font-size: 10px;
 }
-
+.medium-font {
+  font-size: 12px;
+}
 .icon-action {
   cursor: pointer;
   margin-right: 5px;

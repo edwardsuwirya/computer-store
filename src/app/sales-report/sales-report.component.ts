@@ -97,7 +97,7 @@ export class SalesReportComponent implements OnInit {
 
   refreshSales() {
     this.pleaseWaitActive = true;
-    this.salesService.getAllSales('0').subscribe((res)=> {
+    this.salesService.getAllSales((this.page * 10).toString()).subscribe((res)=> {
       this.sales = res;
       for (let s of res) {
         this.salesPaymentService.getSalesPaymentByField('salesNo', s.salesNo, '0').subscribe((res)=> {
@@ -197,22 +197,21 @@ export class SalesReportComponent implements OnInit {
   prev() {
     if (this.page > 0) {
       this.page = this.page - 1;
-      // if (this.keyword) {
-      //   this.findProduct();
-      // } else {
-      //   this.findFirstProduct();
-      // }
+      if (this.keyword) {
+        this.findSales();
+      } else {
+        this.refreshSales();
+      }
     } else {
     }
   }
 
   next() {
     this.page = this.page + 1;
-    // if (this.keyword) {
-    //   this.findProduct();
-    // } else {
-    //   this.findFirstProduct();
-    // }
-
+    if (this.keyword) {
+      this.findSales();
+    } else {
+      this.refreshSales();
+    }
   }
 }

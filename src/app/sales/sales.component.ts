@@ -51,7 +51,7 @@ export class SalesComponent implements OnInit {
   productRegistrationComplete:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   invoiceTotalCalc$ = this.invoiceTotalCalc.asObservable();
-  // customerRegistrationComplete$ = this.customerRegistrationComplete.asObservable();
+  customerRegistrationComplete$ = this.customerRegistrationComplete.asObservable();
   productRegistrationComplete$ = this.productRegistrationComplete.asObservable();
 
   salesDetails:SalesDetail[] = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
@@ -177,6 +177,10 @@ export class SalesComponent implements OnInit {
           newCust.customerStatus = '1';
           this.customerService.saveCustomer(newCust).subscribe((res)=> {
             currentSales.salesCustomerId = res.id;
+            currentSales.salesCustomerName = this.customer;
+            currentSales.salesCustomerAddress1 = this.customerAddress1;
+            currentSales.salesCustomerAddress2 = this.customerAddress2;
+            currentSales.salesCustomerAddress3 = this.customerAddress3;
             this.customerRegistrationComplete.next(true);
           });
         }
@@ -195,18 +199,19 @@ export class SalesComponent implements OnInit {
             unregisterProduct.push(sd);
           }
         }
+
         if (unregisterProduct.length > 0) {
-          Observable.of(...unregisterProduct).flatMap((sdProd)=> {
+          Observable.of(...unregisterProduct).map((sdProd)=> {
             let newProd:Product = new Product();
             newProd.productName = sdProd.productName;
             newProd.productStatus = '1';
-            newProd.productStock = -1;
-            return Observable.create((obs)=> {
+            newProd.productStock = -1 * (sdProd.productQty);
+            Observable.create((obs)=> {
               this.productService.saveProduct(newProd).subscribe((res)=> {
                 sdProd.productId = res.id;
                 obs.next();
               });
-            })
+            }).subscribe();
           }).subscribe(()=> {
           }, ()=> {
           }, ()=> {
@@ -223,14 +228,18 @@ export class SalesComponent implements OnInit {
         currentSales.salesGrandTotal = numeral(this.invoiceGrandTotal).value();
         currentSales.salesPaidStatus = '0';
 
-        this.productRegistrationComplete$.subscribe(()=> {
-          console.log(currentSales);
-
-          this.salesService.saveSales(currentSales).subscribe((res)=> {
-            this.salesForPrint.doPrint(currentSales);
-            this.router.navigate(['/salesPrint']);
-            this.pleaseWaitActive = false;
-          });
+        this.customerRegistrationComplete$.subscribe((res)=> {
+          if (res) {
+            this.productRegistrationComplete$.subscribe((res)=> {
+              if (res) {
+                this.salesService.saveSales(currentSales).subscribe((res)=> {
+                  this.salesForPrint.doPrint(currentSales);
+                  this.router.navigate(['/salesPrint']);
+                  this.pleaseWaitActive = false;
+                });
+              }
+            })
+          }
         })
       } else {
         this.dialogService.showDialog('Your invoice grand total is zero/minus');
