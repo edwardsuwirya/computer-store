@@ -6,9 +6,10 @@ import {ProductService} from "../product/product.service";
 import {CustomerService} from "../customer/customer.service";
 import {Customer} from "../customer/customer";
 import {Product} from "../product/product";
+import {Sales} from "../sales/sales";
 
-declare let _: any;
-declare let $: any;
+declare let _:any;
+declare let $:any;
 
 @Component({
   selector: 'app-sales-customer-report',
@@ -17,16 +18,18 @@ declare let $: any;
   providers: [CustomerService, ProductService, SalesService]
 })
 export class SalesCustomerReportComponent implements OnInit {
-  pleaseWaitActive: boolean = false;
-  customer: string = '';
-  productName: string = '';
-  customerFilterForm: FormControl = new FormControl();
-  productFilterForm: FormControl = new FormControl();
-  customers: Customer[] = [];
-  products: Product[] = [];
+  pleaseWaitActive:boolean = false;
+  customer:string = '';
+  productName:string = '';
+  customerFilterForm:FormControl = new FormControl();
+  productFilterForm:FormControl = new FormControl();
+  customers:Customer[] = [];
+  products:Product[] = [];
 
-  constructor(private customerService: CustomerService,
-              private productService: ProductService, private salesService: SalesService) {
+  sales:Sales[] = [];
+
+  constructor(private customerService:CustomerService,
+              private productService:ProductService, private salesService:SalesService) {
     setTimeout(function () {
       document.getElementById('customer').focus();
     }, 200);
@@ -74,7 +77,7 @@ export class SalesCustomerReportComponent implements OnInit {
     }
   }
 
-  onPickCustomer(customer: Customer) {
+  onPickCustomer(customer:Customer) {
     this.customer = customer.customerName;
     $('#customerModal').modal('close');
     setTimeout(function () {
@@ -82,14 +85,14 @@ export class SalesCustomerReportComponent implements OnInit {
     }, 300);
   }
 
-  onPickProduct(product: Product) {
+  onPickProduct(product:Product) {
     this.productName = product.productName;
     $('#productModal').modal('close');
   }
 
   onFindSales() {
-    this.salesService.getSalesBy2Field('salesCustomerName', this.customer, 'salesDetail.productName', this.productName, '0').subscribe((res) => {
-      console.log(res);
+    this.salesService.getSalesBy2Field('salesCustomerName', this.customer, 'salesDetail.productName', this.productName, '0', '{"salesDate":-1}').subscribe((res) => {
+      this.sales = res;
     })
   }
 }

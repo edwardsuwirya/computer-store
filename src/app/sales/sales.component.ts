@@ -100,7 +100,7 @@ export class SalesComponent implements OnInit {
     });
     this.productFilterForm.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((keyword) => {
       if (keyword) {
-        this.productService.getProductByField('productName', keyword, '0').subscribe((prod) => {
+        this.productService.getProductBy2Fields('productName', keyword, 'productStatus', '1', '0').subscribe((prod) => {
           this.products = prod;
         })
       }

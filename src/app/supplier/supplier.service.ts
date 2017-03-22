@@ -15,8 +15,11 @@ export class SupplierService {
       .catch((err)=>Observable.throw(err));
   }
 
-  getSupplierByField(fieldName:string, fieldValue:string, page:string) {
-    return this.http.get('http://128.199.228.221:2403/supplier?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"},"$sort": {"supplierName": 1},"$skip":' + page + ',"$limit":10}')
+  getSupplierByField(fieldName:string, fieldValue:string, page:string = '0', sort:string = '{"supplierName": 1}') {
+    return this.http.get('http://128.199.228.221:2403/supplier?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"},' +
+      '"$sort":' + sort + ' ,' +
+      '"$skip":' + page + ',' +
+      '"$limit":10}')
       .map(res=>res.json())
       .catch((err)=>Observable.throw(err));
   }

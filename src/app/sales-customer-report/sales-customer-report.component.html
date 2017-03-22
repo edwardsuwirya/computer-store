@@ -38,12 +38,37 @@
             <tr>
               <th>
                 <div class="header-text">
-                  <span>Customer</span>
+                  <span>Invoice Info</span>
+                </div>
+              </th>
+              <th>Customer</th>
+              <th>
+                <div class="header-text">
+                  <span>Product / Unit Price</span>
                 </div>
               </th>
             </tr>
             </thead>
             <tbody>
+            <tr *ngFor="let s of sales" class="medium-font">
+              <td class="td-report" style="width:10%">
+                <div>{{s.salesNo}}</div>
+                <div>{{s.salesDate | date:'dd MMM yyyy'}}</div>
+              </td>
+              <td class="td-report" style="width:20%">
+                <div>{{s.salesCustomerName}}</div>
+              </td>
+              <td class="td-report">
+                <div class="row" *ngFor="let sd of s.salesDetail">
+                  <div class="col s6 m6">
+                    {{sd.productName}}
+                  </div>
+                  <div class="col s6 m6" style="text-align: right;">
+                    {{sd.unitPrice | price }}
+                  </div>
+                </div>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
