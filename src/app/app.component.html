@@ -1,15 +1,19 @@
 <div class="container" style="margin-bottom: 10px">
   <div class="row">
-    <div class="col s6 m1">
-      <img style="margin-top: 15px; cursor: pointer" (click)="goToList()" src="/assets/img/madju-computindo-logo.jpeg">
+    <div class="col s5 m2 l1">
+      <img style="margin-top: 15px; cursor: pointer" (click)="goToList()" src="assets/img/madju-computindo-logo.jpeg">
     </div>
-    <div class="col s6 m5">
+    <div class="col s7 m4 l5">
       <h4 class="title-beautify" style="margin-left:15px;cursor: pointer" (click)="goToList()">{{title}}</h4>
     </div>
-    <div class="col s6 m6"
+    <div class="col m6 l6 hide-on-small-only"
          style="color: rgba(0, 0, 0, .6);text-align: right;font-size: 14px; margin-top: 25px;font-weight: bold">
       Today is {{ todays | date:medium}}
     </div>
+  </div>
+  <div class="row hide-on-med-and-up"
+       style="color: rgba(0, 0, 0, .6);text-align: right;font-size: 14px; margin-top: 25px;font-weight: bold">
+    Today is {{ todays | date:medium}}
   </div>
   <router-outlet></router-outlet>
   <div class="row">

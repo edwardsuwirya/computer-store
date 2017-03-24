@@ -6,6 +6,9 @@ import {Sales} from "../sales/sales";
 import {PricePipe} from "../shared/pipe/price.pipe";
 import {FormControl} from "@angular/forms";
 import {SalesDetail} from "../sales/sales-detail";
+import {Observable} from "rxjs/Rx";
+import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
+import {Router} from "@angular/router";
 
 declare let _:any;
 declare let $:any;
@@ -35,7 +38,9 @@ export class SalesReportComponent implements OnInit {
   keyword:string = '';
   salesDetail:SalesDetail[] = [];
 
-  constructor(private salesPaymentService:SalesPaymentService, private salesService:SalesService) {
+  smallWindow:boolean = false;
+
+  constructor(private router:Router, private salesPaymentService:SalesPaymentService, private salesService:SalesService, private salesForPrint:SalesForPrintingService) {
   }
 
   ngOnInit() {
@@ -58,6 +63,18 @@ export class SalesReportComponent implements OnInit {
         that.salesPaymentInv.paymentDate = this.getMoment().format('DD/MM/YYYY');
       }
     });
+    this.checkSmallWindow();
+    Observable.fromEvent(window, 'resize').subscribe(()=> {
+      this.checkSmallWindow();
+    })
+  }
+
+  checkSmallWindow() {
+    if (window.screen.height < 700) {
+      this.smallWindow = true;
+    } else {
+      this.smallWindow = false;
+    }
   }
 
   private findSales() {
@@ -192,6 +209,12 @@ export class SalesReportComponent implements OnInit {
     this.salesPaymentService.createPaymentDetail(this.salesPaymentInv).subscribe(()=> {
       this.refreshPaidStatus();
     });
+  }
+
+  onReprint(sales:Sales) {
+    $('#salesDetailModal').modal('close');
+    this.salesForPrint.doPrint(sales);
+    this.router.navigate(['/salesPrint']);
   }
 
   prev() {

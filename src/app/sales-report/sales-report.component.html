@@ -6,7 +6,7 @@
     <button type="button" class="btn-floating green right" (click)="refreshSales()" style="margin-right: 5px">
       <i class="fa fa-refresh"></i>
     </button>
-    <table class="bordered">
+    <table class="bordered" *ngIf="!smallWindow">
       <thead>
       <tr>
         <th>
@@ -109,6 +109,118 @@
           <input type="checkbox" class="filled-in" *ngIf="s.salesPaidStatus==='1'" checked="checked"/>
           <input type="checkbox" class="filled-in" *ngIf="s.salesPaidStatus==='0'"/>
           <label></label>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <table class="bordered" *ngIf="smallWindow">
+      <thead>
+      <tr>
+        <th>
+          <div class="header-text">
+            <div>Invoice Info</div>
+            <div>
+            <span>Customer</span>
+            <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
+            </div>
+            <div class="header-text">
+              <span>Clean</span>
+              <a (click)="showSearchBar('PaidStatus')" class="to-pointer"><i class="fa fa-search"></i></a>
+            </div>
+          </div>
+        </th>
+      </tr>
+      <tr [hidden]="!showFilter">
+        <td colspan="6">
+          <input type="text" id="txtFilter" placeholder="{{filterSalesBy}}" [formControl]="filterSales">
+        </td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let s of sales" class="medium-font">
+        <td class="td-report">
+          <div class="row">
+            <div class="col s4">
+              <span class="to-pointer" (click)="viewInvoiceDetail(s)"
+                    style="text-decoration: underline">{{s.salesNo}}</span>
+            </div>
+            <div class="col s4">
+              <span>{{s.salesDate | date:'dd MMM yyyy'}}</span>
+            </div>
+            <div class="col s4" style="text-align: right">
+              <span>{{(s.salesTotal-s.salesDiscount) | price}}</span>
+            </div>
+          </div>
+          <div>{{s.salesCustomerName}}</div>
+
+          <div class="row">
+            <div class="col s12">
+              <span>Delivery Charge</span>
+              <span><a class="orange-text darken-4 action-button to-pointer"
+                       (click)="onUpdateDeliveryCharge(s)">Update</a></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <div *ngIf="s.salesDeliveryCharge">
+                <div>{{s.salesDeliveryInfo}}</div>
+                <div>Ch: {{s.salesDeliveryCharge | price}}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s6">
+              <span>Commission</span>
+              <span><a class="orange-text darken-4 action-button to-pointer"
+                       (click)="onUpdateComission(s)">Update</a></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <div *ngIf="s.salesComission">
+                <div>{{s.salesComissionInfo}}</div>
+                <div>{{s.salesComission | price}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <span>Payment</span>
+              <span><a class="orange-text darken-4 action-button to-pointer"
+                       (click)="onUpdatePaymentMethod(s)">Update</a></span>
+            </div>
+          </div>
+          <div class="row" *ngFor="let ssp of s.salesPayment">
+            <div class="col s4">
+              <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
+            </div>
+            <div class="col s3">
+              {{ssp.paymentDate }}
+            </div>
+            <div class="col s4" style="text-align: right;">
+              {{ssp.paymentValue | price}}
+            </div>
+            <div class="col s1">
+              <span class="to-pointer red-text" (click)="onDeletePayment(ssp,s)"><i
+                class="fa fa-window-close"></i> </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s6">
+              <span>Remaining Balance</span>
+            </div>
+            <div class="col s6" style="text-align: right">
+              {{((s.salesTotal-s.salesDiscount)-salesPaymentTotalCalculation(s.salesPayment)) | price}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s2 offset-s10">
+              <input type="checkbox" class="filled-in" *ngIf="s.salesPaidStatus==='1'" checked="checked"/>
+              <input type="checkbox" class="filled-in" *ngIf="s.salesPaidStatus==='0'"/>
+              <label></label>
+            </div>
+          </div>
         </td>
       </tr>
       </tbody>
@@ -245,6 +357,7 @@
       </div>
       <div class="col s6" style="text-align: right">
         <div class="small-font">Invoice No. {{salesForUpdate.salesNo}}</div>
+        <div><a class="to-pointer" (click)="onReprint(salesForUpdate)">Reprint</a></div>
       </div>
     </div>
     <table>

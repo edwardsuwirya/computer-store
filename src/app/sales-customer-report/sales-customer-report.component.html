@@ -8,17 +8,15 @@
           <h5 class="left text-beauty">Sales Customer Report</h5>
         </div>
         <div class="row">
-          <div class="col s4 m4">
+          <div class="col s12 m4">
             <div class="input-field">
               <input placeholder="Press enter key to query customer" id="customer" type="text"
                      [(ngModel)]="customer"
                      (keypress)="onCustomerFilter($event)" class="invoice-form">
-              <span class="pull-right button-search hide-on-large-only" (click)="onCustomerFilter($event)"><i
-                class="fa fa-search"></i></span>
               <label for="customer" class="active">Customer</label>
             </div>
           </div>
-          <div class="col s4 m4">
+          <div class="col s12 m4">
             <div class="input-field">
               <input type="text" id="productName" [(ngModel)]="productName"
                      (keypress)="onProductFilter($event)"
@@ -26,13 +24,13 @@
               <label for="customer" class="active">Product</label>
             </div>
           </div>
-          <div class="col s4 m4">
+          <div class="col s12 m4">
             <div class="input-field">
-              <button type="button" class="btn green" (click)="onFindSales()">Find</button>
+              <button type="button" class="btn light-green lighten-2" (click)="onFindSales()">Find</button>
             </div>
           </div>
         </div>
-        <div class="list-content">
+        <div style="margin-top: 10px;">
           <table class="bordered">
             <thead>
             <tr>
@@ -41,7 +39,11 @@
                   <span>Invoice Info</span>
                 </div>
               </th>
-              <th>Customer</th>
+              <th>
+                <div class="header-text">
+                  <span>Customer</span>
+                </div>
+              </th>
               <th>
                 <div class="header-text">
                   <span>Product / Unit Price</span>

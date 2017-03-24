@@ -60,6 +60,8 @@ export class SalesCustomerReportComponent implements OnInit {
   onCustomerFilter(event) {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
+      this.customerFilterForm.setValue('')
+      this.customers = [];
       $('#customerModal').modal('open');
       setTimeout(function () {
         document.getElementById('customerFilter').focus();
@@ -70,6 +72,8 @@ export class SalesCustomerReportComponent implements OnInit {
   onProductFilter(event) {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
+      this.productFilterForm.setValue('');
+      this.products = [];
       $('#productModal').modal('open');
       setTimeout(function () {
         document.getElementById('productFilter').focus();
