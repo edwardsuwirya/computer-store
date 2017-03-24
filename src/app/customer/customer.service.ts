@@ -1,16 +1,17 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Inject} from "@angular/core";
 import {Http} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Customer} from "./customer";
+import {APP_CONFIG} from "../shared/model/app-properties";
 
 @Injectable()
 export class CustomerService {
 
-  constructor(private http:Http) {
+  constructor(@Inject(APP_CONFIG) private config, private http:Http) {
   }
 
   getAllCustomer(page:string) {
-    return this.http.get('http://128.199.228.221:2403/customer?{"$sort": {"customerName": 1,"customerNickName":1},"$skip":' + page + ',"$limit":10}')
+    return this.http.get(this.config.serviceBaseUrl + '/customer?{"$sort": {"customerName": 1,"customerNickName":1},"$skip":' + page + ',"$limit":10}')
       .map(res=>res.json())
       .catch((err)=>Observable.throw(err));
   }
@@ -18,18 +19,18 @@ export class CustomerService {
   getCustomerByField(fieldName:string, fieldValue:string, page:string = '0', sort:string = '{"customerName": 1,"customerNickName":1}') {
     if (fieldName === 'customerAddress') {
       return Observable.forkJoin(
-        this.http.get('http://128.199.228.221:2403/customer?{"customerAddress1":{"$regex":"' + fieldValue + '", "$options": "i"}}')
+        this.http.get(this.config.serviceBaseUrl +'/customer?{"customerAddress1":{"$regex":"' + fieldValue + '", "$options": "i"}}')
           .map(res=>res.json())
           .catch((err)=>Observable.throw(err)),
-        this.http.get('http://128.199.228.221:2403/customer?{"customerAddress2":{"$regex":"' + fieldValue + '", "$options": "i"}}')
+        this.http.get(this.config.serviceBaseUrl +'/customer?{"customerAddress2":{"$regex":"' + fieldValue + '", "$options": "i"}}')
           .map(res=>res.json())
           .catch((err)=>Observable.throw(err)),
-        this.http.get('http://128.199.228.221:2403/customer?{"customerAddress3":{"$regex":"' + fieldValue + '", "$options": "i"}}')
+        this.http.get(this.config.serviceBaseUrl +'/customer?{"customerAddress3":{"$regex":"' + fieldValue + '", "$options": "i"}}')
           .map(res=>res.json())
           .catch((err)=>Observable.throw(err))
       )
     } else {
-      return this.http.get('http://128.199.228.221:2403/customer?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"},' +
+      return this.http.get(this.config.serviceBaseUrl +'/customer?{"' + fieldName + '":{"$regex":"' + fieldValue + '", "$options": "i"},' +
         '"$sort": ' + sort + ',' +
         '"$skip":' + page + ',' +
         '"$limit":10}')
@@ -39,7 +40,7 @@ export class CustomerService {
   }
 
   getCustomerBy2Fields(fieldName1:string, fieldValue1:string, fieldName2:string, fieldValue2, page:string = '0', sort:string = '{"customerName": 1,"customerNickName":1}') {
-    return this.http.get('http://128.199.228.221:2403/customer?{' +
+    return this.http.get(this.config.serviceBaseUrl +'/customer?{' +
       '"$and": ' +
       '[{"' + fieldName1 + '":{"$regex":"' + fieldValue1 + '", "$options": "i"}},' +
       '{"' + fieldName2 + '":{"$regex":"' + fieldValue2 + '", "$options": "i"}}],' +
@@ -53,11 +54,11 @@ export class CustomerService {
   saveCustomer(cust:Customer) {
     if (cust) {
       if (cust.id) {
-        return this.http.put('http://128.199.228.221:2403/customer', cust)
+        return this.http.put(this.config.serviceBaseUrl +'/customer', cust)
           .map(res=>res.json())
           .catch((err)=>Observable.throw(err));
       } else {
-        return this.http.post('http://128.199.228.221:2403/customer', cust)
+        return this.http.post(this.config.serviceBaseUrl +'/customer', cust)
           .map(res=>res.json())
           .catch((err)=>Observable.throw(err));
       }

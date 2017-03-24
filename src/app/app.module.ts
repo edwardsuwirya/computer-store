@@ -23,7 +23,8 @@ import {DateFormatDirective} from "./shared/directive/date-format.directive";
 import {SalesReportComponent} from "./sales-report/sales-report.component";
 import {SalesPaymentReportPipe} from "./sales-report/sales-payment-report.pipe";
 import {SalesCustomerReportComponent} from "./sales-customer-report/sales-customer-report.component";
-import {SalesCancelComponent} from './sales-cancel/sales-cancel.component';
+import {SalesCancelComponent} from "./sales-cancel/sales-cancel.component";
+import {appConfig, APP_CONFIG} from "./shared/model/app-properties";
 
 const appRoutes:Routes = [
   {
@@ -78,7 +79,10 @@ const appRoutes:Routes = [
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes, {useHash: true})
   ],
-  providers: [SalesForPrintingService],
+  providers: [
+    {provide: APP_CONFIG, useValue: appConfig},
+    SalesForPrintingService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
