@@ -7,7 +7,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Computer Store';
+  title = 'Madju Computindo';
   todays = new Date();
 
   constructor(private router:Router) {

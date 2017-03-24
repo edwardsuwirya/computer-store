@@ -8,7 +8,6 @@ import {Sales} from "../sales/sales";
   styleUrls: ['./sales-for-printing.component.css'],
 })
 export class SalesForPrintingComponent implements OnInit {
-
   salesPrint:Sales;
 
   constructor(private salesForPrint:SalesForPrintingService) {
@@ -18,4 +17,7 @@ export class SalesForPrintingComponent implements OnInit {
     this.salesPrint = this.salesForPrint.salesForPrint;
   }
 
+  doRefresh(sales:Sales) {
+    this.salesPrint = sales;
+  }
 }

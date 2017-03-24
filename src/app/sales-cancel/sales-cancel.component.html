@@ -1,0 +1,35 @@
+<app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
+<div class="card white darken-1 grey-text">
+  <a class="btn-flat grey-text" routerLink="/home">Home</a>
+  <div class="card-content">
+    <h5 class="text-beauty">Sales Cancellation</h5>
+    <div class="row">
+      <div class="col s4 m4">
+        <div class="input-field">
+          <input placeholder="Press type your sales number" id="salesNo" type="text"
+                 [(ngModel)]="salesNo"
+                 class="invoice-form">
+          <label for="salesNo" class="active">Sales</label>
+        </div>
+      </div>
+      <div class="col s3 m3">
+        <div class="input-field">
+          <button type="button" class="btn light-green lighten-2" (click)="onFindSales()">Find</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="card-panel">
+          <app-sales-for-printing #info></app-sales-for-printing>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s3 m3 offset-s9 offset-m9" style="text-align: right;">
+        <button type="button" class="btn red lighten-2" (click)="onCancelSales()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>

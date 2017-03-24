@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {SalesDetail} from "./sales-detail";
 import {Subject, Observable, BehaviorSubject} from "rxjs/Rx";
@@ -10,8 +10,6 @@ import {DialogService} from "../shared/service/dialog.service";
 import {FormControl} from "@angular/forms";
 import {CustomerService} from "../customer/customer.service";
 import {ProductService} from "../product/product.service";
-import {SalesPayment} from "../sales-report/sales-payment";
-import {SalesPaymentService} from "../sales-report/sales-payment.service";
 import {SalesService} from "./sales.service";
 
 declare let _:any;
@@ -227,6 +225,7 @@ export class SalesComponent implements OnInit {
         currentSales.salesDiscount = numeral(this.invoiceDiscount).value();
         currentSales.salesGrandTotal = numeral(this.invoiceGrandTotal).value();
         currentSales.salesPaidStatus = '0';
+        currentSales.salesStatus = '1';
 
         this.customerRegistrationComplete$.subscribe((res)=> {
           if (res) {
@@ -269,6 +268,8 @@ export class SalesComponent implements OnInit {
   onProductFilter(item:SalesDetail, event) {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
+      this.productFilterForm.setValue('');
+      this.products = [];
       this.itemSelection = item;
       $('#productModal').modal('open');
       setTimeout(function () {

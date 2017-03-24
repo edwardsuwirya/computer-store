@@ -62,7 +62,7 @@ export class SalesReportComponent implements OnInit {
 
   private findSales() {
     this.pleaseWaitActive = true;
-    this.salesService.getSalesByField(this.filterSalesBy, this.keyword, (this.page * 10).toString()).subscribe((sales)=> {
+    this.salesService.getSalesBy2Field(this.filterSalesBy, this.keyword, 'salesStatus', '1', (this.page * 10).toString()).subscribe((sales)=> {
       this.sales = _.uniqBy(_.flatten(sales), 'id');
       for (let s of this.sales) {
         this.salesPaymentService.getSalesPaymentByField('salesNo', s.salesNo, '0').subscribe((res)=> {

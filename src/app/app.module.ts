@@ -1,29 +1,29 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
-
-import {AppComponent} from './app.component';
-import {SupplierComponent} from './supplier/supplier.component';
+import {BrowserModule} from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
+import {AppComponent} from "./app.component";
+import {SupplierComponent} from "./supplier/supplier.component";
 import {Routes, RouterModule} from "@angular/router";
-import {SupplierUpdateComponent} from './supplier-update/supplier-update.component';
-import {PleaseWaitComponent} from './shared/component/please-wait/please-wait.component';
-import {CustomerComponent} from './customer/customer.component';
-import {CustomerUpdateComponent} from './customer-update/customer-update.component';
-import {HomeComponent} from './home/home.component';
-import {ProductComponent} from './product/product.component';
-import {ProductUpdateComponent} from './product-update/product-update.component';
-import {SalesComponent} from './sales/sales.component';
-import {TabNewRowDirective} from './shared/directive/tab-new-row.directive';
-import {TabDelRowDirective} from './shared/directive/tab-del-row.directive';
-import {NumberFormatDirective} from './shared/directive/number-format.directive';
-import {SalesForPrintingComponent} from './sales-for-printing/sales-for-printing.component';
+import {SupplierUpdateComponent} from "./supplier-update/supplier-update.component";
+import {PleaseWaitComponent} from "./shared/component/please-wait/please-wait.component";
+import {CustomerComponent} from "./customer/customer.component";
+import {CustomerUpdateComponent} from "./customer-update/customer-update.component";
+import {HomeComponent} from "./home/home.component";
+import {ProductComponent} from "./product/product.component";
+import {ProductUpdateComponent} from "./product-update/product-update.component";
+import {SalesComponent} from "./sales/sales.component";
+import {TabNewRowDirective} from "./shared/directive/tab-new-row.directive";
+import {TabDelRowDirective} from "./shared/directive/tab-del-row.directive";
+import {NumberFormatDirective} from "./shared/directive/number-format.directive";
+import {SalesForPrintingComponent} from "./sales-for-printing/sales-for-printing.component";
 import {SalesForPrintingService} from "./sales-for-printing/sales-for-printing.service";
-import {PricePipe} from './shared/pipe/price.pipe';
-import {DateFormatDirective} from './shared/directive/date-format.directive';
-import {SalesReportComponent} from './sales-report/sales-report.component';
-import { SalesPaymentReportPipe } from './sales-report/sales-payment-report.pipe';
-import { SalesCustomerReportComponent } from './sales-customer-report/sales-customer-report.component';
+import {PricePipe} from "./shared/pipe/price.pipe";
+import {DateFormatDirective} from "./shared/directive/date-format.directive";
+import {SalesReportComponent} from "./sales-report/sales-report.component";
+import {SalesPaymentReportPipe} from "./sales-report/sales-payment-report.pipe";
+import {SalesCustomerReportComponent} from "./sales-customer-report/sales-customer-report.component";
+import {SalesCancelComponent} from './sales-cancel/sales-cancel.component';
 
 const appRoutes:Routes = [
   {
@@ -45,6 +45,7 @@ const appRoutes:Routes = [
   {path: 'salesPrint', component: SalesForPrintingComponent},
   {path: 'salesReport', component: SalesReportComponent},
   {path: 'salesCustomerReport', component: SalesCustomerReportComponent},
+  {path: 'salesCancel', component: SalesCancelComponent},
 ];
 
 @NgModule({
@@ -68,6 +69,7 @@ const appRoutes:Routes = [
     SalesReportComponent,
     SalesPaymentReportPipe,
     SalesCustomerReportComponent,
+    SalesCancelComponent,
   ],
   imports: [
     BrowserModule,

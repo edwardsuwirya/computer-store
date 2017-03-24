@@ -20,4 +20,5 @@ export class Sales {
   salesComissionInfo:string;
   salesOtherInfo:string;
   salesPayment:SalesPayment[];
+  salesStatus:string;
 }
