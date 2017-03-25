@@ -25,6 +25,8 @@ import {SalesPaymentReportPipe} from "./sales-report/sales-payment-report.pipe";
 import {SalesCustomerReportComponent} from "./sales-customer-report/sales-customer-report.component";
 import {SalesCancelComponent} from "./sales-cancel/sales-cancel.component";
 import {appConfig, APP_CONFIG} from "./shared/model/app-properties";
+import {PurchaseComponent} from "./purchase/purchase.component";
+import {PurchaseReportComponent} from "./purchase-report/purchase-report.component";
 
 const appRoutes:Routes = [
   {
@@ -47,6 +49,8 @@ const appRoutes:Routes = [
   {path: 'salesReport', component: SalesReportComponent},
   {path: 'salesCustomerReport', component: SalesCustomerReportComponent},
   {path: 'salesCancel', component: SalesCancelComponent},
+  {path: 'purchase', component: PurchaseComponent},
+  {path: 'purchaseReport', component: PurchaseReportComponent}
 ];
 
 @NgModule({
@@ -71,6 +75,8 @@ const appRoutes:Routes = [
     SalesPaymentReportPipe,
     SalesCustomerReportComponent,
     SalesCancelComponent,
+    PurchaseComponent,
+    PurchaseReportComponent,
   ],
   imports: [
     BrowserModule,

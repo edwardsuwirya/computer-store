@@ -33,8 +33,6 @@ export class SalesComponent implements OnInit {
   customerAddress2:string = '';
   customerAddress3:string = '';
 
-  salesPaidStatus:boolean = false;
-
   invoiceTotal:number = 0;
   invoiceDiscount:number = 0;
   invoiceGrandTotal:number = 0;
@@ -75,7 +73,7 @@ export class SalesComponent implements OnInit {
         total = total + ((numeral(c.productQty).value() * numeral(c.unitPrice).value()) - numeral(c.discount).value());
       }
       this.invoiceTotal = numeral(total).format('0,0');
-      this.invoiceGrandTotal = numeral(total - this.invoiceDiscount).format('0,0');
+      this.invoiceGrandTotal = numeral(total - numeral(this.invoiceDiscount).value()).format('0,0');
     });
 
     $('#customerModal').modal();
@@ -308,5 +306,6 @@ export class SalesComponent implements OnInit {
     this.customerAddress3 = '';
     this.salesDetails = [new SalesDetail(1, '', '', 0, 0, 0, 0, '')];
     this.invoiceDate = moment().format('DD/MM/YYYY');
+    this.invoiceDiscount = 0;
   }
 }

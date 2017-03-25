@@ -90,10 +90,10 @@
             <div class="col s4">
               <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
             </div>
-            <div class="col s3">
-              {{ssp.paymentDate }}
+            <div class="col s4">
+              {{ssp.paymentDate | date:'dd MMM yyyy'}}
             </div>
-            <div class="col s4" style="text-align: right;">
+            <div class="col s1" style="text-align: right;">
               {{ssp.paymentValue | price}}
             </div>
             <div class="col s1">
@@ -120,8 +120,8 @@
           <div class="header-text">
             <div>Invoice Info</div>
             <div>
-            <span>Customer</span>
-            <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
+              <span>Customer</span>
+              <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
             <div class="header-text">
               <span>Clean</span>
@@ -195,10 +195,10 @@
             <div class="col s4">
               <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
             </div>
-            <div class="col s3">
-              {{ssp.paymentDate }}
+            <div class="col s4">
+              {{ssp.paymentDate | date:'dd MMM yyyy' }}
             </div>
-            <div class="col s4" style="text-align: right;">
+            <div class="col s3" style="text-align: right;">
               {{ssp.paymentValue | price}}
             </div>
             <div class="col s1">

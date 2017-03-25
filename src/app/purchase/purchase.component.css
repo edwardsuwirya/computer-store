@@ -1,0 +1,78 @@
+.total-purchase {
+  font-size: 18px;
+  font-weight: bolder;
+  margin-right: 5px;
+  border-top: 1px solid lightgray;
+}
+
+.purchase-form {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #9e9e9e;
+  border-radius: 0;
+  outline: none;
+  height: 1rem !important;
+  width: 100%;
+  font-size: 1rem;
+  margin: 0 0 0 0 !important;
+  padding: 0;
+  box-shadow: none;
+  box-sizing: content-box;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.purchase-form-payment {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #9e9e9e;
+  border-radius: 0;
+  outline: none;
+  height: 2rem !important;
+  width: 100%;
+  font-size: 1rem;
+  margin: 0 0 0 0 !important;
+  padding: 0;
+  box-shadow: none;
+  box-sizing: content-box;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.purchase-form-detail {
+  border-bottom: none !important;
+}
+
+.action-button {
+  width: 150px;
+  margin-bottom: 10px;
+}
+
+.button-search {
+  margin-top: -25px;
+  margin-right: 3px;
+  cursor: pointer;
+}
+
+.card .card-content {
+  padding: 0px 24px 24px 24px !important;
+}
+
+.supplier-name {
+  font-weight: bolder;
+}
+
+.supplier-address {
+  font-size: 10px;
+}
+
+.product-title {
+  font-weight: bolder;
+}
+
+.product-desc {
+  font-size: 10px;
+}
+
+.product-stock-price {
+  font-size: 11px;
+  font-weight: bolder;
+}
