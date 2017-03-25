@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormGroup, FormControl} from "@angular/forms";
 import {Supplier} from "../supplier/supplier";
 import {SupplierService} from "../supplier/supplier.service";
+import {DialogService} from "../shared/service/dialog.service";
 
 @Component({
   selector: 'app-supplier-update',
@@ -14,7 +15,10 @@ export class SupplierUpdateComponent implements OnInit {
   supplierUpdateForm:FormGroup;
   pleaseWaitActive:boolean = false;
 
-  constructor(private supplierService:SupplierService, private router:Router, private activeRoute:ActivatedRoute) {
+  constructor(private supplierService:SupplierService,
+              private router:Router,
+              private activeRoute:ActivatedRoute,
+              private dialogService:DialogService) {
   }
 
   ngOnInit() {
@@ -39,6 +43,8 @@ export class SupplierUpdateComponent implements OnInit {
     this.supplierService.saveSupplier(newSupplier).subscribe((res) => {
       this.pleaseWaitActive = false;
       this.router.navigate(['supplier']);
+    }, (err)=> {
+      this.dialogService.showDialog('Some error occurred ' + err);
     });
   }
 

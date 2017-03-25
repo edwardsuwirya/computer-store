@@ -168,6 +168,8 @@ export class PurchaseComponent implements OnInit {
             currentPurchase.purchaseSupplierName = this.supplier;
             currentPurchase.purchaseSupplierAddress = this.supplierAddress;
             this.supplierRegistrationComplete.next(true);
+          }, (err)=> {
+            this.dialogService.showDialog('Some error occurred ' + err);
           });
         }
 
@@ -196,10 +198,13 @@ export class PurchaseComponent implements OnInit {
               this.productService.saveProduct(newProd).subscribe((res)=> {
                 sdProd.productId = res.id;
                 obs.next();
+              }, (err)=> {
+                this.dialogService.showDialog('Some error occurred ' + err);
               });
             }).subscribe();
           }).subscribe(()=> {
-          }, ()=> {
+          }, (err)=> {
+            this.dialogService.showDialog('Some error occurred ' + err);
           }, ()=> {
             this.productRegistrationComplete.next(true);
           });
@@ -219,10 +224,11 @@ export class PurchaseComponent implements OnInit {
           if (res) {
             this.productRegistrationComplete$.subscribe((res)=> {
               if (res) {
-                console.log(currentPurchase);
                 this.purchaseService.savePurchase(currentPurchase).subscribe((res)=> {
                   this.router.navigate(['/']);
                   this.pleaseWaitActive = false;
+                }, (err)=> {
+                  this.dialogService.showDialog('Some error occurred ' + err);
                 });
               }
             })

@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {CustomerService} from "../customer/customer.service";
 import {FormGroup, FormControl} from "@angular/forms";
 import {Router, ActivatedRoute} from "@angular/router";
 import {Customer} from "../customer/customer";
+import {DialogService} from "../shared/service/dialog.service";
 
 @Component({
   selector: 'app-customer-update',
@@ -15,7 +16,10 @@ export class CustomerUpdateComponent implements OnInit {
   customerUpdateForm:FormGroup;
   pleaseWaitActive:boolean = false;
 
-  constructor(private customerService:CustomerService, private router:Router, private activeRoute:ActivatedRoute) {
+  constructor(private customerService:CustomerService,
+              private router:Router,
+              private activeRoute:ActivatedRoute,
+              private dialogService:DialogService) {
   }
 
   ngOnInit() {
@@ -42,6 +46,8 @@ export class CustomerUpdateComponent implements OnInit {
     this.customerService.saveCustomer(newCustomer).subscribe((res) => {
       this.pleaseWaitActive = false;
       this.router.navigate(['customer']);
+    }, (err)=> {
+      this.dialogService.showDialog('Some error occurred ' + err);
     });
   }
 

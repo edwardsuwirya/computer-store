@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
 import {SalesService} from "../sales/sales.service";
 import {SalesForPrintingComponent} from "../sales-for-printing/sales-for-printing.component";
 import {Sales} from "../sales/sales";
+import {DialogService} from "../shared/service/dialog.service";
 
 @Component({
   selector: 'app-sales-cancel',
@@ -16,7 +17,9 @@ export class SalesCancelComponent implements OnInit {
   salesNo:string;
   salesForCancel:Sales;
 
-  constructor(private salesService:SalesService, private salesForPrint:SalesForPrintingService) {
+  constructor(private salesService:SalesService,
+              private salesForPrint:SalesForPrintingService,
+              private dialogService:DialogService) {
   }
 
   ngOnInit() {
@@ -33,6 +36,8 @@ export class SalesCancelComponent implements OnInit {
   onCancelSales() {
     this.salesForCancel.salesStatus = '0'
     this.salesService.saveSales(this.salesForCancel).subscribe((res)=> {
+    }, (err)=> {
+      this.dialogService.showDialog('Some error occurred ' + err);
     })
   }
 }

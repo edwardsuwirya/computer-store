@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {FormGroup, FormControl} from "@angular/forms";
 import {ProductService} from "../product/product.service";
 import {Router, ActivatedRoute} from "@angular/router";
 import {Product} from "../product/product";
+import {DialogService} from "../shared/service/dialog.service";
 
 @Component({
   selector: 'app-product-update',
@@ -14,7 +15,10 @@ export class ProductUpdateComponent implements OnInit {
   productUpdateForm:FormGroup;
   pleaseWaitActive:boolean = false;
 
-  constructor(private productService:ProductService, private router:Router, private activeRoute:ActivatedRoute) {
+  constructor(private productService:ProductService,
+              private router:Router,
+              private activeRoute:ActivatedRoute,
+              private dialogService:DialogService) {
   }
 
   ngOnInit() {
@@ -42,6 +46,8 @@ export class ProductUpdateComponent implements OnInit {
     this.productService.saveProduct(newProduct).subscribe((res) => {
       this.pleaseWaitActive = false;
       this.router.navigate(['product']);
+    }, (err)=> {
+      this.dialogService.showDialog('Some error occurred ' + err);
     });
   }
 

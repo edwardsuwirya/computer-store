@@ -178,6 +178,8 @@ export class SalesComponent implements OnInit {
             currentSales.salesCustomerAddress2 = this.customerAddress2;
             currentSales.salesCustomerAddress3 = this.customerAddress3;
             this.customerRegistrationComplete.next(true);
+          }, (err)=> {
+            this.dialogService.showDialog('Some error occurred ' + err);
           });
         }
 
@@ -206,10 +208,13 @@ export class SalesComponent implements OnInit {
               this.productService.saveProduct(newProd).subscribe((res)=> {
                 sdProd.productId = res.id;
                 obs.next();
+              }, (err)=> {
+                this.dialogService.showDialog('Some error occurred ' + err);
               });
             }).subscribe();
           }).subscribe(()=> {
-          }, ()=> {
+          }, (err)=> {
+            this.dialogService.showDialog('Some error occurred ' + err);
           }, ()=> {
             this.productRegistrationComplete.next(true);
           });
@@ -233,6 +238,8 @@ export class SalesComponent implements OnInit {
                   this.salesForPrint.doPrint(currentSales);
                   this.router.navigate(['/salesPrint']);
                   this.pleaseWaitActive = false;
+                }, (err)=> {
+                  this.dialogService.showDialog('Some error occurred ' + err);
                 });
               }
             })
