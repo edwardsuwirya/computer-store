@@ -111,6 +111,9 @@ export class PurchaseReportComponent implements OnInit {
 
   refreshPurchase() {
     this.pleaseWaitActive = true;
+    this.showFilter = false;
+    this.filterPurchase.setValue('');
+    this.keyword = '';
     this.purchaseService.getAllPurchase((this.page * 10).toString()).subscribe((res)=> {
       this.purchase = res;
       for (let s of res) {

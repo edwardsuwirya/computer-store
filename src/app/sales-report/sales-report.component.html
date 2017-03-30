@@ -14,12 +14,14 @@
             <div class="header-text">
               <div>Inv.No</div>
               <div>Inv. Date</div>
+              <a (click)="showSearchBar('No')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
           </th>
           <th>
             <div class="header-text">
               <span>Customer</span>
               <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
+              <a (click)="showSearchBar('UnpaidCustomerName')" class="to-pointer red-text"><i class="fa fa-search"></i></a>
             </div>
           </th>
           <th>
@@ -65,9 +67,9 @@
           <td class="td-report" style="width:10%">
           <span class="to-pointer" (click)="viewInvoiceDetail(s)"
                 style="text-decoration: underline">{{s.salesNo}}</span>
-            <div>{{s.salesDate | date:'dd MMM yyyy'}}</div>
+            <div>{{s.salesDate | date:'dd MMM yy'}}</div>
           </td>
-          <td class="td-report" style="width:20%">{{s.salesCustomerName}}</td>
+          <td class="td-report" style="width:19%">{{s.salesCustomerName}}</td>
           <td class="td-report-right" style="width:7%">{{(s.salesTotal-s.salesDiscount) | price}}</td>
           <td class="td-report" style="width:12%">
             <div><a class="orange-text darken-4 action-button to-pointer" (click)="onUpdateDeliveryCharge(s)">Update</a>
@@ -85,20 +87,20 @@
               <div>{{s.salesComission | price}}</div>
             </div>
           </td>
-          <td class="td-report" style="width:30%">
+          <td class="td-report" style="width:31%">
             <div><a class="orange-text darken-4 action-button to-pointer" (click)="onUpdatePaymentMethod(s)">Update</a>
             </div>
             <div class="row" *ngFor="let ssp of s.salesPayment">
               <div class="col s4">
                 <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
               </div>
-              <div class="col s4">
-                {{ssp.paymentDate | date:'dd MMM yyyy'}}
+              <div class="col s3">
+                {{ssp.paymentDate | date:'dd MMM yy'}}
               </div>
-              <div class="col s2" style="text-align: right;">
+              <div class="col s4" style="text-align: right;">
                 {{ssp.paymentValue | price}}
               </div>
-              <div class="col s2">
+              <div class="col s1">
               <span class="to-pointer red-text" (click)="onDeletePayment(ssp,s)"><i
                 class="fa fa-window-close"></i> </span>
               </div>
@@ -147,7 +149,7 @@
                     style="text-decoration: underline">{{s.salesNo}}</span>
               </div>
               <div class="col s4">
-                <span>{{s.salesDate | date:'dd MMM yyyy'}}</span>
+                <span>{{s.salesDate | date:'dd MMM yy'}}</span>
               </div>
               <div class="col s4" style="text-align: right">
                 <span>{{(s.salesTotal-s.salesDiscount) | price}}</span>
@@ -198,7 +200,7 @@
                 <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
               </div>
               <div class="col s4">
-                {{ssp.paymentDate | date:'dd MMM yyyy' }}
+                {{ssp.paymentDate | date:'dd MMM yy' }}
               </div>
               <div class="col s3" style="text-align: right;">
                 {{ssp.paymentValue | price}}
@@ -387,5 +389,23 @@
       </tr>
       </tbody>
     </table>
+  </div>
+</div>
+<div id="deleteConfirmationModal" class="modal" style="width: 400px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12">
+        <h5>Delete Confirmation</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        Are you sure want to delete this payment ?
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+      <button type="button" class="btn light-green lighten-2" (click)="onConfirmDeletePayment()">Yes</button>
+      <button type="button" class="btn red lighten-2" (click)="onIgnoreDeletePayment()">No</button>
+    </div>
   </div>
 </div>

@@ -29,6 +29,7 @@ export class SalesReportComponent implements OnInit {
   sales:Sales[] = [];
   salesPaymentInv:SalesPayment = new SalesPayment();
   salesForUpdate:Sales = new Sales();
+  salesPaymentUpdate:SalesPayment = new SalesPayment();
 
   bankNameDisabled:boolean = false;
   fieldBy:string = '';
@@ -55,6 +56,7 @@ export class SalesReportComponent implements OnInit {
     $('#comissionModal').modal();
     $('#paymentModal').modal();
     $('#salesDetailModal').modal();
+    $('#deleteConfirmationModal').modal();
     let that = this;
     new Pikaday({
       field: document.getElementById('paymentDate'),
@@ -79,15 +81,28 @@ export class SalesReportComponent implements OnInit {
 
   private findSales() {
     this.pleaseWaitActive = true;
-    this.salesService.getSalesBy2Field(this.filterSalesBy, this.keyword, 'salesStatus', '1', (this.page * 10).toString()).subscribe((sales)=> {
-      this.sales = _.uniqBy(_.flatten(sales), 'id');
-      for (let s of this.sales) {
-        this.salesPaymentService.getSalesPaymentByField('salesNo', s.salesNo, '0').subscribe((res)=> {
-          s.salesPayment = res;
-        });
-      }
-      this.pleaseWaitActive = false;
-    });
+    if (this.filterSalesBy === 'UnpaidCustomerName') {
+      this.salesService.getSalesBy2Field('salesCustomerName', this.keyword, 'salesPaidStatus', '0', (this.page * 10).toString()).subscribe((sales)=> {
+        this.sales = _.uniqBy(_.flatten(sales), 'id');
+        for (let s of this.sales) {
+          this.salesPaymentService.getSalesPaymentByField('salesNo', s.salesNo, '0').subscribe((res)=> {
+            s.salesPayment = res;
+          });
+        }
+        this.pleaseWaitActive = false;
+      });
+    } else {
+      this.salesService.getSalesBy2Field(this.filterSalesBy, this.keyword, 'salesStatus', '1', (this.page * 10).toString()).subscribe((sales)=> {
+        this.sales = _.uniqBy(_.flatten(sales), 'id');
+        for (let s of this.sales) {
+          this.salesPaymentService.getSalesPaymentByField('salesNo', s.salesNo, '0').subscribe((res)=> {
+            s.salesPayment = res;
+          });
+        }
+        this.pleaseWaitActive = false;
+      });
+    }
+
   }
 
   showSearchBar(field:string) {
@@ -99,7 +114,12 @@ export class SalesReportComponent implements OnInit {
       }
     }
     this.fieldBy = field;
-    this.filterSalesBy = 'sales' + field;
+    if (field === 'UnpaidCustomerName') {
+      this.filterSalesBy = 'UnpaidCustomerName';
+    } else {
+      this.filterSalesBy = 'sales' + field;
+    }
+
     this.filterSales.setValue('');
     setTimeout(function () {
       document.getElementById('txtFilter').focus();
@@ -114,6 +134,9 @@ export class SalesReportComponent implements OnInit {
 
   refreshSales() {
     this.pleaseWaitActive = true;
+    this.showFilter = false;
+    this.filterSales.setValue('');
+    this.keyword = '';
     this.salesService.getAllSales((this.page * 10).toString()).subscribe((res)=> {
       this.sales = res;
       for (let s of res) {
@@ -178,9 +201,19 @@ export class SalesReportComponent implements OnInit {
 
   onDeletePayment(salesPayment:SalesPayment, sales:Sales) {
     this.salesForUpdate = sales;
-    this.salesPaymentService.deletePaymentDetail(salesPayment).subscribe(()=> {
+    this.salesPaymentUpdate = salesPayment;
+    $('#deleteConfirmationModal').modal('open');
+  }
+
+  onConfirmDeletePayment() {
+    this.salesPaymentService.deletePaymentDetail(this.salesPaymentUpdate).subscribe(()=> {
       this.refreshPaidStatus();
+      $('#deleteConfirmationModal').modal('close');
     });
+  }
+
+  onIgnoreDeletePayment() {
+    $('#deleteConfirmationModal').modal('close');
   }
 
   salesPaymentTotalCalculation(salesPayment:SalesPayment[]):number {
