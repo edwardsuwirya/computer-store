@@ -1,49 +1,51 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<div class="card white darken-1 grey-text">
-  <a class="btn-flat grey-text" routerLink="/home">Home</a>
-  <a class="btn-flat grey-text" routerLink="/supplier">Supplier List</a>
-  <div class="card-content">
-    <h5 class="text-beauty">Supplier Update</h5>
-    <div class="list-content">
-      <form novalidate [formGroup]="supplierUpdateForm" (submit)="saveSupplier()">
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="" id="supplierName" formControlName="supplierName" type="text">
-            <label for="supplierName" class="active">Supplier Name</label>
+<app-home>
+  <div class="card white darken-1 grey-text">
+    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <a class="btn-flat grey-text" routerLink="/supplier">Supplier List</a>
+    <div class="card-content">
+      <h5 class="text-beauty">Supplier Update</h5>
+      <div class="list-content">
+        <form novalidate [formGroup]="supplierUpdateForm" (submit)="saveSupplier()">
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="" id="supplierName" formControlName="supplierName" type="text">
+              <label for="supplierName" class="active">Supplier Name</label>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="" id="supplierPhone" formControlName="supplierPhone" type="text">
-            <label for="supplierPhone" class="active">Supplier Phone</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="" id="supplierPhone" formControlName="supplierPhone" type="text">
+              <label for="supplierPhone" class="active">Supplier Phone</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="" id="supplierAddress" formControlName="supplierAddress" type="text">
-            <label for="supplierAddress" class="active">Supplier Address</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="" id="supplierAddress" formControlName="supplierAddress" type="text">
+              <label for="supplierAddress" class="active">Supplier Address</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="" id="supplierBank" formControlName="supplierBank" type="text">
-            <label for="supplierBank" class="active">Supplier Bank</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="" id="supplierBank" formControlName="supplierBank" type="text">
+              <label for="supplierBank" class="active">Supplier Bank</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input type="checkbox" id="indeterminate-checkbox" formControlName="supplierStatus"/>
-            <label for="indeterminate-checkbox">Active</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="checkbox" id="indeterminate-checkbox" formControlName="supplierStatus"/>
+              <label for="indeterminate-checkbox">Active</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12 m12" style="text-align: right;">
-            <button type="submit" class="btn light-green lighten-2 action-button">Save</button>
-            <button type="button" class="btn light-green lighten-2 action-button" (click)="goToList()">Cancel</button>
+          <div class="row">
+            <div class="input-field col s12 m12" style="text-align: right;">
+              <button type="submit" class="btn light-green lighten-2 action-button">Save</button>
+              <button type="button" class="btn light-green lighten-2 action-button" (click)="goToList()">Cancel</button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+</app-home>

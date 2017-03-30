@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SalesForPrintingService} from "./sales-for-printing.service";
 import {Sales} from "../sales/sales";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-sales-for-printing',
@@ -8,16 +9,21 @@ import {Sales} from "../sales/sales";
   styleUrls: ['./sales-for-printing.component.css'],
 })
 export class SalesForPrintingComponent implements OnInit {
-  salesPrint:Sales;
+  salesPrint: Sales;
 
-  constructor(private salesForPrint:SalesForPrintingService) {
+  constructor(private salesForPrint: SalesForPrintingService, private router: Router) {
   }
 
   ngOnInit() {
     this.salesPrint = this.salesForPrint.salesForPrint;
   }
 
-  doRefresh(sales:Sales) {
+  goToList() {
+    this.router.navigate(['/']);
+    return;
+  }
+
+  doRefresh(sales: Sales) {
     this.salesPrint = sales;
   }
 }

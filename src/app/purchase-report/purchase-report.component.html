@@ -1,189 +1,192 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<div class="card white darken-1 grey-text">
-  <a class="btn-flat grey-text" routerLink="/home">Home</a>
-  <div class="card-content">
-    <h5 class="text-beauty">Purchase Report</h5>
-    <button type="button" class="btn-floating green right" (click)="refreshPurchase()" style="margin-right: 5px">
-      <i class="fa fa-refresh"></i>
-    </button>
-    <table class="bordered" *ngIf="!smallWindow">
-      <thead>
-      <tr>
-        <th>
-          <div class="header-text">
-            <div>Purchase No</div>
-          </div>
-        </th>
-        <th>
-          <div class="header-text">
-            <div>Purchase Date</div>
-          </div>
-        </th>
-        <th>
-          <div class="header-text">
-            <span>Supplier</span>
-            <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
-          </div>
-        </th>
-        <th>
-          <div class="header-text-number">
-            <span>Total</span>
-          </div>
-        </th>
-        <th>
-          <div class="header-text">
-            <span>Payment Term</span>
-          </div>
-        </th>
-        <th>
-          <div class="header-text-number">
-            <span>Remaining Balance</span>
-          </div>
-        </th>
-        <th>
-          <div class="header-text">
-            <span>Clean</span>
-            <a (click)="showSearchBar('PaidStatus')" class="to-pointer"><i class="fa fa-search"></i></a>
-          </div>
-        </th>
-      </tr>
-      <tr [hidden]="!showFilter">
-        <td colspan="6">
-          <input type="text" id="txtFilter" placeholder="{{filterPurchaseBy}}" [formControl]="filterPurchase">
-        </td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let s of purchase" class="medium-font">
-        <td class="td-report" style="width:10%">
-          <span class="to-pointer" (click)="viewPurchaseDetail(s)"
-                style="text-decoration: underline">{{s.purchaseNo}}</span>
-        </td>
-        <td class="td-report" style="width:10%">
-          <div>{{s.purchaseDate | date:'dd MMM yyyy'}}</div>
-        </td>
-        <td class="td-report" style="width:23%">{{s.purchaseSupplierName}}</td>
-        <td class="td-report-right" style="width:7%">{{(s.purchaseTotal-s.purchaseDiscount) | price}}</td>
-        <td class="td-report" style="width:30%">
-          <div><a class="orange-text darken-4 action-button to-pointer" (click)="onUpdatePaymentMethod(s)">Update</a>
-          </div>
-          <div class="row" *ngFor="let ssp of s.purchasePayment">
-            <div class="col s4">
-              <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
+<app-home>
+  <div class="card white darken-1 grey-text">
+    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <div class="card-content">
+      <h5 class="text-beauty">Purchase Report</h5>
+      <button type="button" class="btn-floating green right" (click)="refreshPurchase()" style="margin-right: 5px">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <table class="bordered" *ngIf="!smallWindow">
+        <thead>
+        <tr>
+          <th>
+            <div class="header-text">
+              <div>Purchase No</div>
             </div>
-            <div class="col s4">
-              {{ssp.paymentDate | date:'dd MMM yyyy'}}
+          </th>
+          <th>
+            <div class="header-text">
+              <div>Purchase Date</div>
             </div>
-            <div class="col s3" style="text-align: right;">
-              {{ssp.paymentValue | price}}
-            </div>
-            <div class="col s1">
-              <span class="to-pointer red-text" (click)="onDeletePayment(ssp,s)"><i
-                class="fa fa-window-close"></i> </span>
-            </div>
-          </div>
-        </td>
-        <td class="td-report-right">
-          {{((s.purchaseTotal-s.purchaseDiscount)-purchasePaymentTotalCalculation(s.purchasePayment)) | price}}
-        </td>
-        <td class="td-report-center" style="width: 7%">
-          <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='1'" checked="checked"/>
-          <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='0'"/>
-          <label></label>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <table class="bordered" *ngIf="smallWindow">
-      <thead>
-      <tr>
-        <th>
-          <div class="header-text">
-            <div>Purchase Info</div>
-            <div>
-              <span>Customer</span>
+          </th>
+          <th>
+            <div class="header-text">
+              <span>Supplier</span>
               <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
+          </th>
+          <th>
+            <div class="header-text-number">
+              <span>Total</span>
+            </div>
+          </th>
+          <th>
+            <div class="header-text">
+              <span>Payment Term</span>
+            </div>
+          </th>
+          <th>
+            <div class="header-text-number">
+              <span>Remaining Balance</span>
+            </div>
+          </th>
+          <th>
             <div class="header-text">
               <span>Clean</span>
               <a (click)="showSearchBar('PaidStatus')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
-          </div>
-        </th>
-      </tr>
-      <tr [hidden]="!showFilter">
-        <td colspan="6">
-          <input type="text" id="txtFilter" placeholder="{{filterPurchaseBy}}" [formControl]="filterPurchase">
-        </td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let s of purchase" class="medium-font">
-        <td class="td-report">
-          <div class="row">
-            <div class="col s4">
-              <span class="to-pointer" (click)="viewPurchaseDetail(s)"
-                    style="text-decoration: underline">{{s.purchaseNo}}</span>
+          </th>
+        </tr>
+        <tr [hidden]="!showFilter">
+          <td colspan="6">
+            <input type="text" id="txtFilter" placeholder="{{filterPurchaseBy}}" [formControl]="filterPurchase">
+          </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let s of purchase" class="medium-font">
+          <td class="td-report" style="width:10%">
+          <span class="to-pointer" (click)="viewPurchaseDetail(s)"
+                style="text-decoration: underline">{{s.purchaseNo}}</span>
+          </td>
+          <td class="td-report" style="width:10%">
+            <div>{{s.purchaseDate | date:'dd MMM yyyy'}}</div>
+          </td>
+          <td class="td-report" style="width:23%">{{s.purchaseSupplierName}}</td>
+          <td class="td-report-right" style="width:7%">{{(s.purchaseTotal-s.purchaseDiscount) | price}}</td>
+          <td class="td-report" style="width:30%">
+            <div><a class="orange-text darken-4 action-button to-pointer" (click)="onUpdatePaymentMethod(s)">Update</a>
             </div>
-            <div class="col s4">
-              <span>{{s.purchaseDate | date:'dd MMM yyyy'}}</span>
-            </div>
-            <div class="col s4" style="text-align: right">
-              <span>{{(s.purchaseTotal-s.purchaseDiscount) | price}}</span>
-            </div>
-          </div>
-          <div>{{s.purchaseCustomerName}}</div>
-
-          <div class="row">
-            <div class="col s12">
-              <span>Payment</span>
-              <span><a class="orange-text darken-4 action-button to-pointer"
-                       (click)="onUpdatePaymentMethod(s)">Update</a></span>
-            </div>
-          </div>
-          <div class="row" *ngFor="let ssp of s.purchasePayment">
-            <div class="col s4">
-              <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
-            </div>
-            <div class="col s4">
-              {{ssp.paymentDate | date:'dd MMM yyyy' }}
-            </div>
-            <div class="col s3" style="text-align: right;">
-              {{ssp.paymentValue | price}}
-            </div>
-            <div class="col s1">
+            <div class="row" *ngFor="let ssp of s.purchasePayment">
+              <div class="col s4">
+                <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
+              </div>
+              <div class="col s4">
+                {{ssp.paymentDate | date:'dd MMM yyyy'}}
+              </div>
+              <div class="col s3" style="text-align: right;">
+                {{ssp.paymentValue | price}}
+              </div>
+              <div class="col s1">
               <span class="to-pointer red-text" (click)="onDeletePayment(ssp,s)"><i
                 class="fa fa-window-close"></i> </span>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col s6">
-              <span>Remaining Balance</span>
+          </td>
+          <td class="td-report-right">
+            {{((s.purchaseTotal-s.purchaseDiscount)-purchasePaymentTotalCalculation(s.purchasePayment)) | price}}
+          </td>
+          <td class="td-report-center" style="width: 7%">
+            <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='1'" checked="checked"/>
+            <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='0'"/>
+            <label></label>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table class="bordered" *ngIf="smallWindow">
+        <thead>
+        <tr>
+          <th>
+            <div class="header-text">
+              <div>Purchase Info</div>
+              <div>
+                <span>Customer</span>
+                <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
+              </div>
+              <div class="header-text">
+                <span>Clean</span>
+                <a (click)="showSearchBar('PaidStatus')" class="to-pointer"><i class="fa fa-search"></i></a>
+              </div>
             </div>
-            <div class="col s6" style="text-align: right">
-              {{((s.purchaseTotal-s.purchaseDiscount)-purchasePaymentTotalCalculation(s.purchasePayment)) | price}}
+          </th>
+        </tr>
+        <tr [hidden]="!showFilter">
+          <td colspan="6">
+            <input type="text" id="txtFilter" placeholder="{{filterPurchaseBy}}" [formControl]="filterPurchase">
+          </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let s of purchase" class="medium-font">
+          <td class="td-report">
+            <div class="row">
+              <div class="col s4">
+              <span class="to-pointer" (click)="viewPurchaseDetail(s)"
+                    style="text-decoration: underline">{{s.purchaseNo}}</span>
+              </div>
+              <div class="col s4">
+                <span>{{s.purchaseDate | date:'dd MMM yyyy'}}</span>
+              </div>
+              <div class="col s4" style="text-align: right">
+                <span>{{(s.purchaseTotal-s.purchaseDiscount) | price}}</span>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col s2 offset-s10">
-              <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='1'" checked="checked"/>
-              <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='0'"/>
-              <label></label>
+            <div>{{s.purchaseCustomerName}}</div>
+
+            <div class="row">
+              <div class="col s12">
+                <span>Payment</span>
+                <span><a class="orange-text darken-4 action-button to-pointer"
+                         (click)="onUpdatePaymentMethod(s)">Update</a></span>
+              </div>
             </div>
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="row">
-      <div class="col s4 m4 offset-s8 offset-m8 pagination">
-        <span class="to-pointer" (click)="prev()"><i class="fa fa-arrow-left"></i></span>
-        <span>{{page+1}}</span>
-        <span class="to-pointer" (click)="next()"><i class="fa fa-arrow-right"></i></span>
+            <div class="row" *ngFor="let ssp of s.purchasePayment">
+              <div class="col s4">
+                <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
+              </div>
+              <div class="col s4">
+                {{ssp.paymentDate | date:'dd MMM yyyy' }}
+              </div>
+              <div class="col s3" style="text-align: right;">
+                {{ssp.paymentValue | price}}
+              </div>
+              <div class="col s1">
+              <span class="to-pointer red-text" (click)="onDeletePayment(ssp,s)"><i
+                class="fa fa-window-close"></i> </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s6">
+                <span>Remaining Balance</span>
+              </div>
+              <div class="col s6" style="text-align: right">
+                {{((s.purchaseTotal-s.purchaseDiscount)-purchasePaymentTotalCalculation(s.purchasePayment)) | price}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s2 offset-s10">
+                <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='1'" checked="checked"/>
+                <input type="checkbox" class="filled-in" *ngIf="s.purchasePaidStatus==='0'"/>
+                <label></label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col s4 m4 offset-s8 offset-m8 pagination">
+          <span class="to-pointer" (click)="prev()"><i class="fa fa-arrow-left"></i></span>
+          <span>{{page+1}}</span>
+          <span class="to-pointer" (click)="next()"><i class="fa fa-arrow-right"></i></span>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</app-home>
+
 <div id="paymentModal" class="modal" style="width: 500px;">
   <div class="modal-content">
     <div class="row">
@@ -251,6 +254,7 @@
     </div>
   </div>
 </div>
+
 <div id="purchaseDetailModal" class="modal" style="width: 600px;">
   <div class="modal-content">
     <div class="row">

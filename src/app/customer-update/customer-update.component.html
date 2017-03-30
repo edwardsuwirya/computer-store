@@ -1,56 +1,58 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<div class="card white darken-1 grey-text">
-  <a class="btn-flat grey-text" routerLink="/home">Home</a>
-  <a class="btn-flat grey-text" routerLink="/customer">Customer List</a>
-  <div class="card-content">
-    <h5 class="text-beauty">Customer Update</h5>
-    <div class="list-content">
-      <form novalidate [formGroup]="customerUpdateForm" (submit)="saveCustomer()">
-        <div class="row">
-          <div class="input-field col s12 m12">
-            <input placeholder="" id="customerName" formControlName="customerName" type="text">
-            <label for="customerName" class="active">Customer Name</label>
+<app-home>
+  <div class="card white darken-1 grey-text">
+    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <a class="btn-flat grey-text" routerLink="/customer">Customer List</a>
+    <div class="card-content">
+      <h5 class="text-beauty">Customer Update</h5>
+      <div class="list-content">
+        <form novalidate [formGroup]="customerUpdateForm" (submit)="saveCustomer()">
+          <div class="row">
+            <div class="input-field col s12 m12">
+              <input placeholder="" id="customerName" formControlName="customerName" type="text">
+              <label for="customerName" class="active">Customer Name</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12 m12">
-            <input placeholder="" id="customerNickName" formControlName="customerNickName" type="text">
-            <label for="customerNickName" class="active">Customer Nick Name</label>
+          <div class="row">
+            <div class="input-field col s12 m12">
+              <input placeholder="" id="customerNickName" formControlName="customerNickName" type="text">
+              <label for="customerNickName" class="active">Customer Nick Name</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col  s12 m12">
-            <input placeholder="" id="customerPhone" formControlName="customerPhone" type="text">
-            <label for="customerPhone" class="active">Customer Phone</label>
+          <div class="row">
+            <div class="input-field col  s12 m12">
+              <input placeholder="" id="customerPhone" formControlName="customerPhone" type="text">
+              <label for="customerPhone" class="active">Customer Phone</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col  s12 m4">
-            <input placeholder="" id="customerAddress1" formControlName="customerAddress1" type="text">
-            <label for="customerAddress1" class="active">Customer Address 1</label>
+          <div class="row">
+            <div class="input-field col  s12 m4">
+              <input placeholder="" id="customerAddress1" formControlName="customerAddress1" type="text">
+              <label for="customerAddress1" class="active">Customer Address 1</label>
+            </div>
+            <div class="input-field col s12 m4">
+              <input placeholder="" id="customerAddress2" formControlName="customerAddress2" type="text">
+              <label for="customerAddress2" class="active">Customer Address 2</label>
+            </div>
+            <div class="input-field col  s12 m4">
+              <input placeholder="" id="customerAddress3" formControlName="customerAddress3" type="text">
+              <label for="customerAddress3" class="active">Customer Address 3</label>
+            </div>
           </div>
-          <div class="input-field col s12 m4">
-            <input placeholder="" id="customerAddress2" formControlName="customerAddress2" type="text">
-            <label for="customerAddress2" class="active">Customer Address 2</label>
+          <div class="row">
+            <div class="input-field col s12 m12">
+              <input type="checkbox" id="indeterminate-checkbox" formControlName="customerStatus"/>
+              <label for="indeterminate-checkbox">Active</label>
+            </div>
           </div>
-          <div class="input-field col  s12 m4">
-            <input placeholder="" id="customerAddress3" formControlName="customerAddress3" type="text">
-            <label for="customerAddress3" class="active">Customer Address 3</label>
+          <div class="row">
+            <div class="input-field col s12 m12" style="text-align: right;">
+              <button type="submit" class="btn light-green lighten-1 action-button">Save</button>
+              <button type="button" class="btn light-green lighten-1 action-button" (click)="goToList()">Cancel</button>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12 m12">
-            <input type="checkbox" id="indeterminate-checkbox" formControlName="customerStatus"/>
-            <label for="indeterminate-checkbox">Active</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12 m12" style="text-align: right;">
-            <button type="submit" class="btn light-green lighten-1 action-button">Save</button>
-            <button type="button" class="btn light-green lighten-1 action-button" (click)="goToList()">Cancel</button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+</app-home>

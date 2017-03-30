@@ -1,4 +1,14 @@
 <div *ngIf="salesPrint">
+  <div class="row">
+    <div class="col s2 m1">
+      <img style="margin-top: 5px; cursor: pointer;" (click)="goToList()"
+           src="assets/img/madju-computindo-logo.jpeg">
+    </div>
+    <div class="col s10 m11">
+      <h4 class="title-beautify" (click)="goToList()"
+          style="margin-left:25px;margin-top: 5px;cursor: pointer;">Madju Computindo</h4>
+    </div>
+  </div>
   <h5>Sales Invoice</h5>
   <div style="font-size: 11px">
     <div class="row">
@@ -23,19 +33,23 @@
               </div>
             </div>
           </div>
-          <div class="col s3 m3 offset-s3 offset-m3">
+          <div class="col s5 m3 offset-s1 offset-m3">
             <div class="row">
-              <div class="col s12">
-                <span style="font-weight: bolder;">Invoice No: </span>
-                <span style="border-bottom: 1px solid lightgray">
+              <div class="col s6" style="text-align: right;">
+                <span style="font-weight: bolder;border-bottom: 1px solid lightgray">Invoice No: </span>
+              </div>
+              <div class="col s6">
+                <span>
                   {{salesPrint.salesNo}}
                 </span>
               </div>
             </div>
             <div class="row">
-              <div class="col s12">
-                <span style="font-weight: bolder;">Invoice Date: </span>
-                <span style="border-bottom: 1px solid lightgray">
+              <div class="col s6" style="text-align: right;">
+                <span style="font-weight: bolder;border-bottom: 1px solid lightgray">Invoice Date: </span>
+              </div>
+              <div class="col s6">
+                <span>
                   {{salesPrint.salesDate | date:'dd MMMM yyyy'}}
                 </span>
               </div>
@@ -50,8 +64,8 @@
         <table>
           <thead>
           <tr>
-            <th style="text-align: center">Qty</th>
             <th>Item</th>
+            <th style="text-align: center">Qty</th>
             <th style="text-align: right">Unit Price</th>
             <th style="text-align: right">Discount</th>
             <th style="text-align: right">Total Price</th>
@@ -59,11 +73,11 @@
           </thead>
           <tbody>
           <tr *ngFor="let sales of salesPrint.salesDetail">
-            <td style="text-align: center">{{sales.productQty | price}}</td>
             <td>
               <div>{{sales.productName}}</div>
               <div>{{sales.salesDetailInfo}}</div>
             </td>
+            <td style="text-align: center">{{sales.productQty | price}}</td>
             <td style="text-align: right">{{sales.unitPrice | price}}</td>
             <td style="text-align: right">{{sales.discount | price}}</td>
             <td style="text-align: right">{{sales.salesTotal | price}}</td>
@@ -74,37 +88,38 @@
     </div>
     <div style="border-top:1px solid lightgray; width: 100%"></div>
     <div class="row">
-      <div class="col s3 offset-s9">
+      <div class="col s5 m3 offset-s7 offset-m9">
         <div class="row">
-          <div class="col s5">
-            <span style="margin-right: 40px;font-weight: bolder;">Total: </span>
+          <div class="col s5" style="text-align: right;">
+            <span style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Total: </span>
           </div>
-          <div class="col s7" style="text-align: right;padding-right: 16px;">
+          <div class="col s7" style="text-align: right;padding-right: 3px;">
             {{salesPrint.salesTotal | price}}
           </div>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col s3 offset-s9">
+      <div class="col s5 m3 offset-s7 offset-m9">
         <div class="row">
-          <div class="col s5">
-            <span style="margin-right: 40px;font-weight: bolder;">Discount: </span>
+          <div class="col s5" style="text-align: right;">
+            <span style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Discount: </span>
           </div>
-          <div class="col s7" style="text-align: right;padding-right: 16px;">
+          <div class="col s7" style="text-align: right;padding-right: 3px;">
             {{salesPrint.salesDiscount | price}}
           </div>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col s3 offset-s9">
+      <div class="col s5 m3 offset-s7 offset-m9">
         <div class="row">
-          <div class="col s5">
-            <span style="margin-right: 40px;font-weight: bolder;">Grand Total: </span>
+          <div class="col s5" style="text-align: right;">
+              <span
+                style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Grand Total: </span>
           </div>
-          <div class="col s7" style="text-align: right;padding-right: 16px;">
-            {{salesPrint.salesGrandTotal | price}}
+          <div class="col s7" style="text-align: right;padding-right: 3px;font-weight: bolder;font-size: 12px">
+            {{(salesPrint.salesTotal-salesPrint.salesDiscount) | price}}
           </div>
         </div>
       </div>

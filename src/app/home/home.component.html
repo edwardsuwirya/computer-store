@@ -1,26 +1,24 @@
-<ul class="collapsible collapsible-accordion" data-collapsible="accordion">
-  <li class="active">
-    <div class="collapsible-header active">Transaction</div>
-    <div class="collapsible-body" style="display: block;">
-      <button class="btn light-green lighten-2 menu-button-large" routerLink="/sales">Sales</button>
-      <button class="btn light-green lighten-2 menu-button-large" routerLink="/purchase">Purchase</button>
-      <button class="btn red lighten-2 menu-button-large" routerLink="/salesCancel">Sales Cancellation</button>
+<div class="container" style="margin-bottom: 10px">
+  <div class="row">
+    <div class="col s5 m2 l1">
+      <img style="margin-top: 15px; cursor: pointer" (click)="goToList()" src="assets/img/madju-computindo-logo.jpeg">
     </div>
-  </li>
-  <li class="">
-    <div class="collapsible-header">Master</div>
-    <div class="collapsible-body" style="display: none;">
-      <button class="btn light-blue lighten-2 menu-button-large" routerLink="/supplier">Supplier</button>
-      <button class="btn light-blue lighten-2 menu-button-large" routerLink="/customer">Customer</button>
-      <button class="btn light-blue lighten-2 menu-button-large" routerLink="/product">Product</button>
+    <div class="col s7 m4 l5">
+      <h4 class="title-beautify" style="margin-left:15px;cursor: pointer" (click)="goToList()">{{title}}</h4>
     </div>
-  </li>
-  <li class="">
-    <div class="collapsible-header">Report</div>
-    <div class="collapsible-body" style="display: none;">
-      <button class="btn orange lighten-2 menu-button-large" routerLink="/salesReport">Sales Report</button>
-      <button class="btn orange lighten-2 menu-button-large" routerLink="/salesCustomerReport">Sales Customer Report</button>
-      <button class="btn orange lighten-2 menu-button-large" routerLink="/purchaseReport">Purchase Report</button>
+    <div class="col m6 l6 hide-on-small-only"
+         style="color: rgba(0, 0, 0, .6);text-align: right;font-size: 14px; margin-top: 25px;font-weight: bold">
+      Today is {{ todays | date:medium}}
     </div>
-  </li>
-</ul>
+  </div>
+  <div class="row hide-on-med-and-up"
+       style="color: rgba(0, 0, 0, .6);text-align: right;font-size: 14px; margin-top: 25px;font-weight: bold">
+    Today is {{ todays | date:medium}}
+  </div>
+  <ng-content></ng-content>
+  <div class="row">
+    <div class="col s4 offset-s8" style="text-align: right">
+      <div style="font-size: 9px;">&copy;Edward Suwirya, 2017</div>
+    </div>
+  </div>
+</div>

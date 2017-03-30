@@ -1,221 +1,227 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<div class="row">
-  <div class="col s12 m12">
-    <div class="card white grey-text">
-      <a class="btn-flat grey-text" routerLink="/home">Home</a>
-      <div class="card-content">
+<app-home>
+  <div class="row">
+    <div class="col s12 m12">
+      <div class="card white grey-text">
+        <a class="btn-flat grey-text" routerLink="/home">Home</a>
+        <div class="card-content">
         <span class="card-title">
           <h5 class="left text-beauty">Sales Invoice</h5>
         </span>
-        <div class="row">
-          <div class="col s12 m12">
-            <div class="row">
-              <div class="col s6 m6">
-                <input type="hidden" [(ngModel)]="customerId">
-                <div class="input-field">
-                  <input placeholder="Press enter key to query customer" id="customer" type="text"
-                         [(ngModel)]="customer"
-                         (keypress)="onCustomerFilter($event)" class="invoice-form">
-                  <span class="pull-right button-search hide-on-large-only" (click)="onCustomerFilter($event)"><i
-                    class="fa fa-search"></i></span>
-                  <label for="customer" class="active">Customer</label>
+          <div class="row">
+            <div class="col s12 m12">
+              <div class="row">
+                <div class="col s6 m6">
+                  <input type="hidden" [(ngModel)]="customerId">
+                  <div class="input-field">
+                    <input placeholder="Press enter key to query customer" id="customer" type="text"
+                           [(ngModel)]="customer"
+                           (keypress)="onCustomerFilter($event)" class="invoice-form">
+                    <span class="pull-right button-search hide-on-large-only" (click)="onCustomerFilter($event)"><i
+                      class="fa fa-search"></i></span>
+                    <label for="customer" class="active">Customer</label>
+                  </div>
+                  <div class="row">
+                    <div class="col s12">
+                      <div class="input-field">
+                        <input type="text" placeholder="" id="custAddress1" [(ngModel)]="customerAddress1"
+                               class="invoice-form">
+                        <label for="custAddress1" class="active">Address</label>
+                      </div>
+                      <div class="input-field">
+                        <input type="text" placeholder="" id="custAddress2" [(ngModel)]="customerAddress2"
+                               class="invoice-form">
+                        <label for="custAddress2" class="active"></label>
+                      </div>
+                      <div class="input-field">
+                        <input type="text" placeholder="" id="custAddress3" [(ngModel)]="customerAddress3"
+                               class="invoice-form">
+                        <label for="custAddress3" class="active"></label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="row">
-                  <div class="col s12">
-                    <div class="input-field">
-                      <input type="text" placeholder="" id="custAddress1" [(ngModel)]="customerAddress1"
-                             class="invoice-form">
-                      <label for="custAddress1" class="active">Address</label>
-                    </div>
-                    <div class="input-field">
-                      <input type="text" placeholder="" id="custAddress2" [(ngModel)]="customerAddress2"
-                             class="invoice-form">
-                      <label for="custAddress2" class="active"></label>
-                    </div>
-                    <div class="input-field">
-                      <input type="text" placeholder="" id="custAddress3" [(ngModel)]="customerAddress3"
-                             class="invoice-form">
-                      <label for="custAddress3" class="active"></label>
-                    </div>
+                <div class="col s5 m3 offset-s1 offset-m3">
+                  <div class="input-field">
+                    <input placeholder="" id="invoiceNo" type="text" [(ngModel)]="invoiceNo" class="invoice-form">
+                    <label for="invoiceNo" class="active">Invoice No</label>
+                  </div>
+                  <div class="input-field">
+                    <input placeholder="" id="invoiceDate" type="text" [(ngModel)]="invoiceDate"
+                           class="invoice-form datepicker">
+                    <label for="invoiceDate" class="active">Date</label>
                   </div>
                 </div>
               </div>
-              <div class="col s5 m3 offset-s1 offset-m3">
-                <div class="input-field">
-                  <input placeholder="" id="invoiceNo" type="text" [(ngModel)]="invoiceNo" class="invoice-form">
-                  <label for="invoiceNo" class="active">Invoice No</label>
-                </div>
-                <div class="input-field">
-                  <input placeholder="" id="invoiceDate" type="text" [(ngModel)]="invoiceDate"
-                         class="invoice-form datepicker">
-                  <label for="invoiceDate" class="active">Date</label>
-                </div>
+            </div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col s12 m12">
+              <table *ngIf="!smallWindow">
+                <thead>
+                <tr>
+                  <th>Item</th>
+                  <th style="text-align: center">Qty</th>
+                  <th style="text-align: right">Unit Price</th>
+                  <th style="text-align: right">Discount</th>
+                  <th style="text-align: right">Total Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="collection-item" *ngFor="let i of salesDetails;let idx = index;">
+                  <td style="width:47%" appTabDelRow [rowId]="i.id"
+                      (rowDelAllowed)="onRemoveRow($event)">
+                    <input type="hidden" [(ngModel)]="i.productId">
+                    <input type="text" id="{{i.id}}" [(ngModel)]="i.productName"
+                           (keypress)="onProductFilter(i,$event)"
+                           class="invoice-form-detail invoice-form" placeholder="Press enter key to query product">
+                    <input type="text" [(ngModel)]="i.salesDetailInfo"
+                           class="invoice-form-detail invoice-form" placeholder="Type some extra product info">
+                  </td>
+                  <td style="width:8%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                      (rowDelAllowed)="onRemoveRow($event)">
+                    <input type="text" id="{{'item'+i.id}}" style="text-align: center" [(ngModel)]="i.productQty"
+                           [appNumberFormat]="i.productQty"
+                           class="invoice-form-detail invoice-form">
+                  </td>
+                  <td style="width:15%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                      (rowDelAllowed)="onRemoveRow($event)">
+                    <input type="text" style="text-align: right" [appNumberFormat]="i.unitPrice"
+                           [(ngModel)]="i.unitPrice"
+                           class="invoice-form-detail invoice-form">
+                  </td>
+                  <td style="width:10%;" (appTabNewRow)="onAddRow($event)" [appNumberFormat]="i.discount" appTabDelRow
+                      [rowId]="i.id"
+                      (rowDelAllowed)="onRemoveRow($event)">
+                    <input type="text" style="text-align: right" [(ngModel)]="i.discount"
+                           class="invoice-form-detail invoice-form">
+                  </td>
+                  <td style="width:18%;" #itemtotalPrice (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                      (rowDelAllowed)="onRemoveRow($event)">
+                    <input type="text" style="text-align: right" [value]="calculatedPrice(i)"
+                           class="invoice-form-detail invoice-form" readonly="true">
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <table *ngIf="smallWindow">
+                <thead>
+                <tr>
+                  <th style="text-align: center">Detail</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="collection-item" *ngFor="let i of salesDetails">
+                  <td>
+                    <div class="row">
+                      <div class="input-field col s6" appTabDelRow [rowId]="i.id"
+                           (rowDelAllowed)="onRemoveRow($event)">
+                        <input type="text" id="{{i.id}}" [(ngModel)]="i.productName"
+                               class="invoice-form" placeholder="">
+                        <span class="pull-right button-search" (click)="onProductFilter(i,$event)"><i
+                          class="fa fa-search"></i></span>
+                        <label class="active">Item</label>
+                      </div>
+                      <div class="input-field col s6" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                           (rowDelAllowed)="onRemoveRow($event)">
+                        <input type="text" [(ngModel)]="i.salesDetailInfo"
+                               class="invoice-form" placeholder="">
+                        <label class="active">Description</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col s3">
+                        <div class="input-field" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                             (rowDelAllowed)="onRemoveRow($event)">
+                          <input type="text" id="{{'item'+i.id}}" style="text-align: center" [(ngModel)]="i.productQty"
+                                 [appNumberFormat]="i.productQty"
+                                 class="invoice-form" placeholder="">
+                          <label class="active">Qty</label>
+                        </div>
+                      </div>
+                      <div class="col s3">
+                        <div class="input-field" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                             (rowDelAllowed)="onRemoveRow($event)">
+                          <input type="text" style="text-align: right" [appNumberFormat]="i.unitPrice"
+                                 [(ngModel)]="i.unitPrice"
+                                 class="invoice-form" placeholder="">
+                          <label class="active">Unit Price</label>
+                        </div>
+                      </div>
+                      <div class="col s3">
+                        <div class="input-field" (appTabNewRow)="onAddRow($event)" [appNumberFormat]="i.discount"
+                             appTabDelRow
+                             [rowId]="i.id"
+                             (rowDelAllowed)="onRemoveRow($event)">
+                          <input type="text" style="text-align: right" [(ngModel)]="i.discount"
+                                 class="invoice-form" placeholder="">
+                          <label class="active">Disc</label>
+                        </div>
+                      </div>
+                      <div class="col s3">
+                        <div class="input-field" #itemtotalPrice (appTabNewRow)="onAddRow($event)" appTabDelRow
+                             [rowId]="i.id"
+                             (rowDelAllowed)="onRemoveRow($event)">
+                          <input type="text" style="text-align: right" [value]="calculatedPrice(i)"
+                                 class="invoice-form" readonly="true" placeholder="">
+                          <label class="active">Total</label>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div style="border-top:1px solid lightgray; width: 100%"></div>
+          <div class="row">
+            <div class="col s5 offset-s7 m3 offset-m9">
+              <div class="input-field" style="padding-right:5px;">
+                <input type="text" id="total" placeholder="0" style="text-align: right" value="{{invoiceTotal}}"
+                       class="invoice-form" readonly="true">
+                <label for="total" class="active">Total</label>
               </div>
             </div>
           </div>
-        </div>
-        <br/>
-        <div class="row">
-          <div class="col s12 m12">
-            <table *ngIf="!smallWindow">
-              <thead>
-              <tr>
-                <th>Item</th>
-                <th style="text-align: center">Qty</th>
-                <th style="text-align: right">Unit Price</th>
-                <th style="text-align: right">Discount</th>
-                <th style="text-align: right">Total Price</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr class="collection-item" *ngFor="let i of salesDetails;let idx = index;">
-                <td style="width:47%" appTabDelRow [rowId]="i.id"
-                    (rowDelAllowed)="onRemoveRow($event)">
-                  <input type="hidden" [(ngModel)]="i.productId">
-                  <input type="text" id="{{i.id}}" [(ngModel)]="i.productName"
-                         (keypress)="onProductFilter(i,$event)"
-                         class="invoice-form-detail invoice-form" placeholder="Press enter key to query product">
-                  <input type="text" [(ngModel)]="i.salesDetailInfo"
-                         class="invoice-form-detail invoice-form" placeholder="Type some extra product info">
-                </td>
-                <td style="width:8%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
-                    (rowDelAllowed)="onRemoveRow($event)">
-                  <input type="text" id="{{'item'+i.id}}" style="text-align: center" [(ngModel)]="i.productQty"
-                         [appNumberFormat]="i.productQty"
-                         class="invoice-form-detail invoice-form">
-                </td>
-                <td style="width:15%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
-                    (rowDelAllowed)="onRemoveRow($event)">
-                  <input type="text" style="text-align: right" [appNumberFormat]="i.unitPrice" [(ngModel)]="i.unitPrice"
-                         class="invoice-form-detail invoice-form">
-                </td>
-                <td style="width:10%;" (appTabNewRow)="onAddRow($event)" [appNumberFormat]="i.discount" appTabDelRow
-                    [rowId]="i.id"
-                    (rowDelAllowed)="onRemoveRow($event)">
-                  <input type="text" style="text-align: right" [(ngModel)]="i.discount"
-                         class="invoice-form-detail invoice-form">
-                </td>
-                <td style="width:18%;" #itemtotalPrice (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
-                    (rowDelAllowed)="onRemoveRow($event)">
-                  <input type="text" style="text-align: right" [value]="calculatedPrice(i)"
-                         class="invoice-form-detail invoice-form" readonly="true">
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <table *ngIf="smallWindow">
-              <thead>
-              <tr>
-                <th style="text-align: center">Detail</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr class="collection-item" *ngFor="let i of salesDetails">
-                <td>
-                  <div class="row">
-                    <div class="input-field col s6" appTabDelRow [rowId]="i.id"
-                         (rowDelAllowed)="onRemoveRow($event)">
-                      <input type="text" id="{{i.id}}" [(ngModel)]="i.productName"
-                             class="invoice-form" placeholder="">
-                      <span class="pull-right button-search" (click)="onProductFilter(i,$event)"><i
-                        class="fa fa-search"></i></span>
-                      <label class="active">Item</label>
-                    </div>
-                    <div class="input-field col s6" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
-                         (rowDelAllowed)="onRemoveRow($event)">
-                      <input type="text" [(ngModel)]="i.salesDetailInfo"
-                             class="invoice-form" placeholder="">
-                      <label class="active">Description</label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col s3">
-                      <div class="input-field" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
-                           (rowDelAllowed)="onRemoveRow($event)">
-                        <input type="text" id="{{'item'+i.id}}" style="text-align: center" [(ngModel)]="i.productQty"
-                               [appNumberFormat]="i.productQty"
-                               class="invoice-form" placeholder="">
-                        <label class="active">Qty</label>
-                      </div>
-                    </div>
-                    <div class="col s3">
-                      <div class="input-field" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
-                           (rowDelAllowed)="onRemoveRow($event)">
-                        <input type="text" style="text-align: right" [appNumberFormat]="i.unitPrice"
-                               [(ngModel)]="i.unitPrice"
-                               class="invoice-form" placeholder="">
-                        <label class="active">Unit Price</label>
-                      </div>
-                    </div>
-                    <div class="col s3">
-                      <div class="input-field" (appTabNewRow)="onAddRow($event)" [appNumberFormat]="i.discount"
-                           appTabDelRow
-                           [rowId]="i.id"
-                           (rowDelAllowed)="onRemoveRow($event)">
-                        <input type="text" style="text-align: right" [(ngModel)]="i.discount"
-                               class="invoice-form" placeholder="">
-                        <label class="active">Disc</label>
-                      </div>
-                    </div>
-                    <div class="col s3">
-                      <div class="input-field" #itemtotalPrice (appTabNewRow)="onAddRow($event)" appTabDelRow
-                           [rowId]="i.id"
-                           (rowDelAllowed)="onRemoveRow($event)">
-                        <input type="text" style="text-align: right" [value]="calculatedPrice(i)"
-                               class="invoice-form" readonly="true" placeholder="">
-                        <label class="active">Total</label>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div style="border-top:1px solid lightgray; width: 100%"></div>
-        <div class="row">
-          <div class="col s5 offset-s7 m3 offset-m9">
-            <div class="input-field" style="padding-right:5px;">
-              <input type="text" id="total" placeholder="0" style="text-align: right" value="{{invoiceTotal}}"
-                     class="invoice-form" readonly="true">
-              <label for="total" class="active">Total</label>
+          <div class="row">
+            <div class="col s5 offset-s7 m3 offset-m9">
+              <div class="input-field" style="padding-right: 5px;">
+                <input type="text" id="invoiceDisc" placeholder="0" style="text-align: right"
+                       [(ngModel)]="invoiceDiscount"
+                       [appNumberFormat]="invoiceDiscount"
+                       class="invoice-form" value="0">
+                <label for="invoiceDisc" class="active">Discount</label>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col s5 offset-s7 m3 offset-m9">
-            <div class="input-field" style="padding-right: 5px;">
-              <input type="text" id="invoiceDisc" placeholder="0" style="text-align: right"
-                     [(ngModel)]="invoiceDiscount"
-                     [appNumberFormat]="invoiceDiscount"
-                     class="invoice-form" value="0">
-              <label for="invoiceDisc" class="active">Discount</label>
+          <div class="row">
+            <div class="col s5 offset-s7 m3 offset-m9">
+              <div class="input-field" style="padding-right: 5px;">
+                <input type="text" id="grandTotal" placeholder="0" style="text-align: right" readonly='true'
+                       class="invoice-form" value="0" [(ngModel)]="invoiceGrandTotal">
+                <label for="grandTotal" class="active">Grand Total</label>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col s5 offset-s7 m3 offset-m9">
-            <div class="input-field" style="padding-right: 5px;">
-              <input type="text" id="grandTotal" placeholder="0" style="text-align: right" readonly='true'
-                     class="invoice-form" value="0" [(ngModel)]="invoiceGrandTotal">
-              <label for="grandTotal" class="active">Grand Total</label>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s9 offset-s3" style="text-align: right;">
-            <div class="input-field">
-              <button type="button" class="btn light-green lighten-2 action-button" (click)="onResetInvoice()">Reset</button>
-              <button type="button" class="btn light-green lighten-2 action-button" (click)="goToList()">Cancel</button>
-              <button type="button" class="btn light-green lighten-2 action-button" (click)="onCreateInvoice()">Save</button>
+          <div class="row">
+            <div class="col s9 offset-s3" style="text-align: right;">
+              <div class="input-field">
+                <button type="button" class="btn light-green lighten-2 action-button" (click)="onResetInvoice()">Reset
+                </button>
+                <button type="button" class="btn light-green lighten-2 action-button" (click)="goToList()">Cancel
+                </button>
+                <button type="button" class="btn light-green lighten-2 action-button" (click)="onCreateInvoice()">Save
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</app-home>
 
 <div id="customerModal" class="modal" style="height: 600px">
   <div class="modal-content">

@@ -7,14 +7,8 @@ import {Router} from "@angular/router";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Madju Computindo';
-  todays = new Date();
-
-  constructor(private router:Router) {
+  constructor() {
   }
 
-  goToList() {
-    this.router.navigate(['/']);
-    return;
-  }
+
 }

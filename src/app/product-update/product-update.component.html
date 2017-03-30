@@ -1,62 +1,66 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<div class="card white darken-1 grey-text">
-  <a class="btn-flat grey-text" routerLink="/home">Home</a>
-  <a class="btn-flat grey-text" routerLink="/product">Product List</a>
-  <div class="card-content">
-    <h5 class="text-beauty">Product Update</h5>
-    <div class="list-content">
-      <form novalidate [formGroup]="productUpdateForm" (submit)="saveProduct()">
-        <div class="row">
-          <div class="input-field col s6">
-            <input placeholder="" id="productId" formControlName="productId" type="text">
-            <label for="productId" class="active">Product Id</label>
+<app-home>
+  <div class="card white darken-1 grey-text">
+    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <a class="btn-flat grey-text" routerLink="/product">Product List</a>
+    <div class="card-content">
+      <h5 class="text-beauty">Product Update</h5>
+      <div class="list-content">
+        <form novalidate [formGroup]="productUpdateForm" (submit)="saveProduct()">
+          <div class="row">
+            <div class="input-field col s6">
+              <input placeholder="" id="productId" formControlName="productId" type="text">
+              <label for="productId" class="active">Product Id</label>
+            </div>
+            <div class="input-field col s6">
+              <input placeholder="" id="productBarcode" formControlName="productBarcode" type="text">
+              <label for="productBarcode" class="active">Product Barcode</label>
+            </div>
           </div>
-          <div class="input-field col s6">
-            <input placeholder="" id="productBarcode" formControlName="productBarcode" type="text">
-            <label for="productBarcode" class="active">Product Barcode</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="" id="productName" formControlName="productName" type="text">
+              <label for="productName" class="active">Product Name</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="" id="productName" formControlName="productName" type="text">
-            <label for="productName" class="active">Product Name</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea id="productSpesification" class="materialize-textarea"
+                        formControlName="productSpesification"></textarea>
+              <label for="productSpesification" class="active">Product Spesification</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <textarea id="productSpesification" class="materialize-textarea" formControlName="productSpesification"></textarea>
-            <label for="productSpesification" class="active">Product Spesification</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea id="productDescription" class="materialize-textarea"
+                        formControlName="productDescription"></textarea>
+              <label for="productDescription" class="active">Product Description</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <textarea id="productDescription" class="materialize-textarea" formControlName="productDescription"></textarea>
-            <label for="productDescription" class="active">Product Description</label>
+          <div class="row">
+            <div class="input-field col s6">
+              <input placeholder="" id="productLastPrice" formControlName="productLastPrice" type="text">
+              <label for="productLastPrice" class="active">Product Last Price</label>
+            </div>
+            <div class="input-field col s6">
+              <input placeholder="" id="productStock" formControlName="productStock" type="text">
+              <label for="productStock" class="active">Product Stock</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s6">
-            <input placeholder="" id="productLastPrice" formControlName="productLastPrice" type="text">
-            <label for="productLastPrice" class="active">Product Last Price</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="checkbox" id="indeterminate-checkbox" formControlName="productStatus"/>
+              <label for="indeterminate-checkbox">Active</label>
+            </div>
           </div>
-          <div class="input-field col s6">
-            <input placeholder="" id="productStock" formControlName="productStock" type="text">
-            <label for="productStock" class="active">Product Stock</label>
+          <div class="row">
+            <div class="input-field col s12 m12" style="text-align: right;">
+              <button type="submit" class="btn light-green lighten-2 action-button">Save</button>
+              <button type="button" class="btn light-green lighten-2 action-button" (click)="goToList()">Cancel</button>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input type="checkbox" id="indeterminate-checkbox" formControlName="productStatus"/>
-            <label for="indeterminate-checkbox">Active</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12 m12" style="text-align: right;">
-            <button type="submit" class="btn light-green lighten-2 action-button">Save</button>
-            <button type="button" class="btn light-green lighten-2 action-button" (click)="goToList()">Cancel</button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+</app-home>

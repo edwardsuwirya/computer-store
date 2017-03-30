@@ -27,6 +27,7 @@ import {SalesCancelComponent} from "./sales-cancel/sales-cancel.component";
 import {appConfig, APP_CONFIG} from "./shared/model/app-properties";
 import {PurchaseComponent} from "./purchase/purchase.component";
 import {PurchaseReportComponent} from "./purchase-report/purchase-report.component";
+import { HomeMenuComponent } from './home-menu/home-menu.component';
 
 const appRoutes:Routes = [
   {
@@ -34,7 +35,7 @@ const appRoutes:Routes = [
     redirectTo: '/home',
     pathMatch: 'full'
   },
-  {path: 'home', component: HomeComponent},
+  {path: 'home', component: HomeMenuComponent},
   {path: 'supplier', component: SupplierComponent},
   {path: 'supplierUpdate', component: SupplierUpdateComponent},
   {path: 'supplierUpdate/:supplier', component: SupplierUpdateComponent},
@@ -77,6 +78,7 @@ const appRoutes:Routes = [
     SalesCancelComponent,
     PurchaseComponent,
     PurchaseReportComponent,
+    HomeMenuComponent,
   ],
   imports: [
     BrowserModule,

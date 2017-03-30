@@ -3,12 +3,12 @@ import {Sales} from "../sales/sales";
 
 @Injectable()
 export class SalesForPrintingService {
-  salesForPrint:Sales;
+  salesForPrint: Sales;
 
   constructor() {
   }
 
-  doPrint(sales:Sales) {
+  doPrint(sales: Sales) {
     this.salesForPrint = sales;
   }
 }

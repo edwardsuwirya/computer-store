@@ -1,83 +1,86 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<div class="row">
-  <div class="col s12 m12">
-    <div class="card white grey-text">
-      <a class="btn-flat grey-text" routerLink="/home">Home</a>
-      <div class="card-content">
-        <div class="row">
-          <h5 class="left text-beauty">Sales Customer Report</h5>
-        </div>
-        <div class="row">
-          <div class="col s12 m4">
-            <div class="input-field">
-              <input placeholder="Press enter key to query customer" id="customer" type="text"
-                     [(ngModel)]="customer"
-                     (keypress)="onCustomerFilter($event)" class="invoice-form">
-              <label for="customer" class="active">Customer</label>
+<app-home>
+  <div class="row">
+    <div class="col s12 m12">
+      <div class="card white grey-text">
+        <a class="btn-flat grey-text" routerLink="/home">Home</a>
+        <div class="card-content">
+          <div class="row">
+            <h5 class="left text-beauty">Sales Customer Report</h5>
+          </div>
+          <div class="row">
+            <div class="col s12 m4">
+              <div class="input-field">
+                <input placeholder="Press enter key to query customer" id="customer" type="text"
+                       [(ngModel)]="customer"
+                       (keypress)="onCustomerFilter($event)" class="invoice-form">
+                <label for="customer" class="active">Customer</label>
+              </div>
+            </div>
+            <div class="col s12 m4">
+              <div class="input-field">
+                <input type="text" id="productName" [(ngModel)]="productName"
+                       (keypress)="onProductFilter($event)"
+                       class="invoice-form-detail invoice-form" placeholder="Press enter key to query product">
+                <label for="customer" class="active">Product</label>
+              </div>
+            </div>
+            <div class="col s12 m4">
+              <div class="input-field">
+                <button type="button" class="btn light-green lighten-2" (click)="onFindSales()">Find</button>
+              </div>
             </div>
           </div>
-          <div class="col s12 m4">
-            <div class="input-field">
-              <input type="text" id="productName" [(ngModel)]="productName"
-                     (keypress)="onProductFilter($event)"
-                     class="invoice-form-detail invoice-form" placeholder="Press enter key to query product">
-              <label for="customer" class="active">Product</label>
-            </div>
-          </div>
-          <div class="col s12 m4">
-            <div class="input-field">
-              <button type="button" class="btn light-green lighten-2" (click)="onFindSales()">Find</button>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top: 10px;">
-          <table class="bordered">
-            <thead>
-            <tr>
-              <th>
-                <div class="header-text">
-                  <span>Invoice Info</span>
-                </div>
-              </th>
-              <th>
-                <div class="header-text">
-                  <span>Customer</span>
-                </div>
-              </th>
-              <th>
-                <div class="header-text">
-                  <span>Product / Unit Price</span>
-                </div>
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let s of sales" class="medium-font">
-              <td class="td-report" style="width:10%">
-                <div>{{s.salesNo}}</div>
-                <div>{{s.salesDate | date:'dd MMM yyyy'}}</div>
-              </td>
-              <td class="td-report" style="width:20%">
-                <div>{{s.salesCustomerName}}</div>
-              </td>
-              <td class="td-report">
-                <div class="row" *ngFor="let sd of s.salesDetail">
-                  <div class="col s6 m6">
-                    {{sd.productName}}
+          <div style="margin-top: 10px;">
+            <table class="bordered">
+              <thead>
+              <tr>
+                <th>
+                  <div class="header-text">
+                    <span>Invoice Info</span>
                   </div>
-                  <div class="col s6 m6" style="text-align: right;">
-                    {{sd.unitPrice | price }}
+                </th>
+                <th>
+                  <div class="header-text">
+                    <span>Customer</span>
                   </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+                </th>
+                <th>
+                  <div class="header-text">
+                    <span>Product / Unit Price</span>
+                  </div>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let s of sales" class="medium-font">
+                <td class="td-report" style="width:10%">
+                  <div>{{s.salesNo}}</div>
+                  <div>{{s.salesDate | date:'dd MMM yyyy'}}</div>
+                </td>
+                <td class="td-report" style="width:20%">
+                  <div>{{s.salesCustomerName}}</div>
+                </td>
+                <td class="td-report">
+                  <div class="row" *ngFor="let sd of s.salesDetail">
+                    <div class="col s6 m6">
+                      {{sd.productName}}
+                    </div>
+                    <div class="col s6 m6" style="text-align: right;">
+                      {{sd.unitPrice | price }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</app-home>
+
 <div id="customerModal" class="modal" style="height: 600px">
   <div class="modal-content">
     <div class="input-field">

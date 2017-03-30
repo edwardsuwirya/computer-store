@@ -1,129 +1,134 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<div class="row">
-  <div class="col s12 m12">
-    <div class="card white darken-1 grey-text">
-      <a class="btn-flat grey-text" routerLink="/home">Home</a>
-      <div class="card-content">
+<app-home>
+  <div class="row">
+    <div class="col s12 m12">
+      <div class="card white darken-1 grey-text">
+        <a class="btn-flat grey-text" routerLink="/home">Home</a>
+        <div class="card-content">
         <span class="card-title">
           <h5 class="left text-beauty">Customer List</h5>
         </span>
-        <button type="button" class="btn-floating light-green lighten-2 right" (click)="newCustomer()">
-          <i class="fa fa-plus"></i>
-        </button>
-        <button type="button" class="btn-floating light-green lighten-2 right" (click)="refreshCustomer()" style="margin-right: 5px">
-          <i class="fa fa-refresh"></i>
-        </button>
-        <div class="list-content">
-          <table class="bordered" *ngIf="!smallWindow">
-            <thead>
-            <tr>
-              <th>
-                <div class="header-text">
-                  <span>Name</span>
-                  <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a>
-                </div>
-              </th>
-              <th>
-                <div class="header-text">
-                  <span>Nick Name</span>
-                  <a (click)="showSearchBar('NickName')" class="to-pointer"><i class="fa fa-search"></i></a>
-                </div>
-              </th>
-              <th>
-                <div class="header-text">
-                  <span>Phone No</span>
-                  <a (click)="showSearchBar('Phone')" class="to-pointer"><i class="fa fa-search"></i></a>
-                </div>
-              </th>
-              <th>
-                <div class="header-text">
-                  <span>Address</span>
-                  <a (click)="showSearchBar('Address')" class="to-pointer"><i class="fa fa-search"></i></a>
-                </div>
-              </th>
-              <th>
-                <div class="header-text">
-                  <span>Status</span>
-                  <a (click)="showSearchBar('Status')" class="to-pointer"><i class="fa fa-search"></i></a>
-                </div>
-              </th>
-              <th></th>
-            </tr>
-            <tr [hidden]="!showFilter">
-              <td colspan="6">
-                <input type="text" id="txtFilter" placeholder="{{filterCustomerBy}}" [formControl]="filterCustomer">
-              </td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let cust of customers" class="medium-font">
-              <td>{{cust.customerName}}</td>
-              <td>{{cust.customerNickName}}</td>
-              <td>{{cust.customerPhone}}</td>
-              <td>
-                <div>{{cust.customerAddress1}}</div>
-                <div>{{cust.customerAddress2}}</div>
-                <div>{{cust.customerAddress3}}</div>
-              </td>
-              <td>
-                <input type="checkbox" class="filled-in" *ngIf="cust.customerStatus==='1'" checked="checked"/>
-                <input type="checkbox" class="filled-in" *ngIf="cust.customerStatus==='0'"/>
-                <label></label>
-              </td>
-              <td>
-                <a class="orange-text darken-4 action-button to-pointer" (click)="updateCustomer(cust)">Update</a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <div class="row">
-            <div class="col s4 m4 offset-s8 offset-m8 pagination">
-              <span class="to-pointer" (click)="prev()"><i class="fa fa-arrow-left"></i></span>
-              <span>{{page+1}}</span>
-              <span class="to-pointer" (click)="next()"><i class="fa fa-arrow-right"></i></span>
+          <button type="button" class="btn-floating light-green lighten-2 right" (click)="newCustomer()">
+            <i class="fa fa-plus"></i>
+          </button>
+          <button type="button" class="btn-floating light-green lighten-2 right" (click)="refreshCustomer()"
+                  style="margin-right: 5px">
+            <i class="fa fa-refresh"></i>
+          </button>
+          <div class="list-content">
+            <table class="bordered" *ngIf="!smallWindow">
+              <thead>
+              <tr>
+                <th>
+                  <div class="header-text">
+                    <span>Name</span>
+                    <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a>
+                  </div>
+                </th>
+                <th>
+                  <div class="header-text">
+                    <span>Nick Name</span>
+                    <a (click)="showSearchBar('NickName')" class="to-pointer"><i class="fa fa-search"></i></a>
+                  </div>
+                </th>
+                <th>
+                  <div class="header-text">
+                    <span>Phone No</span>
+                    <a (click)="showSearchBar('Phone')" class="to-pointer"><i class="fa fa-search"></i></a>
+                  </div>
+                </th>
+                <th>
+                  <div class="header-text">
+                    <span>Address</span>
+                    <a (click)="showSearchBar('Address')" class="to-pointer"><i class="fa fa-search"></i></a>
+                  </div>
+                </th>
+                <th>
+                  <div class="header-text">
+                    <span>Status</span>
+                    <a (click)="showSearchBar('Status')" class="to-pointer"><i class="fa fa-search"></i></a>
+                  </div>
+                </th>
+                <th></th>
+              </tr>
+              <tr [hidden]="!showFilter">
+                <td colspan="6">
+                  <input type="text" id="txtFilter" placeholder="{{filterCustomerBy}}" [formControl]="filterCustomer">
+                </td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let cust of customers" class="medium-font">
+                <td>{{cust.customerName}}</td>
+                <td>{{cust.customerNickName}}</td>
+                <td>{{cust.customerPhone}}</td>
+                <td>
+                  <div>{{cust.customerAddress1}}</div>
+                  <div>{{cust.customerAddress2}}</div>
+                  <div>{{cust.customerAddress3}}</div>
+                </td>
+                <td>
+                  <input type="checkbox" class="filled-in" *ngIf="cust.customerStatus==='1'" checked="checked"/>
+                  <input type="checkbox" class="filled-in" *ngIf="cust.customerStatus==='0'"/>
+                  <label></label>
+                </td>
+                <td>
+                  <a class="orange-text darken-4 action-button to-pointer" (click)="updateCustomer(cust)">Update</a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col s4 m4 offset-s8 offset-m8 pagination">
+                <span class="to-pointer" (click)="prev()"><i class="fa fa-arrow-left"></i></span>
+                <span>{{page+1}}</span>
+                <span class="to-pointer" (click)="next()"><i class="fa fa-arrow-right"></i></span>
+              </div>
             </div>
+            <table class="bordered" *ngIf="smallWindow">
+              <thead>
+              <tr>
+                <th>Name <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a></th>
+              </tr>
+              <tr>
+                <th>Name <a (click)="showSearchBar('NickName')" class="to-pointer"><i class="fa fa-search"></i></a></th>
+              </tr>
+              <tr>
+                <th>Phone No <a (click)="showSearchBar('Phone')" class="to-pointer"><i class="fa fa-search"></i></a>
+                </th>
+              </tr>
+              <tr>
+                <th>Address <a (click)="showSearchBar('Address')" class="to-pointer"><i class="fa fa-search"></i></a>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr [hidden]="!showFilter">
+                <td>
+                  <input type="text" placeholder="{{filterCustomerBy}}" [formControl]="filterCustomer">
+                </td>
+              </tr>
+              <tr *ngFor="let cust of customers" class="small-font">
+                <td>
+                  <div>{{cust.customerName}}</div>
+                  <div>{{cust.customerNickName}}</div>
+                  <div>{{cust.customerPhone}}</div>
+                  <div>{{cust.customerAddress1}}</div>
+                  <div>{{cust.customerAddress2}}</div>
+                  <div>{{cust.customerAddress3}}</div>
+                  <div>
+                    <input type="checkbox" class="filled-in" *ngIf="cust.customerStatus" checked="checked"/>
+                    <input type="checkbox" class="filled-in" *ngIf="!cust.customerStatus"/>
+                  </div>
+                  <div><a class="orange-text darken-4 action-button to-pointer"
+                          (click)="updateCustomer(cust)">Update</a></div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
           </div>
-          <table class="bordered" *ngIf="smallWindow">
-            <thead>
-            <tr>
-              <th>Name <a (click)="showSearchBar('Name')" class="to-pointer"><i class="fa fa-search"></i></a></th>
-            </tr>
-            <tr>
-              <th>Name <a (click)="showSearchBar('NickName')" class="to-pointer"><i class="fa fa-search"></i></a></th>
-            </tr>
-            <tr>
-              <th>Phone No <a (click)="showSearchBar('Phone')" class="to-pointer"><i class="fa fa-search"></i></a></th>
-            </tr>
-            <tr>
-              <th>Address <a (click)="showSearchBar('Address')" class="to-pointer"><i class="fa fa-search"></i></a></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr [hidden]="!showFilter">
-              <td>
-                <input type="text" placeholder="{{filterCustomerBy}}" [formControl]="filterCustomer">
-              </td>
-            </tr>
-            <tr *ngFor="let cust of customers" class="small-font">
-              <td>
-                <div>{{cust.customerName}}</div>
-                <div>{{cust.customerNickName}}</div>
-                <div>{{cust.customerPhone}}</div>
-                <div>{{cust.customerAddress1}}</div>
-                <div>{{cust.customerAddress2}}</div>
-                <div>{{cust.customerAddress3}}</div>
-                <div>
-                  <input type="checkbox" class="filled-in" *ngIf="cust.customerStatus" checked="checked"/>
-                  <input type="checkbox" class="filled-in" *ngIf="!cust.customerStatus"/>
-                </div>
-                <div><a class="orange-text darken-4 action-button to-pointer"
-                        (click)="updateCustomer(cust)">Update</a></div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
   </div>
-</div>
+</app-home>

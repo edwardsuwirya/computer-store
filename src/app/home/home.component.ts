@@ -1,18 +1,23 @@
 import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 
-declare let $:any;
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  title = 'Madju Computindo';
+  todays = new Date();
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   ngOnInit() {
-    $('.collapsible').collapsible();
   }
 
+  goToList() {
+    this.router.navigate(['/']);
+    return;
+  }
 }
