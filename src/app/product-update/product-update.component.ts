@@ -9,7 +9,7 @@ import {DialogService} from "../shared/service/dialog.service";
   selector: 'app-product-update',
   templateUrl: './product-update.component.html',
   styleUrls: ['./product-update.component.css'],
-  providers: [ProductService]
+  providers: [ProductService,DialogService]
 })
 export class ProductUpdateComponent implements OnInit {
   productUpdateForm:FormGroup;

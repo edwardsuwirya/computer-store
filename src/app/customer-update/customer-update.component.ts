@@ -9,7 +9,7 @@ import {DialogService} from "../shared/service/dialog.service";
   selector: 'app-customer-update',
   templateUrl: './customer-update.component.html',
   styleUrls: ['./customer-update.component.css'],
-  providers: [CustomerService]
+  providers: [CustomerService,DialogService]
 })
 export class CustomerUpdateComponent implements OnInit {
 

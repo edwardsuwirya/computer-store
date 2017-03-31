@@ -9,16 +9,16 @@ import {DialogService} from "../shared/service/dialog.service";
   selector: 'app-supplier-update',
   templateUrl: './supplier-update.component.html',
   styleUrls: ['./supplier-update.component.css'],
-  providers: [SupplierService]
+  providers: [SupplierService, DialogService]
 })
 export class SupplierUpdateComponent implements OnInit {
-  supplierUpdateForm:FormGroup;
-  pleaseWaitActive:boolean = false;
+  supplierUpdateForm: FormGroup;
+  pleaseWaitActive: boolean = false;
 
-  constructor(private supplierService:SupplierService,
-              private router:Router,
-              private activeRoute:ActivatedRoute,
-              private dialogService:DialogService) {
+  constructor(private supplierService: SupplierService,
+              private router: Router,
+              private activeRoute: ActivatedRoute,
+              private dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -38,12 +38,12 @@ export class SupplierUpdateComponent implements OnInit {
 
   saveSupplier() {
     this.pleaseWaitActive = true;
-    let newSupplier:Supplier = this.supplierUpdateForm.value;
+    let newSupplier: Supplier = this.supplierUpdateForm.value;
     newSupplier.supplierStatus ? newSupplier.supplierStatus = '1' : newSupplier.supplierStatus = '0';
     this.supplierService.saveSupplier(newSupplier).subscribe((res) => {
       this.pleaseWaitActive = false;
       this.router.navigate(['supplier']);
-    }, (err)=> {
+    }, (err) => {
       this.dialogService.showDialog('Some error occurred ' + err);
     });
   }
