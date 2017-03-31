@@ -9,7 +9,7 @@ import {DialogService} from "../shared/service/dialog.service";
   selector: 'app-sales-cancel',
   templateUrl: './sales-cancel.component.html',
   styleUrls: ['./sales-cancel.component.css'],
-  providers: [SalesService]
+  providers: [SalesService,DialogService]
 })
 export class SalesCancelComponent implements OnInit {
   @ViewChild('info')
