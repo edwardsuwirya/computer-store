@@ -155,6 +155,7 @@ export class SalesReportComponent implements OnInit {
   refreshSales() {
     this.pleaseWaitActive = true;
     this.showFilter = false;
+    this.showFilterDate = false;
     this.filterSales.setValue('');
     this.keyword = '';
     this.salesService.getAllSales((this.page * 10).toString()).subscribe((res)=> {
