@@ -7,14 +7,32 @@
       <button type="button" class="btn-floating green right" (click)="refreshSales()" style="margin-right: 5px">
         <i class="fa fa-refresh"></i>
       </button>
+      <div [hidden]="!showFilter">
+        <div class="input-field">
+          <input type="text" id="txtFilter" placeholder="" class="invoice-form"
+                 [formControl]="filterSales">
+          <label for="txtFilter" class="active" style="top:2rem !important;">Filter data by {{filterSalesBy}}</label>
+        </div>
+      </div>
+      <div [hidden]="!showFilterDate">
+        <div class="input-field">
+          <input type="text" id="invoiceDate" placeholder="" class="invoice-form">
+          <label for="invoiceDate" class="active" style="top:2rem !important;">Filter data By {{filterSalesBy}}</label>
+        </div>
+      </div>
       <table class="bordered" *ngIf="!smallWindow">
         <thead>
         <tr>
           <th>
             <div class="header-text">
-              <div>Inv.No</div>
-              <div>Inv. Date</div>
-              <a (click)="showSearchBar('No')" class="to-pointer"><i class="fa fa-search"></i></a>
+              <div>
+                <span>Inv.No</span>
+                <a (click)="showSearchBar('No')" class="to-pointer"><i class="fa fa-search"></i></a>
+              </div>
+              <div>
+                <span>Inv. Date</span>
+                <a (click)="showSearchBar('Date')" class="to-pointer"><i class="fa fa-search"></i></a>
+              </div>
             </div>
           </th>
           <th>
@@ -55,11 +73,6 @@
               <a (click)="showSearchBar('PaidStatus')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
           </th>
-        </tr>
-        <tr [hidden]="!showFilter">
-          <td colspan="6">
-            <input type="text" id="txtFilter" placeholder="{{filterSalesBy}}" [formControl]="filterSales">
-          </td>
         </tr>
         </thead>
         <tbody>

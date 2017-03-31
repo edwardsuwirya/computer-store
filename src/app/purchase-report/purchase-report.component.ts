@@ -139,7 +139,7 @@ export class PurchaseReportComponent implements OnInit {
         this.purchaseForUpdate.purchasePaidStatus = '1';
       }
       this.purchaseService.updatePurchaseInfo(this.purchaseForUpdate).subscribe((res)=> {
-        this.refreshPurchase();
+        this.findPurchase();
         $('#paymentModal').modal('close');
         this.pleaseWaitActive = false;
       });

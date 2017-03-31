@@ -33,7 +33,9 @@ export class SalesReportComponent implements OnInit {
 
   bankNameDisabled:boolean = false;
   fieldBy:string = '';
+  showFilterDate:boolean = false;
   showFilter:boolean = false;
+
   filterSalesBy:string = '';
   filterSales:FormControl = new FormControl('');
   keyword:string = '';
@@ -59,12 +61,21 @@ export class SalesReportComponent implements OnInit {
     $('#deleteConfirmationModal').modal();
     let that = this;
     new Pikaday({
+      field: document.getElementById('invoiceDate'),
+      format: 'DD/MM/YYYY',
+      onSelect: function () {
+        that.keyword = this.getMoment().format('YYYY-MM-DD');
+        that.findSales();
+      }
+    });
+    new Pikaday({
       field: document.getElementById('paymentDate'),
       format: 'DD/MM/YYYY',
       onSelect: function () {
         that.salesPaymentInv.paymentDate = this.getMoment().format('DD/MM/YYYY');
       }
     });
+
     this.checkSmallWindow();
     Observable.fromEvent(window, 'resize').subscribe(()=> {
       this.checkSmallWindow();
@@ -106,9 +117,14 @@ export class SalesReportComponent implements OnInit {
   }
 
   showSearchBar(field:string) {
-    if (this.fieldBy === field) {
+    if (field === 'Date') {
+      this.showFilterDate = !this.showFilterDate;
+      this.showFilter = false;
+    } else if (this.fieldBy === field) {
+      this.showFilterDate = false;
       this.showFilter = !this.showFilter;
     } else {
+      this.showFilterDate = false;
       if (!this.showFilter) {
         this.showFilter = true;
       }
@@ -122,7 +138,11 @@ export class SalesReportComponent implements OnInit {
 
     this.filterSales.setValue('');
     setTimeout(function () {
-      document.getElementById('txtFilter').focus();
+      if (field != 'Date') {
+        document.getElementById('txtFilter').focus();
+      } else {
+        document.getElementById('invoiceDate').focus();
+      }
     }, 200);
   }
 
@@ -162,7 +182,7 @@ export class SalesReportComponent implements OnInit {
         this.salesForUpdate.salesPaidStatus = '1';
       }
       this.salesService.updateSalesInfo(this.salesForUpdate).subscribe((res)=> {
-        this.refreshSales();
+        this.findSales();
         $('#paymentModal').modal('close');
         this.pleaseWaitActive = false;
       });

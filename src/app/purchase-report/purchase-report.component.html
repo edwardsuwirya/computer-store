@@ -7,6 +7,13 @@
       <button type="button" class="btn-floating green right" (click)="refreshPurchase()" style="margin-right: 5px">
         <i class="fa fa-refresh"></i>
       </button>
+      <div [hidden]="!showFilter">
+        <div class="input-field">
+          <input type="text" id="txtFilter" placeholder="" class="purchase-form"
+                 [formControl]="filterPurchase">
+          <label for="txtFilter" class="active" style="top:2rem !important;">Filter data by {{filterPurchaseBy}}</label>
+        </div>
+      </div>
       <table class="bordered" *ngIf="!smallWindow">
         <thead>
         <tr>
@@ -23,7 +30,7 @@
           <th>
             <div class="header-text">
               <span>Supplier</span>
-              <a (click)="showSearchBar('CustomerName')" class="to-pointer"><i class="fa fa-search"></i></a>
+              <a (click)="showSearchBar('SupplierName')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
           </th>
           <th>
@@ -47,11 +54,6 @@
               <a (click)="showSearchBar('PaidStatus')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
           </th>
-        </tr>
-        <tr [hidden]="!showFilter">
-          <td colspan="6">
-            <input type="text" id="txtFilter" placeholder="{{filterPurchaseBy}}" [formControl]="filterPurchase">
-          </td>
         </tr>
         </thead>
         <tbody>
