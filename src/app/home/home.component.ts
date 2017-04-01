@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 
 @Component({
@@ -10,7 +10,7 @@ export class HomeComponent implements OnInit {
   title = 'Madju Computindo';
   todays = new Date();
 
-  constructor(private router: Router) {
+  constructor(private router:Router) {
   }
 
   ngOnInit() {
@@ -19,5 +19,10 @@ export class HomeComponent implements OnInit {
   goToList() {
     this.router.navigate(['/']);
     return;
+  }
+
+  doLogout() {
+    localStorage.clear();
+    this.router.navigate(['login']);
   }
 }

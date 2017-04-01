@@ -27,31 +27,34 @@ import {SalesCancelComponent} from "./sales-cancel/sales-cancel.component";
 import {appConfig, APP_CONFIG} from "./shared/model/app-properties";
 import {PurchaseComponent} from "./purchase/purchase.component";
 import {PurchaseReportComponent} from "./purchase-report/purchase-report.component";
-import { HomeMenuComponent } from './home-menu/home-menu.component';
+import {HomeMenuComponent} from "./home-menu/home-menu.component";
+import {LoginComponent} from "./login/login.component";
+import {RouterGuard} from "./login/router-guard";
 
 const appRoutes:Routes = [
   {
     path: '',
-    redirectTo: '/home',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
-  {path: 'home', component: HomeMenuComponent},
-  {path: 'supplier', component: SupplierComponent},
-  {path: 'supplierUpdate', component: SupplierUpdateComponent},
-  {path: 'supplierUpdate/:supplier', component: SupplierUpdateComponent},
-  {path: 'customer', component: CustomerComponent},
-  {path: 'customerUpdate', component: CustomerUpdateComponent},
-  {path: 'customerUpdate/:customer', component: CustomerUpdateComponent},
-  {path: 'product', component: ProductComponent},
-  {path: 'productUpdate', component: ProductUpdateComponent},
-  {path: 'productUpdate/:product', component: ProductUpdateComponent},
-  {path: 'sales', component: SalesComponent},
-  {path: 'salesPrint', component: SalesForPrintingComponent},
-  {path: 'salesReport', component: SalesReportComponent},
-  {path: 'salesCustomerReport', component: SalesCustomerReportComponent},
-  {path: 'salesCancel', component: SalesCancelComponent},
-  {path: 'purchase', component: PurchaseComponent},
-  {path: 'purchaseReport', component: PurchaseReportComponent}
+  {path: 'login', component: LoginComponent},
+  {path: 'home', component: HomeMenuComponent, canActivate: [RouterGuard]},
+  {path: 'supplier', component: SupplierComponent, canActivate: [RouterGuard]},
+  {path: 'supplierUpdate', component: SupplierUpdateComponent, canActivate: [RouterGuard]},
+  {path: 'supplierUpdate/:supplier', component: SupplierUpdateComponent, canActivate: [RouterGuard]},
+  {path: 'customer', component: CustomerComponent, canActivate: [RouterGuard]},
+  {path: 'customerUpdate', component: CustomerUpdateComponent, canActivate: [RouterGuard]},
+  {path: 'customerUpdate/:customer', component: CustomerUpdateComponent, canActivate: [RouterGuard]},
+  {path: 'product', component: ProductComponent, canActivate: [RouterGuard]},
+  {path: 'productUpdate', component: ProductUpdateComponent, canActivate: [RouterGuard]},
+  {path: 'productUpdate/:product', component: ProductUpdateComponent, canActivate: [RouterGuard]},
+  {path: 'sales', component: SalesComponent, canActivate: [RouterGuard]},
+  {path: 'salesPrint', component: SalesForPrintingComponent, canActivate: [RouterGuard]},
+  {path: 'salesReport', component: SalesReportComponent, canActivate: [RouterGuard]},
+  {path: 'salesCustomerReport', component: SalesCustomerReportComponent, canActivate: [RouterGuard]},
+  {path: 'salesCancel', component: SalesCancelComponent, canActivate: [RouterGuard]},
+  {path: 'purchase', component: PurchaseComponent, canActivate: [RouterGuard]},
+  {path: 'purchaseReport', component: PurchaseReportComponent, canActivate: [RouterGuard]}
 ];
 
 @NgModule({
@@ -79,6 +82,7 @@ const appRoutes:Routes = [
     PurchaseComponent,
     PurchaseReportComponent,
     HomeMenuComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,7 +93,8 @@ const appRoutes:Routes = [
   ],
   providers: [
     {provide: APP_CONFIG, useValue: appConfig},
-    SalesForPrintingService
+    SalesForPrintingService,
+    RouterGuard
   ],
   bootstrap: [AppComponent]
 })

@@ -8,7 +8,8 @@
     </div>
     <div class="col m6 l6 hide-on-small-only"
          style="color: rgba(0, 0, 0, .6);text-align: right;font-size: 14px; margin-top: 25px;font-weight: bold">
-      Today is {{ todays | date:medium}}
+      <span>Today is {{ todays | date:medium}}</span>
+      <a href="#" (click)="doLogout()">Logout</a>
     </div>
   </div>
   <div class="row hide-on-med-and-up"
