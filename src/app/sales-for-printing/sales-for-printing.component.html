@@ -90,10 +90,10 @@
     <div class="row">
       <div class="col s5 m3 offset-s7 offset-m9">
         <div class="row">
-          <div class="col s5" style="text-align: right;">
+          <div class="col s6" style="text-align: right;">
             <span style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Total: </span>
           </div>
-          <div class="col s7" style="text-align: right;padding-right: 3px;">
+          <div class="col s6" style="text-align: right;padding-right: 5px;">
             {{salesPrint.salesTotal | price}}
           </div>
         </div>
@@ -102,10 +102,10 @@
     <div class="row">
       <div class="col s5 m3 offset-s7 offset-m9">
         <div class="row">
-          <div class="col s5" style="text-align: right;">
+          <div class="col s6" style="text-align: right;">
             <span style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Discount: </span>
           </div>
-          <div class="col s7" style="text-align: right;padding-right: 3px;">
+          <div class="col s6" style="text-align: right;padding-right: 5px;">
             {{salesPrint.salesDiscount | price}}
           </div>
         </div>
@@ -114,15 +114,32 @@
     <div class="row">
       <div class="col s5 m3 offset-s7 offset-m9">
         <div class="row">
-          <div class="col s5" style="text-align: right;">
-              <span
-                style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Grand Total: </span>
+          <div class="col s6" style="text-align: right;">
+            <span style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Grand Total: </span>
           </div>
-          <div class="col s7" style="text-align: right;padding-right: 3px;font-weight: bolder;font-size: 12px">
+          <div class="col s6" style="text-align: right;padding-right: 5px;font-weight: bolder;font-size: 12px">
             {{(salesPrint.salesTotal-salesPrint.salesDiscount) | price}}
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <br/>
+  <div class="row" style="font-size: 11px;font-weight: bolder">
+    <div class="col s4" style="text-align: center">
+      <span>Diperiksa Oleh</span>
+      <br/><br/><br/><br/><br/>
+      <span style="margin-right: 160px">(</span><span>)</span>
+    </div>
+    <div class="col s4" style="text-align: center">
+      <span>Dikirim Oleh</span>
+      <br/><br/><br/><br/><br/>
+      <span style="margin-right: 160px">(</span><span>)</span>
+    </div>
+    <div class="col s4" style="text-align: center">
+      <span>Hormat Kami</span>
+      <br/><br/><br/><br/><br/>
+      <span style="margin-right: 160px">(</span><span>)</span>
     </div>
   </div>
 </div>
