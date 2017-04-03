@@ -86,9 +86,9 @@ export class ProductComponent implements OnInit {
     this.fieldBy = field;
     this.filterProductBy = 'product' + field;
     this.filterProduct.setValue('');
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('txtFilter').focus();
-    }, 200);
+    }).subscribe();
   }
 
   refreshProduct() {

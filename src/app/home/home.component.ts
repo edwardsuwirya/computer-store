@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   }
 
   goToList() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
     return;
   }
 

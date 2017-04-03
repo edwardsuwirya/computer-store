@@ -19,7 +19,7 @@ export class SalesForPrintingComponent implements OnInit {
   }
 
   goToList() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
     return;
   }
 

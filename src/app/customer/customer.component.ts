@@ -5,7 +5,7 @@ import {CustomerService} from "./customer.service";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs/Rx";
 
-declare let _:any;
+declare let _: any;
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -13,25 +13,25 @@ declare let _:any;
   providers: [CustomerService]
 })
 export class CustomerComponent implements OnInit {
-  pleaseWaitActive:boolean = false;
-  customers:Customer[] = [];
-  filterCustomer:FormControl = new FormControl('');
+  pleaseWaitActive: boolean = false;
+  customers: Customer[] = [];
+  filterCustomer: FormControl = new FormControl('');
 
-  showFilter:boolean = false;
-  filterCustomerBy:string = '';
-  fieldBy:string = '';
+  showFilter: boolean = false;
+  filterCustomerBy: string = '';
+  fieldBy: string = '';
 
-  smallWindow:boolean = false;
-  page:number = 0;
-  keyword:string = '';
+  smallWindow: boolean = false;
+  page: number = 0;
+  keyword: string = '';
 
-  constructor(private customerService:CustomerService, private router:Router) {
+  constructor(private customerService: CustomerService, private router: Router) {
   }
 
   ngOnInit() {
     this.findFirstCustomer();
 
-    this.filterCustomer.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword)=> {
+    this.filterCustomer.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword) => {
       if (keyword) {
         this.keyword = keyword;
         this.findCustomer();
@@ -39,7 +39,7 @@ export class CustomerComponent implements OnInit {
     });
 
     this.checkSmallWindow();
-    Observable.fromEvent(window, 'resize').subscribe(()=> {
+    Observable.fromEvent(window, 'resize').subscribe(() => {
       this.checkSmallWindow();
     })
   }
@@ -54,7 +54,7 @@ export class CustomerComponent implements OnInit {
 
   private findFirstCustomer() {
     this.pleaseWaitActive = true;
-    this.customerService.getAllCustomer((this.page * 10).toString()).subscribe((cust)=> {
+    this.customerService.getAllCustomer((this.page * 10).toString()).subscribe((cust) => {
       this.customers = cust;
       this.pleaseWaitActive = false;
     });
@@ -62,7 +62,7 @@ export class CustomerComponent implements OnInit {
 
   private findCustomer() {
     this.pleaseWaitActive = true;
-    this.customerService.getCustomerByField(this.filterCustomerBy, this.keyword, (this.page * 10).toString()).subscribe((cust)=> {
+    this.customerService.getCustomerByField(this.filterCustomerBy, this.keyword, (this.page * 10).toString()).subscribe((cust) => {
       this.customers = _.uniqBy(_.flatten(cust), 'id');
       this.pleaseWaitActive = false;
     });
@@ -72,11 +72,11 @@ export class CustomerComponent implements OnInit {
     this.router.navigate(['customerUpdate', JSON.stringify(new Customer())]);
   }
 
-  updateCustomer(cust:Customer) {
+  updateCustomer(cust: Customer) {
     this.router.navigate(['customerUpdate', JSON.stringify(cust)]);
   }
 
-  showSearchBar(field:string) {
+  showSearchBar(field: string) {
     if (this.fieldBy === field) {
       this.showFilter = !this.showFilter;
     } else {
@@ -87,9 +87,9 @@ export class CustomerComponent implements OnInit {
     this.fieldBy = field;
     this.filterCustomerBy = 'customer' + field;
     this.filterCustomer.setValue('');
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('txtFilter').focus();
-    }, 200);
+    }).subscribe();
   }
 
   refreshCustomer() {

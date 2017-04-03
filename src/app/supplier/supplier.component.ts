@@ -12,29 +12,29 @@ import {Observable} from "rxjs/Rx";
   providers: [SupplierService]
 })
 export class SupplierComponent implements OnInit {
-  pleaseWaitActive:boolean = false;
-  suppliers:Supplier[] = [];
-  filterSupplier:FormControl = new FormControl('');
+  pleaseWaitActive: boolean = false;
+  suppliers: Supplier[] = [];
+  filterSupplier: FormControl = new FormControl('');
 
-  showFilter:boolean = false;
-  filterSupplierBy:string = '';
-  fieldBy:string = '';
+  showFilter: boolean = false;
+  filterSupplierBy: string = '';
+  fieldBy: string = '';
 
-  smallWindow:boolean = false;
-  page:number = 0;
-  keyword:string = '';
+  smallWindow: boolean = false;
+  page: number = 0;
+  keyword: string = '';
 
-  constructor(private supplierService:SupplierService, private router:Router) {
+  constructor(private supplierService: SupplierService, private router: Router) {
   }
 
   ngOnInit() {
     this.findFirstSupplier();
-    this.filterSupplier.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword)=> {
+    this.filterSupplier.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword) => {
       this.keyword = keyword;
       this.findSupplier();
     });
     this.checkSmallWindow();
-    Observable.fromEvent(window, 'resize').subscribe(()=> {
+    Observable.fromEvent(window, 'resize').subscribe(() => {
       this.checkSmallWindow();
     });
   }
@@ -49,7 +49,7 @@ export class SupplierComponent implements OnInit {
 
   private findFirstSupplier() {
     this.pleaseWaitActive = true;
-    this.supplierService.getAllSupllier((this.page * 10).toString()).subscribe((supp)=> {
+    this.supplierService.getAllSupllier((this.page * 10).toString()).subscribe((supp) => {
       this.suppliers = supp;
       this.pleaseWaitActive = false;
     });
@@ -57,7 +57,7 @@ export class SupplierComponent implements OnInit {
 
   private findSupplier() {
     this.pleaseWaitActive = true;
-    this.supplierService.getSupplierByField(this.filterSupplierBy, this.keyword, (this.page * 10).toString()).subscribe((sup)=> {
+    this.supplierService.getSupplierByField(this.filterSupplierBy, this.keyword, (this.page * 10).toString()).subscribe((sup) => {
       this.suppliers = sup;
       this.pleaseWaitActive = false;
     });
@@ -67,11 +67,11 @@ export class SupplierComponent implements OnInit {
     this.router.navigate(['supplierUpdate', JSON.stringify(new Supplier())]);
   }
 
-  updateSupplier(sup:Supplier) {
+  updateSupplier(sup: Supplier) {
     this.router.navigate(['supplierUpdate', JSON.stringify(sup)]);
   }
 
-  showSearchBar(field:string) {
+  showSearchBar(field: string) {
     if (this.fieldBy === field) {
       this.showFilter = !this.showFilter;
     } else {
@@ -82,9 +82,9 @@ export class SupplierComponent implements OnInit {
     this.fieldBy = field;
     this.filterSupplierBy = 'supplier' + field;
     this.filterSupplier.setValue('');
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('txtFilter').focus();
-    }, 200);
+    }).subscribe();
   }
 
   refreshSupplier() {

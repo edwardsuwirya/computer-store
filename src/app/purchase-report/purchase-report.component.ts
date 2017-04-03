@@ -9,11 +9,11 @@ import {PurchaseService} from "../purchase/purchase.service";
 import {PurchasePaymentService} from "./purchase-payment.service";
 import {PurchasePayment} from "./purchase-payment";
 
-declare let _:any;
-declare let $:any;
-declare let numeral:any;
-declare let moment:any;
-declare let Pikaday:any;
+declare let _: any;
+declare let $: any;
+declare let numeral: any;
+declare let moment: any;
+declare let Pikaday: any;
 
 @Component({
   selector: 'app-purchase-report',
@@ -22,29 +22,29 @@ declare let Pikaday:any;
   providers: [PurchasePaymentService, PurchaseService, PricePipe]
 })
 export class PurchaseReportComponent implements OnInit {
-  page:number = 0;
-  pleaseWaitActive:boolean = false;
+  page: number = 0;
+  pleaseWaitActive: boolean = false;
 
-  purchase:Purchase[] = [];
-  purchasePayment:PurchasePayment = new PurchasePayment();
-  purchaseForUpdate:Purchase = new Purchase();
+  purchase: Purchase[] = [];
+  purchasePayment: PurchasePayment = new PurchasePayment();
+  purchaseForUpdate: Purchase = new Purchase();
 
-  bankNameDisabled:boolean = false;
-  fieldBy:string = '';
-  showFilter:boolean = false;
-  filterPurchaseBy:string = '';
-  filterPurchase:FormControl = new FormControl('');
-  keyword:string = '';
-  purchaseDetail:PurchaseDetail[] = [];
+  bankNameDisabled: boolean = false;
+  fieldBy: string = '';
+  showFilter: boolean = false;
+  filterPurchaseBy: string = '';
+  filterPurchase: FormControl = new FormControl('');
+  keyword: string = '';
+  purchaseDetail: PurchaseDetail[] = [];
 
-  smallWindow:boolean = false;
+  smallWindow: boolean = false;
 
-  constructor(private router:Router, private purchasePaymentService:PurchasePaymentService, private purchaseService:PurchaseService) {
+  constructor(private router: Router, private purchasePaymentService: PurchasePaymentService, private purchaseService: PurchaseService) {
   }
 
   ngOnInit() {
     this.refreshPurchase();
-    this.filterPurchase.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword)=> {
+    this.filterPurchase.valueChanges.debounceTime(500).distinctUntilChanged().subscribe((keyword) => {
       if (keyword) {
         this.keyword = keyword;
         this.findPurchase();
@@ -61,7 +61,7 @@ export class PurchaseReportComponent implements OnInit {
       }
     });
     this.checkSmallWindow();
-    Observable.fromEvent(window, 'resize').subscribe(()=> {
+    Observable.fromEvent(window, 'resize').subscribe(() => {
       this.checkSmallWindow();
     })
   }
@@ -76,10 +76,10 @@ export class PurchaseReportComponent implements OnInit {
 
   private findPurchase() {
     this.pleaseWaitActive = true;
-    this.purchaseService.getPurchaseBy2Field(this.filterPurchaseBy, this.keyword, 'purchaseStatus', '1', (this.page * 10).toString()).subscribe((purchase)=> {
+    this.purchaseService.getPurchaseBy2Field(this.filterPurchaseBy, this.keyword, 'purchaseStatus', '1', (this.page * 10).toString()).subscribe((purchase) => {
       this.purchase = _.uniqBy(_.flatten(purchase), 'id');
       for (let s of this.purchase) {
-        this.purchasePaymentService.getPurchasePaymentByField('purchaseNo', s.purchaseNo, '0').subscribe((res)=> {
+        this.purchasePaymentService.getPurchasePaymentByField('purchaseNo', s.purchaseNo, '0').subscribe((res) => {
           s.purchasePayment = res;
         });
       }
@@ -87,7 +87,7 @@ export class PurchaseReportComponent implements OnInit {
     });
   }
 
-  showSearchBar(field:string) {
+  showSearchBar(field: string) {
     if (this.fieldBy === field) {
       this.showFilter = !this.showFilter;
     } else {
@@ -98,12 +98,12 @@ export class PurchaseReportComponent implements OnInit {
     this.fieldBy = field;
     this.filterPurchaseBy = 'purchase' + field;
     this.filterPurchase.setValue('');
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('txtFilter').focus();
-    }, 200);
+    }).subscribe();
   }
 
-  viewPurchaseDetail(purchase:Purchase) {
+  viewPurchaseDetail(purchase: Purchase) {
     this.purchaseForUpdate = purchase;
     this.purchaseDetail = purchase.purchaseDetail;
     $('#purchaseDetailModal').modal('open');
@@ -114,10 +114,10 @@ export class PurchaseReportComponent implements OnInit {
     this.showFilter = false;
     this.filterPurchase.setValue('');
     this.keyword = '';
-    this.purchaseService.getAllPurchase((this.page * 10).toString()).subscribe((res)=> {
+    this.purchaseService.getAllPurchase((this.page * 10).toString()).subscribe((res) => {
       this.purchase = res;
       for (let s of res) {
-        this.purchasePaymentService.getPurchasePaymentByField('purchaseNo', s.purchaseNo, '0').subscribe((res)=> {
+        this.purchasePaymentService.getPurchasePaymentByField('purchaseNo', s.purchaseNo, '0').subscribe((res) => {
           s.purchasePayment = res;
         });
       }
@@ -126,19 +126,19 @@ export class PurchaseReportComponent implements OnInit {
   }
 
   refreshPaidStatus() {
-    this.purchasePaymentService.getPurchasePaymentByField('salesNo', this.purchaseForUpdate.purchaseNo, '0').subscribe((res)=> {
+    this.purchasePaymentService.getPurchasePaymentByField('salesNo', this.purchaseForUpdate.purchaseNo, '0').subscribe((res) => {
       let grandTotal = this.purchaseForUpdate.purchaseTotal - this.purchaseForUpdate.purchaseDiscount;
-      let totalPayment:number = 0;
+      let totalPayment: number = 0;
       for (let r of res) {
         totalPayment = totalPayment + r.paymentValue;
       }
-      let nominalAccured:number = grandTotal - totalPayment;
+      let nominalAccured: number = grandTotal - totalPayment;
       if (nominalAccured > 0) {
         this.purchaseForUpdate.purchasePaidStatus = '0';
       } else {
         this.purchaseForUpdate.purchasePaidStatus = '1';
       }
-      this.purchaseService.updatePurchaseInfo(this.purchaseForUpdate).subscribe((res)=> {
+      this.purchaseService.updatePurchaseInfo(this.purchaseForUpdate).subscribe((res) => {
         this.findPurchase();
         $('#paymentModal').modal('close');
         this.pleaseWaitActive = false;
@@ -146,16 +146,16 @@ export class PurchaseReportComponent implements OnInit {
     });
   }
 
-  onDeletePayment(purchasePayment:PurchasePayment, purchase:Purchase) {
+  onDeletePayment(purchasePayment: PurchasePayment, purchase: Purchase) {
     this.purchaseForUpdate = purchase;
-    this.purchasePaymentService.deletePaymentDetail(purchasePayment).subscribe(()=> {
+    this.purchasePaymentService.deletePaymentDetail(purchasePayment).subscribe(() => {
       this.refreshPaidStatus();
     });
   }
 
-  purchasePaymentTotalCalculation(purchasePayment:PurchasePayment[]):number {
+  purchasePaymentTotalCalculation(purchasePayment: PurchasePayment[]): number {
     if (purchasePayment) {
-      let totalPayment:number = 0;
+      let totalPayment: number = 0;
       for (let ssp of purchasePayment) {
         totalPayment = totalPayment + numeral(ssp.paymentValue).value();
       }
@@ -165,7 +165,7 @@ export class PurchaseReportComponent implements OnInit {
     }
   }
 
-  onUpdatePaymentMethod(purchase:Purchase) {
+  onUpdatePaymentMethod(purchase: Purchase) {
     this.purchaseForUpdate = purchase;
     this.purchasePayment = new PurchasePayment();
     $('#paymentModal').modal('open');
@@ -176,7 +176,7 @@ export class PurchaseReportComponent implements OnInit {
     this.purchasePayment.paymentValue = numeral(this.purchasePayment.paymentValue).value();
     this.purchasePayment.paymentDate = moment(this.purchasePayment.paymentDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
     this.purchasePayment.purchaseNo = this.purchaseForUpdate.purchaseNo;
-    this.purchasePaymentService.createPaymentDetail(this.purchasePayment).subscribe(()=> {
+    this.purchasePaymentService.createPaymentDetail(this.purchasePayment).subscribe(() => {
       this.refreshPaidStatus();
     });
   }

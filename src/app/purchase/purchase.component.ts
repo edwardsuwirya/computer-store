@@ -11,11 +11,11 @@ import {PurchaseDetail} from "./purchase-detail";
 import {Purchase} from "./purchase";
 import {PurchaseService} from "./purchase.service";
 
-declare let _:any;
-declare let numeral:any;
-declare let $:any;
-declare let moment:any;
-declare let Pikaday:any;
+declare let _: any;
+declare let numeral: any;
+declare let $: any;
+declare let moment: any;
+declare let Pikaday: any;
 
 @Component({
   selector: 'app-purchase',
@@ -25,44 +25,44 @@ declare let Pikaday:any;
 })
 export class PurchaseComponent implements OnInit {
 
-  pleaseWaitActive:boolean = false;
-  purchaseNo:string;
-  purchaseDate:string;
-  supplierId:string;
-  supplier:string = '';
-  supplierAddress:string = '';
+  pleaseWaitActive: boolean = false;
+  purchaseNo: string;
+  purchaseDate: string;
+  supplierId: string;
+  supplier: string = '';
+  supplierAddress: string = '';
 
-  purchaseTotal:number = 0;
-  purchaseDiscount:number = 0;
-  purchaseGrandTotal:number = 0;
+  purchaseTotal: number = 0;
+  purchaseDiscount: number = 0;
+  purchaseGrandTotal: number = 0;
 
-  suppliers:Supplier[] = [];
-  products:Product[] = [];
+  suppliers: Supplier[] = [];
+  products: Product[] = [];
 
-  itemSelection:PurchaseDetail;
+  itemSelection: PurchaseDetail;
 
-  purchaseTotalCalc:Subject<number> = new Subject<number>();
-  supplierRegistrationComplete:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  productRegistrationComplete:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  purchaseTotalCalc: Subject<number> = new Subject<number>();
+  supplierRegistrationComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  productRegistrationComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   purchaseTotalCalc$ = this.purchaseTotalCalc.asObservable();
   supplierRegistrationComplete$ = this.supplierRegistrationComplete.asObservable();
   productRegistrationComplete$ = this.productRegistrationComplete.asObservable();
 
-  purchaseDetails:PurchaseDetail[] = [new PurchaseDetail(1, '', '', 0, 0, 0, 0, '')];
+  purchaseDetails: PurchaseDetail[] = [new PurchaseDetail(1, '', '', 0, 0, 0, 0, '')];
 
 
-  smallWindow:boolean = false;
+  smallWindow: boolean = false;
 
-  supplierFilterForm:FormControl = new FormControl();
-  productFilterForm:FormControl = new FormControl();
+  supplierFilterForm: FormControl = new FormControl();
+  productFilterForm: FormControl = new FormControl();
 
-  constructor(private router:Router, private dialogService:DialogService,
-              private supplierService:SupplierService,
-              private productService:ProductService, private purchaseService:PurchaseService) {
-    setTimeout(function () {
+  constructor(private router: Router, private dialogService: DialogService,
+              private supplierService: SupplierService,
+              private productService: ProductService, private purchaseService: PurchaseService) {
+    Observable.timer(300).do(() => {
       document.getElementById('supplier').focus();
-    }, 200);
+    }).subscribe();
   }
 
   ngOnInit() {
@@ -117,7 +117,7 @@ export class PurchaseComponent implements OnInit {
   }
 
   goToList() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
     return;
   }
 
@@ -126,10 +126,9 @@ export class PurchaseComponent implements OnInit {
     if (lastPurchaseDetail) {
       let currId = Number(lastPurchaseDetail.id) + 1;
       this.purchaseDetails.push(new PurchaseDetail(currId, '', '', 0, 0, 0, 0, ''));
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById(currId.toString()).focus();
-      }, 300);
-
+      }).subscribe();
     } else {
       this.purchaseDetails.push(new PurchaseDetail(1, '', '', 0, 0, 0, 0, ''));
     }
@@ -149,7 +148,7 @@ export class PurchaseComponent implements OnInit {
     if (this.supplier && this.purchaseDate && this.purchaseNo) {
       if (numeral(this.purchaseGrandTotal).value() > 0) {
         this.pleaseWaitActive = true;
-        let currentPurchase:Purchase = new Purchase();
+        let currentPurchase: Purchase = new Purchase();
         currentPurchase.purchaseNo = this.purchaseNo;
         currentPurchase.purchaseDate = moment(this.purchaseDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
@@ -159,23 +158,23 @@ export class PurchaseComponent implements OnInit {
           currentPurchase.purchaseSupplierAddress = this.supplierAddress;
           this.supplierRegistrationComplete.next(true);
         } else {
-          let newSupp:Supplier = new Supplier();
+          let newSupp: Supplier = new Supplier();
           newSupp.supplierName = this.supplier;
           newSupp.supplierAddress = this.supplierAddress;
           newSupp.supplierStatus = '1';
-          this.supplierService.saveSupplier(newSupp).subscribe((res)=> {
+          this.supplierService.saveSupplier(newSupp).subscribe((res) => {
             currentPurchase.purchaseSupplierId = res.id;
             currentPurchase.purchaseSupplierName = this.supplier;
             currentPurchase.purchaseSupplierAddress = this.supplierAddress;
             this.supplierRegistrationComplete.next(true);
-          }, (err)=> {
+          }, (err) => {
             this.dialogService.showDialog('Some error occurred ' + err);
           });
         }
 
-        let unregisterProduct:PurchaseDetail[] = [];
+        let unregisterProduct: PurchaseDetail[] = [];
         for (let sd of this.purchaseDetails) {
-          let isUnregister:boolean = false;
+          let isUnregister: boolean = false;
           if (!sd.productId) {
             isUnregister = true;
           }
@@ -189,23 +188,23 @@ export class PurchaseComponent implements OnInit {
         }
 
         if (unregisterProduct.length > 0) {
-          Observable.of(...unregisterProduct).map((sdProd)=> {
-            let newProd:Product = new Product();
+          Observable.of(...unregisterProduct).map((sdProd) => {
+            let newProd: Product = new Product();
             newProd.productName = sdProd.productName;
             newProd.productStatus = '1';
             newProd.productStock = -1 * (sdProd.productQty);
-            Observable.create((obs)=> {
-              this.productService.saveProduct(newProd).subscribe((res)=> {
+            Observable.create((obs) => {
+              this.productService.saveProduct(newProd).subscribe((res) => {
                 sdProd.productId = res.id;
                 obs.next();
-              }, (err)=> {
+              }, (err) => {
                 this.dialogService.showDialog('Some error occurred ' + err);
               });
             }).subscribe();
-          }).subscribe(()=> {
-          }, (err)=> {
+          }).subscribe(() => {
+          }, (err) => {
             this.dialogService.showDialog('Some error occurred ' + err);
-          }, ()=> {
+          }, () => {
             this.productRegistrationComplete.next(true);
           });
         } else {
@@ -220,14 +219,14 @@ export class PurchaseComponent implements OnInit {
         currentPurchase.purchasePaidStatus = '0';
         currentPurchase.purchaseStatus = '1';
 
-        this.supplierRegistrationComplete$.subscribe((res)=> {
+        this.supplierRegistrationComplete$.subscribe((res) => {
           if (res) {
-            this.productRegistrationComplete$.subscribe((res)=> {
+            this.productRegistrationComplete$.subscribe((res) => {
               if (res) {
-                this.purchaseService.savePurchase(currentPurchase).subscribe((res)=> {
-                  this.router.navigate(['/']);
+                this.purchaseService.savePurchase(currentPurchase).subscribe((res) => {
+                  this.router.navigate(['/home']);
                   this.pleaseWaitActive = false;
-                }, (err)=> {
+                }, (err) => {
                   this.dialogService.showDialog('Some error occurred ' + err);
                 });
               }
@@ -242,8 +241,8 @@ export class PurchaseComponent implements OnInit {
     }
   }
 
-  calculatedPrice(purchaseDetail:PurchaseDetail):number {
-    let tot:number = (numeral(purchaseDetail.productQty).value() * numeral(purchaseDetail.unitPrice).value()) - numeral(purchaseDetail.discount).value();
+  calculatedPrice(purchaseDetail: PurchaseDetail): number {
+    let tot: number = (numeral(purchaseDetail.productQty).value() * numeral(purchaseDetail.unitPrice).value()) - numeral(purchaseDetail.discount).value();
     purchaseDetail.purchaseTotal = tot;
     this.purchaseTotalCalc.next(tot);
     return numeral(tot).format('0,0');
@@ -253,43 +252,43 @@ export class PurchaseComponent implements OnInit {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
       $('#supplierModal').modal('open');
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById('supplierFilter').focus();
-      }, 300);
+      }).subscribe();
     }
   }
 
-  onProductFilter(item:PurchaseDetail, event) {
+  onProductFilter(item: PurchaseDetail, event) {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
       this.productFilterForm.setValue('');
       this.products = [];
       this.itemSelection = item;
       $('#productModal').modal('open');
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById('productFilter').focus();
-      }, 300);
+      }).subscribe();
     }
   }
 
-  onPickSupplier(supplier:Supplier) {
+  onPickSupplier(supplier: Supplier) {
     this.supplierId = supplier.id;
     this.supplier = supplier.supplierName;
     this.supplierAddress = supplier.supplierAddress;
     $('#supplierModal').modal('close');
-    setTimeout(function () {
-      document.getElementById('purchaseNo').focus();
-    }, 300);
+    Observable.timer(300).do(() => {
+      document.getElementById('purchaseN').focus();
+    }).subscribe();
   }
 
-  onPickProduct(product:Product) {
+  onPickProduct(product: Product) {
     this.itemSelection.productId = product.id;
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');
     let that = this;
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('item' + that.itemSelection.id).focus();
-    }, 300);
+    }).subscribe();
   }
 
   onResetPurchase() {

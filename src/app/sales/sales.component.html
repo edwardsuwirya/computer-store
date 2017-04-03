@@ -79,25 +79,27 @@
                     <input type="text" [(ngModel)]="i.salesDetailInfo"
                            class="invoice-form-detail invoice-form" placeholder="Type some extra product info">
                   </td>
-                  <td style="width:8%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                  <td class="td-report" style="width:8%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
                       (rowDelAllowed)="onRemoveRow($event)">
                     <input type="text" id="{{'item'+i.id}}" style="text-align: center" [(ngModel)]="i.productQty"
                            [appNumberFormat]="i.productQty"
                            class="invoice-form-detail invoice-form">
                   </td>
-                  <td style="width:15%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                  <td class="td-report" style="width:15%;" (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
                       (rowDelAllowed)="onRemoveRow($event)">
                     <input type="text" style="text-align: right" [appNumberFormat]="i.unitPrice"
                            [(ngModel)]="i.unitPrice"
                            class="invoice-form-detail invoice-form">
                   </td>
-                  <td style="width:10%;" (appTabNewRow)="onAddRow($event)" [appNumberFormat]="i.discount" appTabDelRow
+                  <td class="td-report" style="width:10%;" (appTabNewRow)="onAddRow($event)"
+                      [appNumberFormat]="i.discount" appTabDelRow
                       [rowId]="i.id"
                       (rowDelAllowed)="onRemoveRow($event)">
                     <input type="text" style="text-align: right" [(ngModel)]="i.discount"
                            class="invoice-form-detail invoice-form">
                   </td>
-                  <td style="width:18%;" #itemtotalPrice (appTabNewRow)="onAddRow($event)" appTabDelRow [rowId]="i.id"
+                  <td class="td-report" style="width:18%;" #itemtotalPrice (appTabNewRow)="onAddRow($event)"
+                      appTabDelRow [rowId]="i.id"
                       (rowDelAllowed)="onRemoveRow($event)">
                     <input type="text" style="text-align: right" [value]="calculatedPrice(i)"
                            class="invoice-form-detail invoice-form" readonly="true">

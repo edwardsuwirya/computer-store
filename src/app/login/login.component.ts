@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {DialogService} from "../shared/service/dialog.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -9,13 +10,16 @@ import {DialogService} from "../shared/service/dialog.service";
   providers: [DialogService]
 })
 export class LoginComponent implements OnInit {
-  username:string;
-  userpassword:string;
+  username: string;
+  userpassword: string;
 
-  constructor(private router:Router, private dialogService:DialogService) {
+  constructor(private router: Router, private dialogService: DialogService) {
   }
 
   ngOnInit() {
+    Observable.timer(300).do(() => {
+      document.getElementById('username').focus();
+    }).subscribe();
   }
 
   doLogin() {

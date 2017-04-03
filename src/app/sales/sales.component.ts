@@ -61,9 +61,9 @@ export class SalesComponent implements OnInit {
   constructor(private router: Router, private dialogService: DialogService,
               private salesForPrint: SalesForPrintingService, private customerService: CustomerService,
               private productService: ProductService, private salesService: SalesService) {
-    setTimeout(function () {
+    Observable.timer(200).do(() => {
       document.getElementById('customer').focus();
-    }, 200);
+    }).subscribe();
   }
 
   ngOnInit() {
@@ -124,7 +124,7 @@ export class SalesComponent implements OnInit {
   }
 
   goToList() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
     return;
   }
 
@@ -133,10 +133,9 @@ export class SalesComponent implements OnInit {
     if (lastSalesDetail) {
       let currId = Number(lastSalesDetail.id) + 1;
       this.salesDetails.push(new SalesDetail(currId, '', '', 0, 0, 0, 0, ''));
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById(currId.toString()).focus();
-      }, 300);
-
+      }).subscribe();
     } else {
       this.salesDetails.push(new SalesDetail(1, '', '', 0, 0, 0, 0, ''));
     }
@@ -267,9 +266,9 @@ export class SalesComponent implements OnInit {
     let target = event.target;
     if (event.keyCode === 13 || target.className.indexOf('fa') != -1) {
       $('#customerModal').modal('open');
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById('customerFilter').focus();
-      }, 300);
+      }).subscribe();
     }
   }
 
@@ -280,9 +279,9 @@ export class SalesComponent implements OnInit {
       this.products = [];
       this.itemSelection = item;
       $('#productModal').modal('open');
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById('productFilter').focus();
-      }, 300);
+      }).subscribe();
     }
   }
 
@@ -293,9 +292,9 @@ export class SalesComponent implements OnInit {
     this.customerAddress2 = customer.customerAddress2;
     this.customerAddress3 = customer.customerAddress3;
     $('#customerModal').modal('close');
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('invoiceNo').focus();
-    }, 300);
+    }).subscribe();
   }
 
   onPickProduct(product: Product) {
@@ -303,9 +302,9 @@ export class SalesComponent implements OnInit {
     this.itemSelection.productName = product.productName;
     $('#productModal').modal('close');
     let that = this;
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('item' + that.itemSelection.id).focus();
-    }, 300);
+    }).subscribe();
   }
 
   onResetInvoice() {

@@ -8,8 +8,8 @@ import {Customer} from "../customer/customer";
 import {Product} from "../product/product";
 import {Sales} from "../sales/sales";
 
-declare let _:any;
-declare let $:any;
+declare let _: any;
+declare let $: any;
 
 @Component({
   selector: 'app-sales-customer-report',
@@ -18,21 +18,21 @@ declare let $:any;
   providers: [CustomerService, ProductService, SalesService]
 })
 export class SalesCustomerReportComponent implements OnInit {
-  pleaseWaitActive:boolean = false;
-  customer:string = '';
-  productName:string = '';
-  customerFilterForm:FormControl = new FormControl();
-  productFilterForm:FormControl = new FormControl();
-  customers:Customer[] = [];
-  products:Product[] = [];
+  pleaseWaitActive: boolean = false;
+  customer: string = '';
+  productName: string = '';
+  customerFilterForm: FormControl = new FormControl();
+  productFilterForm: FormControl = new FormControl();
+  customers: Customer[] = [];
+  products: Product[] = [];
 
-  sales:Sales[] = [];
+  sales: Sales[] = [];
 
-  constructor(private customerService:CustomerService,
-              private productService:ProductService, private salesService:SalesService) {
-    setTimeout(function () {
+  constructor(private customerService: CustomerService,
+              private productService: ProductService, private salesService: SalesService) {
+    Observable.timer(300).do(() => {
       document.getElementById('customer').focus();
-    }, 200);
+    }).subscribe();
   }
 
   ngOnInit() {
@@ -63,9 +63,9 @@ export class SalesCustomerReportComponent implements OnInit {
       this.customerFilterForm.setValue('')
       this.customers = [];
       $('#customerModal').modal('open');
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById('customerFilter').focus();
-      }, 300);
+      }).subscribe();
     }
   }
 
@@ -75,21 +75,21 @@ export class SalesCustomerReportComponent implements OnInit {
       this.productFilterForm.setValue('');
       this.products = [];
       $('#productModal').modal('open');
-      setTimeout(function () {
+      Observable.timer(300).do(() => {
         document.getElementById('productFilter').focus();
-      }, 300);
+      }).subscribe();
     }
   }
 
-  onPickCustomer(customer:Customer) {
+  onPickCustomer(customer: Customer) {
     this.customer = customer.customerName;
     $('#customerModal').modal('close');
-    setTimeout(function () {
+    Observable.timer(300).do(() => {
       document.getElementById('productName').focus();
-    }, 300);
+    }).subscribe();
   }
 
-  onPickProduct(product:Product) {
+  onPickProduct(product: Product) {
     this.productName = product.productName;
     $('#productModal').modal('close');
   }
