@@ -30,6 +30,7 @@ import {PurchaseReportComponent} from "./purchase-report/purchase-report.compone
 import {HomeMenuComponent} from "./home-menu/home-menu.component";
 import {LoginComponent} from "./login/login.component";
 import {RouterGuard} from "./login/router-guard";
+import {PurchaseCancelComponent} from "./purchase-cancel/purchase-cancel.component";
 
 const appRoutes:Routes = [
   {
@@ -53,8 +54,11 @@ const appRoutes:Routes = [
   {path: 'salesReport', component: SalesReportComponent, canActivate: [RouterGuard]},
   {path: 'salesCustomerReport', component: SalesCustomerReportComponent, canActivate: [RouterGuard]},
   {path: 'salesCancel', component: SalesCancelComponent, canActivate: [RouterGuard]},
+  {path: 'salesCancel/:salesNo', component: SalesCancelComponent, canActivate: [RouterGuard]},
   {path: 'purchase', component: PurchaseComponent, canActivate: [RouterGuard]},
-  {path: 'purchaseReport', component: PurchaseReportComponent, canActivate: [RouterGuard]}
+  {path: 'purchaseReport', component: PurchaseReportComponent, canActivate: [RouterGuard]},
+  {path: 'purchaseCancel', component: PurchaseCancelComponent, canActivate: [RouterGuard]},
+  {path: 'purchaseCancel/:purchaseNo', component: PurchaseCancelComponent, canActivate: [RouterGuard]}
 ];
 
 @NgModule({
@@ -83,6 +87,7 @@ const appRoutes:Routes = [
     PurchaseReportComponent,
     HomeMenuComponent,
     LoginComponent,
+    PurchaseCancelComponent,
   ],
   imports: [
     BrowserModule,

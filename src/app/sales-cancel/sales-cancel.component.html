@@ -35,3 +35,21 @@
 
   </div>
 </app-home>
+<div id="cancelConfirmationModal" class="modal" style="width: 400px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12">
+        <h5>Delete Confirmation</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        Are you sure want to delete this invoice ?
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+      <button type="button" class="btn light-green lighten-2" (click)="onConfirmCancelSales()">Yes</button>
+      <button type="button" class="btn red lighten-2" (click)="onIgnoreCancelSales()">No</button>
+    </div>
+  </div>
+</div>

@@ -11,12 +11,12 @@ export class PurchaseService {
   }
 
   getAllPurchase(page:string) {
-    return this.http.get(this.config.serviceBaseUrl + '/purchase?{"$sort": {"purchaseNo": -1},"$skip":' + page + ',"$limit":10}')
+    return this.http.get(this.config.serviceBaseUrl + '/purchase?{"$sort": {"purchaseDate": -1},"$skip":' + page + ',"$limit":10}')
       .map(res => res.json())
       .catch((err) => Observable.throw(err));
   }
 
-  getPurchaseByField(fieldName:string, fieldValue:string, page:string = '0', sort:string = '{"purchaseNo": -1}') {
+  getPurchaseByField(fieldName:string, fieldValue:string, page:string = '0', sort:string = '{"purchaseDate": -1}') {
     return this.http.get(this.config.serviceBaseUrl + '/purchase?{"' + fieldName + '":{"$regex":"' + fieldValue + '", ' +
       '"$options": "i"},' +
       '"$sort": ' + sort + ',' +
@@ -25,7 +25,7 @@ export class PurchaseService {
       .catch((err) => Observable.throw(err));
   }
 
-  getPurchaseBy2Field(fieldName1:string, fieldValue1:string, fieldName2:string, fieldValue2:string, page:string = '0', sort:string = '{"purchaseNo": -1}') {
+  getPurchaseBy2Field(fieldName1:string, fieldValue1:string, fieldName2:string, fieldValue2:string, page:string = '0', sort:string = '{"purchaseDate": -1}') {
     return this.http.get(this.config.serviceBaseUrl + '/purchase?{' +
       '"$and":[' +
       '{"' + fieldName1 + '":{"$regex":"' + fieldValue1 + '", "$options": "i"}},' +

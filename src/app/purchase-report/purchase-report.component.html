@@ -14,17 +14,26 @@
           <label for="txtFilter" class="active" style="top:2rem !important;">Filter data by {{filterPurchaseBy}}</label>
         </div>
       </div>
+      <div [hidden]="!showFilterDate">
+        <div class="input-field">
+          <input type="text" id="purchaseDate" placeholder="" class="purchase-form">
+          <label for="purchaseDate" class="active" style="top:2rem !important;">Filter data By
+            {{filterPurchaseBy}}</label>
+        </div>
+      </div>
       <table class="bordered" *ngIf="!smallWindow">
         <thead>
         <tr>
           <th>
             <div class="header-text">
-              <div>Purchase No</div>
+              <span>Purchase No</span>
+              <a (click)="showSearchBar('No')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
           </th>
           <th>
             <div class="header-text">
-              <div>Purchase Date</div>
+              <span>Purchase Date</span>
+              <a (click)="showSearchBar('Date')" class="to-pointer"><i class="fa fa-search"></i></a>
             </div>
           </th>
           <th>
@@ -62,7 +71,7 @@
           <span class="to-pointer" (click)="viewPurchaseDetail(s)"
                 style="text-decoration: underline">{{s.purchaseNo}}</span>
           </td>
-          <td class="td-report" style="width:10%">
+          <td class="td-report" style="width:11%">
             <div>{{s.purchaseDate | date:'dd MMM yyyy'}}</div>
           </td>
           <td class="td-report" style="width:23%">{{s.purchaseSupplierName}}</td>
@@ -265,6 +274,7 @@
       </div>
       <div class="col s6" style="text-align: right">
         <div class="small-font">Purchase No. {{purchaseForUpdate.purchaseNo}}</div>
+        <span><a class="to-pointer red-text" (click)="onCancelPurchase(purchaseForUpdate.purchaseNo)">Cancel</a></span>
       </div>
     </div>
     <table>
@@ -287,5 +297,24 @@
       </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<div id="deleteConfirmationModal" class="modal" style="width: 400px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12">
+        <h5>Delete Confirmation</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        Are you sure want to delete this payment ?
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+      <button type="button" class="btn light-green lighten-2" (click)="onConfirmDeletePayment()">Yes</button>
+      <button type="button" class="btn red lighten-2" (click)="onIgnoreDeletePayment()">No</button>
+    </div>
   </div>
 </div>

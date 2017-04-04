@@ -1,15 +1,17 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
 import {SalesService} from "../sales/sales.service";
 import {SalesForPrintingComponent} from "../sales-for-printing/sales-for-printing.component";
 import {Sales} from "../sales/sales";
 import {DialogService} from "../shared/service/dialog.service";
+import {Router, ActivatedRoute} from "@angular/router";
+
+declare let $:any;
 
 @Component({
   selector: 'app-sales-cancel',
   templateUrl: './sales-cancel.component.html',
   styleUrls: ['./sales-cancel.component.css'],
-  providers: [SalesService,DialogService]
+  providers: [SalesService, DialogService]
 })
 export class SalesCancelComponent implements OnInit {
   @ViewChild('info')
@@ -18,26 +20,42 @@ export class SalesCancelComponent implements OnInit {
   salesForCancel:Sales;
 
   constructor(private salesService:SalesService,
-              private salesForPrint:SalesForPrintingService,
+              private activeRoute:ActivatedRoute,
+              private router:Router,
               private dialogService:DialogService) {
   }
 
   ngOnInit() {
+    $('#cancelConfirmationModal').modal();
+    let salesNo = this.activeRoute.snapshot.params['salesNo'];
+    if (salesNo) {
+      this.salesNo = salesNo;
+      this.onFindSales();
+    }
   }
 
   onFindSales() {
-    this.salesService.getSalesByField('salesNo', this.salesNo).subscribe((res)=> {
+    this.salesService.getSalesBy2Field('salesNo', this.salesNo, 'salesStatus', '1').subscribe((res)=> {
       this.salesForCancel = res[0];
       this.salesInfo.doRefresh(this.salesForCancel);
-
     })
   }
 
-  onCancelSales() {
+  onConfirmCancelSales() {
     this.salesForCancel.salesStatus = '0'
     this.salesService.saveSales(this.salesForCancel).subscribe((res)=> {
+      $('#cancelConfirmationModal').modal('close');
+      this.router.navigate(['/home']);
     }, (err)=> {
       this.dialogService.showDialog('Some error occurred ' + err);
     })
+  }
+
+  onIgnoreCancelSales() {
+    $('#cancelConfirmationModal').modal('close');
+  }
+
+  onCancelSales() {
+    $('#cancelConfirmationModal').modal('open');
   }
 }

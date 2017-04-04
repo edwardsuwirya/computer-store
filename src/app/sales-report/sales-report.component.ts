@@ -10,11 +10,11 @@ import {Observable} from "rxjs/Rx";
 import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
 import {Router} from "@angular/router";
 
-declare let _: any;
-declare let $: any;
-declare let numeral: any;
-declare let moment: any;
-declare let Pikaday: any;
+declare let _:any;
+declare let $:any;
+declare let numeral:any;
+declare let moment:any;
+declare let Pikaday:any;
 
 @Component({
   selector: 'app-sales-report',
@@ -23,27 +23,27 @@ declare let Pikaday: any;
   providers: [SalesPaymentService, SalesService, PricePipe]
 })
 export class SalesReportComponent implements OnInit {
-  page: number = 0;
-  pleaseWaitActive: boolean = false;
+  page:number = 0;
+  pleaseWaitActive:boolean = false;
 
-  sales: Sales[] = [];
-  salesPaymentInv: SalesPayment = new SalesPayment();
-  salesForUpdate: Sales = new Sales();
-  salesPaymentUpdate: SalesPayment = new SalesPayment();
+  sales:Sales[] = [];
+  salesPaymentInv:SalesPayment = new SalesPayment();
+  salesForUpdate:Sales = new Sales();
+  salesPaymentUpdate:SalesPayment = new SalesPayment();
 
-  bankNameDisabled: boolean = false;
-  fieldBy: string = '';
-  showFilterDate: boolean = false;
-  showFilter: boolean = false;
+  bankNameDisabled:boolean = false;
+  fieldBy:string = '';
+  showFilterDate:boolean = false;
+  showFilter:boolean = false;
 
-  filterSalesBy: string = '';
-  filterSales: FormControl = new FormControl('');
-  keyword: string = '';
-  salesDetail: SalesDetail[] = [];
+  filterSalesBy:string = '';
+  filterSales:FormControl = new FormControl('');
+  keyword:string = '';
+  salesDetail:SalesDetail[] = [];
 
-  smallWindow: boolean = false;
+  smallWindow:boolean = false;
 
-  constructor(private router: Router, private salesPaymentService: SalesPaymentService, private salesService: SalesService, private salesForPrint: SalesForPrintingService) {
+  constructor(private router:Router, private salesPaymentService:SalesPaymentService, private salesService:SalesService, private salesForPrint:SalesForPrintingService) {
   }
 
   ngOnInit() {
@@ -116,7 +116,7 @@ export class SalesReportComponent implements OnInit {
 
   }
 
-  showSearchBar(field: string) {
+  showSearchBar(field:string) {
     if (field === 'Date') {
       this.showFilterDate = !this.showFilterDate;
       this.showFilter = false;
@@ -146,7 +146,7 @@ export class SalesReportComponent implements OnInit {
     }).subscribe();
   }
 
-  viewInvoiceDetail(sales: Sales) {
+  viewInvoiceDetail(sales:Sales) {
     this.salesForUpdate = sales;
     this.salesDetail = sales.salesDetail;
     $('#salesDetailModal').modal('open');
@@ -172,11 +172,11 @@ export class SalesReportComponent implements OnInit {
   refreshPaidStatus() {
     this.salesPaymentService.getSalesPaymentByField('salesNo', this.salesForUpdate.salesNo, '0').subscribe((res) => {
       let grandTotal = this.salesForUpdate.salesTotal - this.salesForUpdate.salesDiscount;
-      let totalPayment: number = 0;
+      let totalPayment:number = 0;
       for (let r of res) {
         totalPayment = totalPayment + r.paymentValue;
       }
-      let nominalAccured: number = grandTotal - totalPayment;
+      let nominalAccured:number = grandTotal - totalPayment;
       if (nominalAccured > 0) {
         this.salesForUpdate.salesPaidStatus = '0';
       } else {
@@ -190,7 +190,7 @@ export class SalesReportComponent implements OnInit {
     });
   }
 
-  onUpdateDeliveryCharge(sales: Sales) {
+  onUpdateDeliveryCharge(sales:Sales) {
     this.salesForUpdate = sales;
     this.salesForUpdate.salesDeliveryCharge = new PricePipe().transform(this.salesForUpdate.salesDeliveryCharge);
     $('#deliveryModal').modal('open');
@@ -205,7 +205,7 @@ export class SalesReportComponent implements OnInit {
     });
   }
 
-  onUpdateComission(sales: Sales) {
+  onUpdateComission(sales:Sales) {
     this.salesForUpdate = sales;
     this.salesForUpdate.salesComission = new PricePipe().transform(this.salesForUpdate.salesComission);
     $('#comissionModal').modal('open');
@@ -220,7 +220,7 @@ export class SalesReportComponent implements OnInit {
     });
   }
 
-  onDeletePayment(salesPayment: SalesPayment, sales: Sales) {
+  onDeletePayment(salesPayment:SalesPayment, sales:Sales) {
     this.salesForUpdate = sales;
     this.salesPaymentUpdate = salesPayment;
     $('#deleteConfirmationModal').modal('open');
@@ -237,9 +237,9 @@ export class SalesReportComponent implements OnInit {
     $('#deleteConfirmationModal').modal('close');
   }
 
-  salesPaymentTotalCalculation(salesPayment: SalesPayment[]): number {
+  salesPaymentTotalCalculation(salesPayment:SalesPayment[]):number {
     if (salesPayment) {
-      let totalPayment: number = 0;
+      let totalPayment:number = 0;
       for (let ssp of salesPayment) {
         totalPayment = totalPayment + numeral(ssp.paymentValue).value();
       }
@@ -249,7 +249,7 @@ export class SalesReportComponent implements OnInit {
     }
   }
 
-  onUpdatePaymentMethod(sales: Sales) {
+  onUpdatePaymentMethod(sales:Sales) {
     this.salesForUpdate = sales;
     this.salesPaymentInv = new SalesPayment();
     $('#paymentModal').modal('open');
@@ -265,10 +265,15 @@ export class SalesReportComponent implements OnInit {
     });
   }
 
-  onReprint(sales: Sales) {
+  onReprint(sales:Sales) {
     $('#salesDetailModal').modal('close');
     this.salesForPrint.doPrint(sales);
     this.router.navigate(['/salesPrint']);
+  }
+
+  onCancelSales(sales:Sales) {
+    $('#salesDetailModal').modal('close');
+    this.router.navigate(['/salesCancel/' + sales.salesNo]);
   }
 
   prev() {

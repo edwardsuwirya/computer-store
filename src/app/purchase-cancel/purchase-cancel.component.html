@@ -1,0 +1,90 @@
+<app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
+<app-home>
+  <div class="card white darken-1 grey-text">
+    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <div class="card-content">
+      <h5 class="text-beauty">Purchase Cancellation</h5>
+      <div class="row">
+        <div class="col s4 m4">
+          <div class="input-field">
+            <input placeholder="Press type your purchase number" id="purchaseNo" type="text"
+                   [(ngModel)]="purchaseNo"
+                   class="invoice-form">
+            <label for="purchaseNo" class="active">Purchase</label>
+          </div>
+        </div>
+        <div class="col s3 m3">
+          <div class="input-field">
+            <button type="button" class="btn light-green lighten-2" (click)="onFindPurchase()">Find</button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="card-panel">
+            <div class="row">
+              <div class="col s1">
+                <span class="header-text">Supplier: </span>
+              </div>
+              <div class="col s11">
+                {{purchaseForCancel.purchaseSupplierName}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s1">
+                <span class="header-text">For Total: </span>
+              </div>
+              <div class="col s11">
+                {{purchaseForCancel.purchaseTotal | price}}
+              </div>
+            </div>
+            <table>
+              <thead>
+              <tr>
+                <td class="header-text">Product Name</td>
+                <td class="header-text-number">Product Qty</td>
+                <td class="header-text-number">Unit Price</td>
+                <td class="header-text-number">Disc</td>
+                <td class="header-text-number">Purchase Total</td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let sd of purchaseDetail" class="small-font">
+                <td>{{sd.productName}}</td>
+                <td style="text-align: right;">{{sd.productQty}}</td>
+                <td style="text-align: right;">{{sd.unitPrice | price}}</td>
+                <td style="text-align: right;">{{sd.discount | price}}</td>
+                <td style="text-align: right;">{{sd.purchaseTotal | price}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s3 m3 offset-s9 offset-m9" style="text-align: right;">
+          <button type="button" class="btn red lighten-2" (click)="onCancelPurchase()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</app-home>
+<div id="cancelConfirmationModal" class="modal" style="width: 400px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12">
+        <h5>Delete Confirmation</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        Are you sure want to delete this purchase ?
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+      <button type="button" class="btn light-green lighten-2" (click)="onConfirmCancelPurchase()">Yes</button>
+      <button type="button" class="btn red lighten-2" (click)="onIgnoreCancelPurchase()">No</button>
+    </div>
+  </div>
+</div>

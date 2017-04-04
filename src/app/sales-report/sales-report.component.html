@@ -379,7 +379,8 @@
       </div>
       <div class="col s6" style="text-align: right">
         <div class="small-font">Invoice No. {{salesForUpdate.salesNo}}</div>
-        <div><a class="to-pointer" (click)="onReprint(salesForUpdate)">Reprint</a></div>
+        <span><a class="to-pointer" (click)="onReprint(salesForUpdate)">Reprint</a></span>
+        <span><a class="to-pointer red-text" (click)="onCancelSales(salesForUpdate)">Cancel</a></span>
       </div>
     </div>
     <table>
@@ -404,6 +405,7 @@
     </table>
   </div>
 </div>
+
 <div id="deleteConfirmationModal" class="modal" style="width: 400px;">
   <div class="modal-content">
     <div class="row">

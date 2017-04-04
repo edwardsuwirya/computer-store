@@ -9,11 +9,11 @@ import {PurchaseService} from "../purchase/purchase.service";
 import {PurchasePaymentService} from "./purchase-payment.service";
 import {PurchasePayment} from "./purchase-payment";
 
-declare let _: any;
-declare let $: any;
-declare let numeral: any;
-declare let moment: any;
-declare let Pikaday: any;
+declare let _:any;
+declare let $:any;
+declare let numeral:any;
+declare let moment:any;
+declare let Pikaday:any;
 
 @Component({
   selector: 'app-purchase-report',
@@ -22,24 +22,26 @@ declare let Pikaday: any;
   providers: [PurchasePaymentService, PurchaseService, PricePipe]
 })
 export class PurchaseReportComponent implements OnInit {
-  page: number = 0;
-  pleaseWaitActive: boolean = false;
+  page:number = 0;
+  pleaseWaitActive:boolean = false;
 
-  purchase: Purchase[] = [];
-  purchasePayment: PurchasePayment = new PurchasePayment();
-  purchaseForUpdate: Purchase = new Purchase();
+  purchase:Purchase[] = [];
+  purchasePayment:PurchasePayment = new PurchasePayment();
+  purchaseForUpdate:Purchase = new Purchase();
+  purchasePaymentUpdate:PurchasePayment = new PurchasePayment();
 
-  bankNameDisabled: boolean = false;
-  fieldBy: string = '';
-  showFilter: boolean = false;
-  filterPurchaseBy: string = '';
-  filterPurchase: FormControl = new FormControl('');
-  keyword: string = '';
-  purchaseDetail: PurchaseDetail[] = [];
+  bankNameDisabled:boolean = false;
+  fieldBy:string = '';
+  showFilter:boolean = false;
+  showFilterDate:boolean = false;
+  filterPurchaseBy:string = '';
+  filterPurchase:FormControl = new FormControl('');
+  keyword:string = '';
+  purchaseDetail:PurchaseDetail[] = [];
 
-  smallWindow: boolean = false;
+  smallWindow:boolean = false;
 
-  constructor(private router: Router, private purchasePaymentService: PurchasePaymentService, private purchaseService: PurchaseService) {
+  constructor(private router:Router, private purchasePaymentService:PurchasePaymentService, private purchaseService:PurchaseService) {
   }
 
   ngOnInit() {
@@ -52,7 +54,18 @@ export class PurchaseReportComponent implements OnInit {
     });
     $('#paymentModal').modal();
     $('#purchaseDetailModal').modal();
+    $('#deleteConfirmationModal').modal();
+
     let that = this;
+    new Pikaday({
+      field: document.getElementById('purchaseDate'),
+      format: 'DD/MM/YYYY',
+      onSelect: function () {
+        that.keyword = this.getMoment().format('YYYY-MM-DD');
+        that.findPurchase();
+      }
+    });
+
     new Pikaday({
       field: document.getElementById('paymentDate'),
       format: 'DD/MM/YYYY',
@@ -87,10 +100,15 @@ export class PurchaseReportComponent implements OnInit {
     });
   }
 
-  showSearchBar(field: string) {
-    if (this.fieldBy === field) {
+  showSearchBar(field:string) {
+    if (field === 'Date') {
+      this.showFilterDate = !this.showFilterDate;
+      this.showFilter = false;
+    } else if (this.fieldBy === field) {
+      this.showFilterDate = false;
       this.showFilter = !this.showFilter;
     } else {
+      this.showFilterDate = false;
       if (!this.showFilter) {
         this.showFilter = true;
       }
@@ -99,11 +117,15 @@ export class PurchaseReportComponent implements OnInit {
     this.filterPurchaseBy = 'purchase' + field;
     this.filterPurchase.setValue('');
     Observable.timer(300).do(() => {
-      document.getElementById('txtFilter').focus();
+      if (field != 'Date') {
+        document.getElementById('txtFilter').focus();
+      } else {
+        document.getElementById('purchaseDate').focus();
+      }
     }).subscribe();
   }
 
-  viewPurchaseDetail(purchase: Purchase) {
+  viewPurchaseDetail(purchase:Purchase) {
     this.purchaseForUpdate = purchase;
     this.purchaseDetail = purchase.purchaseDetail;
     $('#purchaseDetailModal').modal('open');
@@ -112,6 +134,7 @@ export class PurchaseReportComponent implements OnInit {
   refreshPurchase() {
     this.pleaseWaitActive = true;
     this.showFilter = false;
+    this.showFilterDate = false;
     this.filterPurchase.setValue('');
     this.keyword = '';
     this.purchaseService.getAllPurchase((this.page * 10).toString()).subscribe((res) => {
@@ -128,11 +151,11 @@ export class PurchaseReportComponent implements OnInit {
   refreshPaidStatus() {
     this.purchasePaymentService.getPurchasePaymentByField('salesNo', this.purchaseForUpdate.purchaseNo, '0').subscribe((res) => {
       let grandTotal = this.purchaseForUpdate.purchaseTotal - this.purchaseForUpdate.purchaseDiscount;
-      let totalPayment: number = 0;
+      let totalPayment:number = 0;
       for (let r of res) {
         totalPayment = totalPayment + r.paymentValue;
       }
-      let nominalAccured: number = grandTotal - totalPayment;
+      let nominalAccured:number = grandTotal - totalPayment;
       if (nominalAccured > 0) {
         this.purchaseForUpdate.purchasePaidStatus = '0';
       } else {
@@ -146,16 +169,26 @@ export class PurchaseReportComponent implements OnInit {
     });
   }
 
-  onDeletePayment(purchasePayment: PurchasePayment, purchase: Purchase) {
-    this.purchaseForUpdate = purchase;
-    this.purchasePaymentService.deletePaymentDetail(purchasePayment).subscribe(() => {
+  onConfirmDeletePayment() {
+    this.purchasePaymentService.deletePaymentDetail(this.purchasePaymentUpdate).subscribe(() => {
       this.refreshPaidStatus();
+      $('#deleteConfirmationModal').modal('close');
     });
   }
 
-  purchasePaymentTotalCalculation(purchasePayment: PurchasePayment[]): number {
+  onIgnoreDeletePayment() {
+    $('#deleteConfirmationModal').modal('close');
+  }
+
+  onDeletePayment(purchasePayment:PurchasePayment, purchase:Purchase) {
+    this.purchaseForUpdate = purchase;
+    this.purchasePaymentUpdate = purchasePayment;
+    $('#deleteConfirmationModal').modal('open');
+  }
+
+  purchasePaymentTotalCalculation(purchasePayment:PurchasePayment[]):number {
     if (purchasePayment) {
-      let totalPayment: number = 0;
+      let totalPayment:number = 0;
       for (let ssp of purchasePayment) {
         totalPayment = totalPayment + numeral(ssp.paymentValue).value();
       }
@@ -165,7 +198,7 @@ export class PurchaseReportComponent implements OnInit {
     }
   }
 
-  onUpdatePaymentMethod(purchase: Purchase) {
+  onUpdatePaymentMethod(purchase:Purchase) {
     this.purchaseForUpdate = purchase;
     this.purchasePayment = new PurchasePayment();
     $('#paymentModal').modal('open');
@@ -179,6 +212,11 @@ export class PurchaseReportComponent implements OnInit {
     this.purchasePaymentService.createPaymentDetail(this.purchasePayment).subscribe(() => {
       this.refreshPaidStatus();
     });
+  }
+
+  onCancelPurchase(purchaseNo:string) {
+    $('#purchaseDetailModal').modal('close');
+    this.router.navigate(['/purchaseCancel/' + purchaseNo]);
   }
 
   prev() {
