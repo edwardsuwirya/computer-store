@@ -1,7 +1,8 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Inject} from "@angular/core";
 import {Router} from "@angular/router";
 import {DialogService} from "../shared/service/dialog.service";
 import {Observable} from "rxjs";
+import {APP_CONFIG} from "../shared/model/app-properties";
 
 @Component({
   selector: 'app-login',
@@ -10,10 +11,10 @@ import {Observable} from "rxjs";
   providers: [DialogService]
 })
 export class LoginComponent implements OnInit {
-  username: string;
-  userpassword: string;
+  username:string;
+  userpassword:string;
 
-  constructor(private router: Router, private dialogService: DialogService) {
+  constructor(@Inject(APP_CONFIG) private appConfig, private router:Router, private dialogService:DialogService) {
   }
 
   ngOnInit() {
@@ -23,8 +24,10 @@ export class LoginComponent implements OnInit {
   }
 
   doLogin() {
-    if (this.username === 'madju' && this.userpassword === 'madjucom') {
+    if (this.username === this.appConfig.userName && this.userpassword === this.appConfig.userPwd) {
       localStorage.setItem('LA', '1');
+      localStorage.setItem('appName','Toko Komputer');
+      localStorage.setItem('appVersion','1.0.0');
       this.router.navigate(['home']);
     } else {
       this.dialogService.showDialog('Invalid login');

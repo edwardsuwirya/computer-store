@@ -1,5 +1,5 @@
-<div class="container" style="margin-bottom: 10px">
-  <div class="row">
+<div [ngClass]="{'container': showHeader}" style="margin-bottom: 10px">
+  <div class="row" *ngIf="showHeader">
     <div class="col s5 m2 l1">
       <img style="margin-top: 15px; cursor: pointer" (click)="goToList()" src="assets/img/madju-computindo-logo.jpeg">
     </div>
@@ -12,7 +12,7 @@
       <a href="#" (click)="doLogout()">Logout</a>
     </div>
   </div>
-  <div class="row hide-on-med-and-up"
+  <div class="row hide-on-med-and-up" *ngIf="showHeader"
        style="color: rgba(0, 0, 0, .6);text-align: right;font-size: 14px; margin-top: 25px;font-weight: bold">
     Today is {{ todays | date:medium}}
   </div>

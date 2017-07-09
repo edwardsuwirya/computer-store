@@ -1,0 +1,235 @@
+<app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
+<app-home>
+  <div class="card white darken-1 grey-text">
+    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <div class="card-content">
+      <h5 class="text-beauty">Overdue Payment Over 3 Month</h5>
+      <div class="row" [hidden]="hidePayment">
+        <div class="col s12">
+          <div style="width: 100%; text-align: right">
+            <div style="cursor: pointer" (click)="onClosePaymentPanel()"><i class="fa fa-close"></i> Close</div>
+          </div>
+          <app-sales-report [title]="'Overdue Payment'"
+                            [showHeader]="false"
+                            (modalEvent)="onSalesReportModal($event)" #salesReport></app-sales-report>
+        </div>
+      </div>
+      <button type="button" class="btn-floating green right" (click)="refreshSales()" style="margin-right: 5px">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <table class="bordered" *ngIf="!smallWindow">
+        <thead>
+        <tr>
+          <th>
+            <div class="header-text">
+              <div>
+                <span>Inv.No</span>
+              </div>
+              <div>
+                <span>Inv. Date</span>
+              </div>
+            </div>
+          </th>
+          <th>
+            <div class="header-text">
+              <span>Customer</span>
+            </div>
+          </th>
+          <th>
+            <div class="header-text-number">
+              <span>Total</span>
+            </div>
+          </th>
+          <th>
+            <div class="header-text">
+              <span>Del.Charge</span>
+            </div>
+          </th>
+          <th>
+            <div class="header-text">
+              <span>Commission</span>
+            </div>
+          </th>
+          <th>
+            <div class="header-text">
+              <span>Payment Term</span>
+            </div>
+          </th>
+          <th>
+            <div class="header-text-number">
+              <span>Remaining Balance</span>
+            </div>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let s of overdues" class="medium-font">
+          <td class="td-report" style="width:10%">
+          <span class="to-pointer" (click)="viewInvoiceDetail(s)"
+                style="text-decoration: underline">{{s.salesNo}}</span>
+            <div>{{s.salesDate | date:'dd MMM yy'}}</div>
+          </td>
+          <td class="td-report" style="width:19%">{{s.salesCustomerName}}</td>
+          <td class="td-report-right" style="width:7%">
+            <span class="to-pointer" style="text-decoration: underline" (click)="makePayment(s)">{{(s.salesTotal-s.salesDiscount) | price}}</span>
+          </td>
+          <td class="td-report" style="width:12%">
+            <div *ngIf="s.salesDeliveryCharge">
+              <div>{{s.salesDeliveryInfo}}</div>
+              <div>Ch: {{s.salesDeliveryCharge | price}}</div>
+            </div>
+          </td>
+          <td class="td-report" style="width:12%">
+            <div *ngIf="s.salesComission">
+              <div>{{s.salesComissionInfo}}</div>
+              <div>{{s.salesComission | price}}</div>
+            </div>
+          </td>
+          <td class="td-report" style="width:31%">
+            <div class="row" *ngFor="let ssp of s.salesPayment">
+              <div class="col s4">
+                <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
+              </div>
+              <div class="col s4">
+                {{ssp.paymentDate | date:'dd MMM yy'}}
+              </div>
+              <div class="col s4" style="text-align: right;">
+                {{ssp.paymentValue | price}}
+              </div>
+            </div>
+          </td>
+          <td class="td-report-right">
+            {{((s.salesTotal-s.salesDiscount)-salesPaymentTotalCalculation(s.salesPayment)) | price}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table class="bordered" *ngIf="smallWindow">
+        <thead>
+        <tr>
+          <th>
+            <div class="header-text">
+              <div>Invoice Info</div>
+              <div>
+                <span>Customer</span>
+              </div>
+            </div>
+          </th>
+        </tr>
+        <tr [hidden]="!showFilter">
+          <td colspan="6">
+            <input type="text" id="txtFilter" placeholder="{{filterSalesBy}}" [formControl]="filterSales">
+          </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let s of overdues" class="medium-font">
+          <td class="td-report">
+            <div class="row">
+              <div class="col s4">
+              <span class="to-pointer" (click)="viewInvoiceDetail(s)"
+                    style="text-decoration: underline">{{s.salesNo}}</span>
+              </div>
+              <div class="col s4">
+                <span>{{s.salesDate | date:'dd MMM yy'}}</span>
+              </div>
+              <div class="col s4" style="text-align: right">
+                <span class="to-pointer" style="text-decoration: underline" (click)="makePayment(s)">{{(s.salesTotal-s.salesDiscount) | price}}</span>
+              </div>
+            </div>
+            <div>{{s.salesCustomerName}}</div>
+
+            <div class="row">
+              <div class="col s12">
+                <span>Delivery Charge</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <div *ngIf="s.salesDeliveryCharge">
+                  <div>{{s.salesDeliveryInfo}}</div>
+                  <div>Ch: {{s.salesDeliveryCharge | price}}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s6">
+                <span>Commission</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <div *ngIf="s.salesComission">
+                  <div>{{s.salesComissionInfo}}</div>
+                  <div>{{s.salesComission | price}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <span>Payment</span>
+              </div>
+            </div>
+            <div class="row" *ngFor="let ssp of s.salesPayment">
+              <div class="col s4">
+                <span>{{ssp.paymentType}} {{ssp.bankName}}</span>
+              </div>
+              <div class="col s4">
+                {{ssp.paymentDate | date:'dd MMM yy' }}
+              </div>
+              <div class="col s4" style="text-align: right;">
+                {{ssp.paymentValue | price}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s6">
+                <span>Remaining Balance</span>
+              </div>
+              <div class="col s6" style="text-align: right">
+                {{((s.salesTotal-s.salesDiscount)-salesPaymentTotalCalculation(s.salesPayment)) | price}}
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</app-home>
+
+
+<div id="salesDetailModal" class="modal" style="width: 600px;">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s6">
+        <h5>Invoice Detail</h5>
+      </div>
+      <div class="col s6" style="text-align: right">
+        <!--<div class="small-font">Invoice No. {{salesForUpdate.salesNo}}</div>-->
+        <span><a class="to-pointer" (click)="onReprint(salesForUpdate)">Reprint</a></span>
+        <span><a class="to-pointer red-text" (click)="onCancelSales(salesForUpdate)">Cancel</a></span>
+      </div>
+    </div>
+    <table>
+      <thead>
+      <tr>
+        <td class="header-text">Product Name</td>
+        <td class="header-text-number">Product Qty</td>
+        <td class="header-text-number">Unit Price</td>
+        <td class="header-text-number">Disc</td>
+        <td class="header-text-number">Sales Total</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let sd of salesDetail" class="small-font">
+        <td>{{sd.productName}}</td>
+        <td style="text-align: right;">{{sd.productQty}}</td>
+        <td style="text-align: right;">{{sd.unitPrice | price}}</td>
+        <td style="text-align: right;">{{sd.discount | price}}</td>
+        <td style="text-align: right;">{{sd.salesTotal | price}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

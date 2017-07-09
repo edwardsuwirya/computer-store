@@ -1,10 +1,10 @@
 <app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
-<app-home>
+<app-home [showHeader]="showHeader">
   <div class="card white darken-1 grey-text">
-    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <a class="btn-flat grey-text" *ngIf="showHeader" routerLink="/home">Home</a>
     <div class="card-content">
-      <h5 class="text-beauty">Sales Report</h5>
-      <button type="button" class="btn-floating green right" (click)="refreshSales()" style="margin-right: 5px">
+      <h5 class="text-beauty">{{title}}</h5>
+      <button *ngIf="showHeader" type="button" class="btn-floating green right" (click)="refreshSales()" style="margin-right: 5px">
         <i class="fa fa-refresh"></i>
       </button>
       <div [hidden]="!showFilter">

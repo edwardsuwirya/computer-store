@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Input, Output} from "@angular/core";
 import {SalesPayment} from "./sales-payment";
 import {SalesPaymentService} from "./sales-payment.service";
 import {SalesService} from "../sales/sales.service";
@@ -9,6 +9,7 @@ import {SalesDetail} from "../sales/sales-detail";
 import {Observable} from "rxjs/Rx";
 import {SalesForPrintingService} from "../sales-for-printing/sales-for-printing.service";
 import {Router} from "@angular/router";
+import {EventEmitter} from "@angular/forms/src/facade/async";
 
 declare let _:any;
 declare let $:any;
@@ -42,6 +43,15 @@ export class SalesReportComponent implements OnInit {
   salesDetail:SalesDetail[] = [];
 
   smallWindow:boolean = false;
+
+  @Input()
+  showHeader:boolean = true;
+
+  @Input()
+  title:string = 'Sales Report';
+
+  @Output()
+  modalEvent:EventEmitter = new EventEmitter();
 
   constructor(private router:Router, private salesPaymentService:SalesPaymentService, private salesService:SalesService, private salesForPrint:SalesForPrintingService) {
   }
@@ -90,7 +100,7 @@ export class SalesReportComponent implements OnInit {
     }
   }
 
-  private findSales() {
+  findSales() {
     this.pleaseWaitActive = true;
     if (this.filterSalesBy === 'UnpaidCustomerName') {
       this.salesService.getSalesBy2Field('salesCustomerName', this.keyword, 'salesPaidStatus', '0', (this.page * 10).toString()).subscribe((sales) => {
@@ -202,6 +212,7 @@ export class SalesReportComponent implements OnInit {
     this.salesService.updateSalesInfo(this.salesForUpdate).subscribe((res) => {
       $('#deliveryModal').modal('close');
       this.pleaseWaitActive = false;
+      this.modalEvent.emit({'doDeliveryCharge': '1'});
     });
   }
 
@@ -217,6 +228,7 @@ export class SalesReportComponent implements OnInit {
     this.salesService.updateSalesInfo(this.salesForUpdate).subscribe((res) => {
       $('#comissionModal').modal('close');
       this.pleaseWaitActive = false;
+      this.modalEvent.emit({'doComission': '1'});
     });
   }
 
@@ -262,6 +274,7 @@ export class SalesReportComponent implements OnInit {
     this.salesPaymentInv.salesNo = this.salesForUpdate.salesNo;
     this.salesPaymentService.createPaymentDetail(this.salesPaymentInv).subscribe(() => {
       this.refreshPaidStatus();
+      this.modalEvent.emit({'doPayment': '1'});
     });
   }
 
