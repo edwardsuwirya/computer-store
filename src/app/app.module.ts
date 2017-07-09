@@ -32,6 +32,7 @@ import {LoginComponent} from "./login/login.component";
 import {RouterGuard} from "./login/router-guard";
 import {PurchaseCancelComponent} from "./purchase-cancel/purchase-cancel.component";
 import { OverdueReportComponent } from './overdue-report/overdue-report.component';
+import { SalesTotalReportComponent } from './sales-total-report/sales-total-report.component';
 
 const appRoutes:Routes = [
   {
@@ -54,7 +55,7 @@ const appRoutes:Routes = [
   {path: 'salesPrint', component: SalesForPrintingComponent, canActivate: [RouterGuard]},
   {path: 'salesReport', component: SalesReportComponent, canActivate: [RouterGuard]},
   {path: 'overdueReport', component: OverdueReportComponent, canActivate: [RouterGuard]},
-  {path: 'salesTotalReport', component: SalesReportComponent, canActivate: [RouterGuard]},
+  {path: 'salesTotalReport', component: SalesTotalReportComponent, canActivate: [RouterGuard]},
   {path: 'salesCustomerReport', component: SalesCustomerReportComponent, canActivate: [RouterGuard]},
   {path: 'salesCancel', component: SalesCancelComponent, canActivate: [RouterGuard]},
   {path: 'salesCancel/:salesNo', component: SalesCancelComponent, canActivate: [RouterGuard]},
@@ -92,6 +93,7 @@ const appRoutes:Routes = [
     LoginComponent,
     PurchaseCancelComponent,
     OverdueReportComponent,
+    SalesTotalReportComponent,
   ],
   imports: [
     BrowserModule,
