@@ -1,3 +1,43 @@
-<p>
-  sales-total-report works!
-</p>
+<app-please-wait [pleaseWaitActive]="pleaseWaitActive"></app-please-wait>
+<app-home>
+  <div class="card white darken-1 grey-text">
+    <a class="btn-flat grey-text" routerLink="/home">Home</a>
+    <div class="card-content">
+      <h5 class="text-beauty">Sales Total Report</h5>
+      <table class="bordered">
+        <thead>
+        <tr>
+          <td>Description</td>
+          <td>Value</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>Paid Sales</td>
+          <td>{{paidSales | price}}</td>
+        </tr>
+        <tr>
+          <td>Unpaid Sales</td>
+          <td>{{unpaidSales | price }}</td>
+        </tr>
+        <tr>
+          <td>Cancelled Sales</td>
+          <td>{{cancelledSales | price}}</td>
+        </tr>
+        <tr>
+          <td>Paid Sales Count</td>
+          <td>{{paidSalesCount | price}}</td>
+        </tr>
+        <tr>
+          <td>Unpaid Sales Count</td>
+          <td>{{unpaidSalesCount | price}}</td>
+        </tr>
+        <tr>
+          <td>Cancelled Sales Count</td>
+          <td>{{cancelledSalesCount | price}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</app-home>
