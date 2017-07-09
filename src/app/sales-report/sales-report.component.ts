@@ -51,7 +51,7 @@ export class SalesReportComponent implements OnInit {
   title:string = 'Sales Report';
 
   @Output()
-  modalEvent:EventEmitter = new EventEmitter();
+  modalEvent:EventEmitter<{}> = new EventEmitter();
 
   constructor(private router:Router, private salesPaymentService:SalesPaymentService, private salesService:SalesService, private salesForPrint:SalesForPrintingService) {
   }
