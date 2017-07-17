@@ -17,6 +17,8 @@ export class PurchaseCancelComponent implements OnInit {
   purchaseForCancel:Purchase = new Purchase();
   purchaseDetail:PurchaseDetail[] = [];
 
+  purchaseFound:boolean = false;
+
   constructor(private purchaseService:PurchaseService,
               private activeRoute:ActivatedRoute,
               private router:Router,
@@ -34,8 +36,13 @@ export class PurchaseCancelComponent implements OnInit {
 
   onFindPurchase() {
     this.purchaseService.getPurchaseBy2Field('purchaseNo', this.purchaseNo, 'purchaseStatus', '1').subscribe((res)=> {
-      this.purchaseForCancel = res[0];
-      this.purchaseDetail = this.purchaseForCancel.purchaseDetail;
+      if(res){
+        this.purchaseForCancel = res[0];
+        this.purchaseDetail = this.purchaseForCancel.purchaseDetail;
+        this.purchaseFound = true;
+      }else{
+        this.purchaseFound = false;
+      }
     })
   }
 
@@ -54,6 +61,8 @@ export class PurchaseCancelComponent implements OnInit {
   }
 
   onCancelPurchase() {
-    $('#cancelConfirmationModal').modal('open');
+    if(this.purchaseFound){
+      $('#cancelConfirmationModal').modal('open');
+    }
   }
 }

@@ -7,6 +7,9 @@ export const appConfig = {
   'supportServiceBaseUrl':'http://139.59.112.176:8888/api',
   'userName': 'madju',
   'userPwd': 'madjucom',
-  'overdue': '3.0'
+  'overdue': '3.0',
+  'bcaAccNo':'7100155979',
+  'bcaAccName':'Effendi',
+  'bcaBranch':'KCP Mangga Dua Mall'
   // 'serviceBaseUrl': 'http://128.199.228.221:2403',
 }

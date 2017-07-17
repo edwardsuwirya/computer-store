@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Inject} from "@angular/core";
 import {SalesForPrintingService} from "./sales-for-printing.service";
 import {Sales} from "../sales/sales";
 import {Router} from "@angular/router";
+import {APP_CONFIG} from "../shared/model/app-properties";
 
 @Component({
   selector: 'app-sales-for-printing',
@@ -9,13 +10,19 @@ import {Router} from "@angular/router";
   styleUrls: ['./sales-for-printing.component.css'],
 })
 export class SalesForPrintingComponent implements OnInit {
-  salesPrint: Sales;
+  salesPrint:Sales;
+  bcaAccNo:string;
+  bcaAccName:string;
+  bcaBranch:string;
 
-  constructor(private salesForPrint: SalesForPrintingService, private router: Router) {
+  constructor(@Inject(APP_CONFIG) private  appConfig, private salesForPrint:SalesForPrintingService, private router:Router) {
   }
 
   ngOnInit() {
     this.salesPrint = this.salesForPrint.salesForPrint;
+    this.bcaAccNo = this.appConfig.bcaAccNo;
+    this.bcaAccName = this.appConfig.bcaAccName;
+    this.bcaBranch = this.appConfig.bcaBranch;
   }
 
   goToList() {
@@ -23,7 +30,7 @@ export class SalesForPrintingComponent implements OnInit {
     return;
   }
 
-  doRefresh(sales: Sales) {
+  doRefresh(sales:Sales) {
     this.salesPrint = sales;
   }
 }

@@ -19,6 +19,8 @@ export class SalesCancelComponent implements OnInit {
   salesNo:string;
   salesForCancel:Sales;
 
+  salesFound:boolean = false;
+
   constructor(private salesService:SalesService,
               private activeRoute:ActivatedRoute,
               private router:Router,
@@ -36,8 +38,13 @@ export class SalesCancelComponent implements OnInit {
 
   onFindSales() {
     this.salesService.getSalesBy2Field('salesNo', this.salesNo, 'salesStatus', '1').subscribe((res)=> {
-      this.salesForCancel = res[0];
-      this.salesInfo.doRefresh(this.salesForCancel);
+      if(res){
+        this.salesForCancel = res[0];
+        this.salesInfo.doRefresh(this.salesForCancel);
+        this.salesFound = true;
+      }else{
+        this.salesFound = false;
+      }
     })
   }
 
@@ -56,6 +63,8 @@ export class SalesCancelComponent implements OnInit {
   }
 
   onCancelSales() {
-    $('#cancelConfirmationModal').modal('open');
+    if(this.salesFound){
+      $('#cancelConfirmationModal').modal('open');
+    }
   }
 }

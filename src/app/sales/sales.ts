@@ -21,4 +21,5 @@ export class Sales {
   salesOtherInfo:string;
   salesPayment:SalesPayment[];
   salesStatus:string;
+  purchaseOrderNo:string;
 }

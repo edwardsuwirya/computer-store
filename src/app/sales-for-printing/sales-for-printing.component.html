@@ -50,6 +50,16 @@
                 </span>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col s6" style="text-align: right;">
+                    <span style="font-weight: bolder;border-bottom: 1px solid lightgray">PO No: </span>
+                  </div>
+                  <div class="col s6">
+                <span>
+                  {{salesPrint.purchaseOrderNo}}
+                </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -85,7 +95,10 @@
         </div>
         <div style="margin-left:13px;border-top:1px solid lightgray; margin-right: 13px;"></div>
         <div class="row">
-          <div class="col s5 m3 offset-s7 offset-m9">
+          <div class="col s4 m4">
+            <span style="margin-left: 5px; font-weight: bolder">Rek. BCA : {{bcaAccNo}} a/n {{bcaAccName}}</span>
+          </div>
+          <div class="col s5 m3 offset-s3 offset-m5">
             <div class="row">
               <div class="col s6" style="text-align: right;">
                 <span style="margin-right: 40px;font-weight: bolder;border-bottom: 1px solid lightgray">Total: </span>

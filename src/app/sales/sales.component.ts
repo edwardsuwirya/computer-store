@@ -27,6 +27,7 @@ export class SalesComponent implements OnInit {
   pleaseWaitActive: boolean = false;
   invoiceNo: string;
   invoiceDate: string;
+  purchaseOrderNo:string;
   customerId: string;
   customer: string = '';
   customerAddress1: string = '';
@@ -157,6 +158,7 @@ export class SalesComponent implements OnInit {
         this.pleaseWaitActive = true;
         let currentSales: Sales = new Sales();
         currentSales.salesNo = this.invoiceNo;
+        currentSales.purchaseOrderNo = this.purchaseOrderNo;
         currentSales.salesDate = moment(this.invoiceDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
         if (this.customerId) {
